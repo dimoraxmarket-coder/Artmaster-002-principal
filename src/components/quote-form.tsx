@@ -284,6 +284,8 @@ export function QuoteForm({ locale, services, contact, compact = false }: { loca
               <input id={`${id}-phone`} name="phone" type="tel" required maxLength={30} autoComplete="tel" disabled={submitting} aria-invalid={!!errors.phone} aria-describedby={description('phone')} />
               {fieldError('phone')}
             </div>
+          </div>
+          <div className="form-grid">
             <div className="field">
               <label htmlFor={`${id}-email`}>{t.email} <span aria-hidden="true">*</span></label>
               <input id={`${id}-email`} name="email" type="email" required maxLength={254} autoComplete="email" disabled={submitting} aria-invalid={!!errors.email} aria-describedby={description('email')} />

@@ -6,7 +6,19 @@ import { JsonLd, breadcrumbData } from '@/lib/seo';
 import { t } from '@/lib/i18n';
 export function Breadcrumb({locale,items}:{locale:Locale;items:{name:string;path:string}[]}){
  const list=[{name:t(locale).nav.home,path:localizedPath(locale)},...items];
- return <><nav aria-label={({ro:'Navigare ierarhică',ru:'Навигационная цепочка',en:'Breadcrumb'})[locale]} className="breadcrumb container"><ol>{list.map((i,n)=><li key={i.path}>{n===list.length-1?<span aria-current="page">{i.name}</span>:<Link href={i.path}>{i.name}</Link>}</li>)}</ol></nav><JsonLd data={breadcrumbData(list)}/></>;
+ return <>
+  <nav aria-label="Breadcrumb" className="breadcrumb container">
+   <ol className="breadcrumb-list">
+    {list.map((item,index)=><li key={item.path} className="breadcrumb-item">
+     {index>0&&<span className="breadcrumb-separator" aria-hidden="true">/</span>}
+     {index===list.length-1
+      ?<span className="breadcrumb-current" aria-current="page">{item.name}</span>
+      :<Link href={item.path} className="breadcrumb-link">{item.name}</Link>}
+    </li>)}
+   </ol>
+  </nav>
+  <JsonLd data={breadcrumbData(list)}/>
+ </>;
 }
 export function PageHero({eyebrow,title,description}:{eyebrow?:string;title:string;description:string}){return <section className="page-hero"><div className="container">{eyebrow&&<p className="eyebrow">{eyebrow}</p>}<h1 className="page-title">{title}</h1><p>{description}</p></div></section>;}
 export function ServiceCards({locale,services}:{locale:Locale;services:Service[]}){return <div className="card-grid">{services.map(s=><Link key={s.slug} href={localizedPath(locale,`servicii/${s.slug}`)} className="card"><div className="card-media"><Image src={s.image} alt={s.title[locale]} fill sizes="(max-width:600px) 100vw,(max-width:1000px) 50vw,33vw"/></div><div className="card-body"><h3>{s.title[locale]}</h3><p>{s.summary[locale]}</p><span className="card-action">{t(locale).common.learnMore}<span aria-hidden>↗</span></span></div></Link>)}</div>;}

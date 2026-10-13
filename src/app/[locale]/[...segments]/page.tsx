@@ -12,6 +12,7 @@ import { pageMetadata,JsonLd } from '@/lib/seo';
 import { Breadcrumb,PageHero,ServiceCards,EquipmentCards,FaqList,QuoteCta } from '@/components/page-parts';
 import { PortfolioGallery } from '@/components/portfolio-gallery';
 import { QuoteForm } from '@/components/quote-form';
+import { Icon } from '@/components/icons';
 type Props={params:Promise<{locale:string;segments:string[]}>};
 const legalTitles={confidentialitate:{ro:'Politica de confidențialitate',ru:'Политика конфиденциальности',en:'Privacy policy'},termeni:{ro:'Condiții de utilizare',ru:'Условия использования',en:'Terms of use'},cookies:{ro:'Politica privind cookie-urile',ru:'Политика файлов cookie',en:'Cookie policy'}};
 function resolve(content:SiteContent,segments:string[],locale:Locale){
@@ -42,9 +43,9 @@ export default async function ContentPage({params}:Props){
  const content=await getContent();const item=resolve(content,segments,locale);if(!item)notFound();
  const ui=t(locale);const [section,slug]=segments;
  const title=typeof item.title==='string'?item.title:item.title[locale];const description=typeof item.summary==='string'?item.summary:item.summary[locale];
- const parentName=({servicii:ui.nav.services,echipamente:ui.nav.equipment,portofoliu:ui.nav.portfolio,blog:ui.nav.blog} as Record<string,string>)[section];
- const crumbs=slug?[{name:parentName,path:localizedPath(locale,section)},{name:title,path:localizedPath(locale,segments.join('/'))}]:[{name:title,path:localizedPath(locale,section)}];
- return <><Breadcrumb locale={locale} items={crumbs}/><PageHero title={title} description={description} eyebrow="ARTMASTER"/>
+ const sectionName=({servicii:ui.nav.services,echipamente:ui.nav.equipment,portofoliu:ui.nav.portfolio,blog:ui.nav.blog,'despre-noi':ui.nav.about,contact:ui.nav.contact,'solicita-oferta':ui.nav.quote,'intrebari-frecvente':ui.nav.faq} as Record<string,string>)[section]||title;
+ const crumbs=slug?[{name:sectionName,path:localizedPath(locale,section)},{name:title,path:localizedPath(locale,segments.join('/'))}]:[{name:sectionName,path:localizedPath(locale,section)}];
+ return <><Breadcrumb locale={locale} items={crumbs}/>{section!=='contact'&&<PageHero title={title} description={description} eyebrow="ARTMASTER"/>}
  {section==='servicii'&&!slug&&<section className="section container"><ServiceCards locale={locale} services={content.services}/></section>}
  {section==='servicii'&&slug&&(()=>{const s=content.services.find(s=>s.slug===slug)!;return <><section className="section container split detail-intro"><div className="prose"><h2>{ui.common.applications}</h2><p>{s.description[locale]}</p><ul className="feature-list">{s.applications[locale].map(a=><li key={a}>{a}</li>)}</ul><h2>{ui.common.quoteDetails}</h2><ul>{s.quoteHints[locale].map(h=><li key={h}>{h}</li>)}</ul><Link className="button" href={localizedPath(locale,'solicita-oferta')+'?serviciu='+s.slug}>{ui.common.requestQuote} ↗</Link></div><figure className="detail-visual"><Image src={s.image} alt={s.title[locale]} width={900} height={650} sizes="(max-width:768px) 100vw,50vw"/>{isConceptImage(s.image)&&<figcaption>{ui.common.concept}</figcaption>}</figure></section><section className="section section-soft"><div className="container"><h2>{ui.common.faq}</h2><FaqList locale={locale} faqs={s.faqs}/></div></section><section className="section container"><h2>{ui.common.relatedEquipment}</h2><EquipmentCards locale={locale} equipment={content.equipment.filter(e=>s.equipmentSlugs.includes(e.slug))}/></section><section className="section container"><h2>{ui.common.relatedServices}</h2><ServiceCards locale={locale} services={content.services.filter(e=>s.relatedSlugs.includes(e.slug))}/></section><JsonLd data={{'@context':'https://schema.org','@type':'Service',name:s.title[locale],description:s.description[locale],url:siteUrl+localizedPath(locale,segments.join('/')),provider:{'@id':siteUrl+'/#organization'},areaServed:{'@type':'Country',name:'Republica Moldova'}}}/></>;})()}
  {section==='echipamente'&&!slug&&<section className="section container"><EquipmentCards locale={locale} equipment={content.equipment}/></section>}
@@ -66,8 +67,26 @@ function About({locale,content}:{locale:Locale;content:SiteContent}){
  return <><section className="section container split"><div className="prose"><h2>{text.title}</h2><p>{text.paragraph}</p><p>{text.second}</p><Link className="button" href={localizedPath(locale,'contact')}>{t(locale).nav.contact} ↗</Link></div><figure className="detail-visual"><Image src="/media/print-workshop.png" alt={t(locale).common.concept} width={1200} height={800}/><figcaption>{t(locale).common.conceptNotice}</figcaption></figure></section><section className="section container"><h2>{text.equipment}</h2><EquipmentCards locale={locale} equipment={content.equipment}/></section></>;
 }
 function ContactPage({locale,content}:{locale:Locale;content:SiteContent}){
- const {contact}=content;const labels={ro:{office:'Oficiu în Durlești',phone:'Telefon',email:'E-mail',address:'Adresă',map:'Deschide harta',form:'Povestește-ne despre proiect'},ru:{office:'Офис в Дурлештах',phone:'Телефон',email:'Эл. почта',address:'Адрес',map:'Открыть карту',form:'Расскажите о проекте'},en:{office:'Office in Durlești',phone:'Phone',email:'Email',address:'Address',map:'Open map',form:'Tell us about your project'}}[locale];
- return <section className="section container contact-grid"><div className="contact-details min-w-0"><p className="eyebrow">ARTMASTER</p><h2>{labels.office}</h2><dl><dt>{labels.phone}</dt><dd><a href={'tel:'+contact.phone}>{contact.phone}</a></dd><dt>{labels.email}</dt><dd><a href={'mailto:'+contact.email}>{contact.email}</a></dd><dt>{labels.address}</dt><dd>{contact.address[locale]}</dd></dl><a className="button button-secondary" href={'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(contact.address[locale])} target="_blank" rel="noopener noreferrer">{labels.map} ↗</a></div><div><h2>{labels.form}</h2><QuoteForm locale={locale} services={content.services} contact={content.contact} compact/></div></section>;
+ const {contact}=content;const labels=t(locale).contact;
+ return <section className="container contact-grid" aria-labelledby="contact-heading">
+  <div className="contact-details">
+   <p className="eyebrow">{labels.eyebrow}</p>
+   <h1 id="contact-heading" className="contact-title">{labels.title}</h1>
+   <p className="contact-intro">{labels.description}</p>
+   <dl className="contact-cards">
+    <div className="contact-card"><dt><Icon name="phone"/><span>{labels.phone}</span></dt><dd><a href={'tel:'+contact.phone}>{contact.phone}</a></dd></div>
+    <div className="contact-card"><dt><Icon name="mail"/><span>{labels.email}</span></dt><dd><a href={'mailto:'+contact.email}>{contact.email}</a></dd></div>
+    <div className="contact-card"><dt><Icon name="pin"/><span>{labels.address}</span></dt><dd><address>{contact.address[locale]}</address></dd></div>
+   </dl>
+   <a className="text-link contact-map" href={'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(contact.address[locale])} target="_blank" rel="noopener noreferrer">{labels.map}<Icon name="arrow"/></a>
+   <p className="contact-visit">{labels.visit}</p>
+  </div>
+  <div className="contact-form-panel" aria-labelledby="contact-form-heading">
+   <h2 id="contact-form-heading">{labels.formTitle}</h2>
+   <p className="contact-form-intro">{labels.formDescription}</p>
+   <QuoteForm locale={locale} services={content.services} contact={contact} compact/>
+  </div>
+ </section>;
 }
 function LegalPage({locale,section,content}:{locale:Locale;section:string;content:SiteContent}){
  const strings={
