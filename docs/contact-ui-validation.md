@@ -16,6 +16,7 @@ Data verificării: 13 octombrie 2026.
 - npm run lint: trecut.
 - npm run build: trecut, build de producție Next.js.
 - 8 teste Playwright specifice corectării: trecute. Acoperă Contact în cele trei limbi la 320, 375, 390, 768, 1024, 1440 și 1920 px; structura și linkurile breadcrumb-ului pentru servicii/echipamente/portofoliu/ghiduri; potrivirea JSON-LD; validarea formularului, detalii opționale păstrate, trimitere cu PDF și persistență locală reală; verificări Axe pentru pagina Contact cu formularul expandat, în trei limbi, fără probleme grave sau critice.
+- Suita combinată `tests/contact.e2e.ts` și `tests/site.e2e.ts`: **35/35 teste Playwright trecute**, 0 eșecuri, în 4,4 minute. Include cele 8 teste noi și 27 de verificări existente pentru paginile publice, navigare, metadata/SEO, antete de securitate, formularul separat de ofertă, respingerea fișierelor neacceptate/prea mari, accesibilitate și hidratare.
 - Capturile versiunii de producție au fost inspectate vizual la 1440 px (RO), 375 px (RO) și 768 px (RU).
 
 Testele formularului folosesc o bază SQLite locală izolată, fără furnizor de e-mail configurat. Confirmarea verificată este înregistrarea cererii; nu reprezintă o probă a livrării de e-mail în producție.
