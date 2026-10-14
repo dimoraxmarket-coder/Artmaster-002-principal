@@ -1,4 +1,5 @@
 import type { Localized, SiteContent } from './types';
+import { additionalServices } from './additional-services';
 
 const l = (ro: string, ru: string, en: string): Localized => ({ ro, ru, en });
 
@@ -150,6 +151,7 @@ export const defaultContent: SiteContent = {
       relatedSlugs: ['litere-volumetrice', 'imprimare-3d', 'gravura-laser'],
       equipmentSlugs: ['freza-cnc'],
     },
+    ...additionalServices,
   ],
   equipment: [
     {

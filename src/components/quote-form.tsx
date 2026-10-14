@@ -19,7 +19,7 @@ const copy = {
     details: 'Detalii suplimentare despre proiect (opțional)', company: 'Companie', dimensions: 'Dimensiuni', quantity: 'Cantitate', deadline: 'Termen dorit',
     dimensionsPlaceholder: 'De exemplu, 120 × 80 cm',
     message: 'Descrie proiectul', messagePlaceholder: 'Ce dorești să realizăm? Include dimensiunile, cantitatea și termenul dorit.',
-    files: 'Atașează fișiere', fileHint: 'Până la 3 fișiere PDF, PNG sau JPG. Maximum 5 MB per fișier și 10 MB în total.',
+    files: 'Atașează fișiere', chooseFiles: 'Alege fișiere', noFiles: 'Nu ai selectat fișiere.', fileHint: 'Până la 3 fișiere PDF, PNG sau JPG. Maximum 5 MB per fișier și 10 MB în total.',
     consent: 'Sunt de acord cu prelucrarea datelor pentru a primi o ofertă, conform', privacy: 'politicii de confidențialitate',
     submit: 'Solicită o ofertă', sending: 'Se trimite…', success: 'Cererea a fost înregistrată.', reference: 'Referință',
     required: 'Completează acest câmp.', invalidEmail: 'Introdu o adresă de e-mail validă.', invalidPhone: 'Introdu un număr de telefon valid.',
@@ -41,7 +41,7 @@ const copy = {
     details: 'Дополнительные сведения о проекте (необязательно)', company: 'Компания', dimensions: 'Размеры', quantity: 'Количество', deadline: 'Желаемый срок',
     dimensionsPlaceholder: 'Например, 120 × 80 см',
     message: 'Расскажите о проекте', messagePlaceholder: 'Что вы хотите изготовить? Укажите размеры, количество и желаемый срок.',
-    files: 'Прикрепите файлы', fileHint: 'До 3 файлов PDF, PNG или JPG. Не более 5 МБ на файл и 10 МБ суммарно.',
+    files: 'Прикрепите файлы', chooseFiles: 'Выбрать файлы', noFiles: 'Файлы не выбраны.', fileHint: 'До 3 файлов PDF, PNG или JPG. Не более 5 МБ на файл и 10 МБ суммарно.',
     consent: 'Я согласен на обработку данных для получения предложения в соответствии с', privacy: 'политикой конфиденциальности',
     submit: 'Запросить предложение', sending: 'Отправка…', success: 'Заявка зарегистрирована.', reference: 'Номер заявки',
     required: 'Заполните это поле.', invalidEmail: 'Введите корректный адрес электронной почты.', invalidPhone: 'Введите корректный номер телефона.',
@@ -63,7 +63,7 @@ const copy = {
     details: 'Additional project details (optional)', company: 'Company', dimensions: 'Dimensions', quantity: 'Quantity', deadline: 'Preferred deadline',
     dimensionsPlaceholder: 'For example, 120 × 80 cm',
     message: 'Tell us about your project', messagePlaceholder: 'What would you like us to create? Include dimensions, quantity and your preferred deadline.',
-    files: 'Attach files', fileHint: 'Up to 3 PDF, PNG or JPG files. Maximum 5 MB per file and 10 MB in total.',
+    files: 'Attach files', chooseFiles: 'Choose files', noFiles: 'No files selected.', fileHint: 'Up to 3 PDF, PNG or JPG files. Maximum 5 MB per file and 10 MB in total.',
     consent: 'I agree to the processing of my data to receive a quote, under the', privacy: 'privacy policy',
     submit: 'Request a quote', sending: 'Sending…', success: 'Your request has been registered.', reference: 'Reference',
     required: 'Complete this field.', invalidEmail: 'Enter a valid email address.', invalidPhone: 'Enter a valid phone number.',
@@ -91,7 +91,7 @@ function delay(milliseconds: number, signal: AbortSignal): Promise<void> {
   });
 }
 
-export function QuoteForm({ locale, services, contact, compact = false }: { locale: Locale; services: Service[]; contact: Pick<Contact, 'phone' | 'email'>; compact?: boolean }) {
+export function QuoteForm({ locale, services, contact, compact = false, initialService = '' }: { locale: Locale; services: Service[]; contact: Pick<Contact, 'phone' | 'email'>; compact?: boolean; initialService?: string }) {
   const t = copy[locale];
   const id = useId();
   const formRef = useRef<HTMLFormElement>(null);
@@ -104,6 +104,7 @@ export function QuoteForm({ locale, services, contact, compact = false }: { loca
   const [errors, setErrors] = useState<FieldErrors>({});
   const [status, setStatus] = useState('');
   const [unavailable, setUnavailable] = useState(false);
+  const [fileNames, setFileNames] = useState<string[]>([]);
   const [receipt, setReceipt] = useState<Receipt | null>(null);
 
   async function getToken(signal: AbortSignal): Promise<FormToken> {
@@ -207,6 +208,7 @@ export function QuoteForm({ locale, services, contact, compact = false }: { loca
       data.set('token', issued.token);
       data.set('idempotencyKey', issued.idempotencyKey);
       data.set('locale', locale);
+      data.set('sourcePath', window.location.pathname);
       for (const [field, value] of [...data.entries()]) {
         if (value instanceof File && value.size === 0 && !value.name) data.delete(field);
       }
@@ -293,7 +295,7 @@ export function QuoteForm({ locale, services, contact, compact = false }: { loca
             </div>
             <div className="field">
               <label htmlFor={`${id}-service`}>{t.service} <span aria-hidden="true">*</span></label>
-              <select id={`${id}-service`} name="service" required defaultValue="" disabled={submitting} aria-invalid={!!errors.service} aria-describedby={description('service')}>
+              <select id={`${id}-service`} name="service" required defaultValue={services.some(service => service.slug === initialService) ? initialService : ''} disabled={submitting} aria-invalid={!!errors.service} aria-describedby={description('service')}>
                 <option value="" disabled>{t.choose}</option>
                 {services.map(service => <option key={service.slug} value={service.slug}>{service.title[locale]}</option>)}
               </select>
@@ -331,11 +333,17 @@ export function QuoteForm({ locale, services, contact, compact = false }: { loca
             {fieldError('message')}
           </div>
           <div className="field">
-            <label htmlFor={`${id}-files`}>{t.files}</label>
-            <input id={`${id}-files`} name="files" type="file" multiple accept=".pdf,.png,.jpg,.jpeg,application/pdf,image/png,image/jpeg" disabled={submitting} aria-invalid={!!errors.files} aria-describedby={`${id}-files-hint${errors.files ? ` ${id}-files-error` : ''}`} onChange={event => {
-              const error = fileError(Array.from(event.currentTarget.files ?? []));
+            <label id={`${id}-files-label`} htmlFor={`${id}-files`}>{t.files}</label>
+            <div className="file-upload">
+            <input id={`${id}-files`} className="file-upload-input" aria-labelledby={`${id}-files-label`} name="files" type="file" multiple accept=".pdf,.png,.jpg,.jpeg,application/pdf,image/png,image/jpeg" disabled={submitting} aria-invalid={!!errors.files} aria-describedby={`${id}-files-hint${errors.files ? ` ${id}-files-error` : ''}`} onChange={event => {
+              const selected = Array.from(event.currentTarget.files ?? []);
+              setFileNames(selected.map(file => file.name));
+              const error = fileError(selected);
               setErrors(previous => ({ ...previous, files: error }));
             }} />
+              <label className="file-upload-action" htmlFor={`${id}-files`}>{t.chooseFiles}</label>
+              <span className="file-upload-names" aria-live="polite">{fileNames.length ? fileNames.join(', ') : t.noFiles}</span>
+            </div>
             <small id={`${id}-files-hint`}>{t.fileHint}</small>
             {fieldError('files')}
           </div>

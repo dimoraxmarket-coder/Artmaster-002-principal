@@ -13,5 +13,9 @@ export default async function LocaleLayout({children,params}:{children:React.Rea
  const content=await getContent();
  const {contact}=content;
  const nonce=(await headers()).get('x-nonce')||'';
- return <><a className="skip-link" href="#main-content">{({ro:'Sari la conținut',ru:'Перейти к содержимому',en:'Skip to content'})[locale]}</a><Header locale={locale} contact={contact}/><main id="main-content">{children}</main><Footer locale={locale} content={content}/><JsonLd data={{'@context':'https://schema.org','@type':'LocalBusiness','@id':siteUrl+'/#organization',name:contact.companyName||'ARTMASTER',url:siteUrl,telephone:contact.phone||undefined,email:contact.email||undefined,address:contact.address[locale]?{'@type':'PostalAddress',streetAddress:contact.address[locale],addressCountry:'MD'}:undefined}}/><AnalyticsConsent locale={locale} measurementId={process.env.GA_MEASUREMENT_ID||''} nonce={nonce}/></>;
+ return <><a className="skip-link" href="#main-content">{({ro:'Sari la conținut',ru:'Перейти к содержимому',en:'Skip to content'})[locale]}</a><Header locale={locale} contact={contact}/><main id="main-content">{children}</main><Footer locale={locale} content={content}/><JsonLd data={{'@context':'https://schema.org','@graph':[
+ {'@type':['Organization','LocalBusiness'],'@id':siteUrl+'/#organization',name:contact.companyName||'ARTMASTER',url:siteUrl,logo:{'@id':siteUrl+'/#logo'},image:siteUrl+'/branding/artmaster-wordmark.png',telephone:contact.phone||undefined,email:contact.email||undefined,address:contact.address[locale]?{'@type':'PostalAddress',streetAddress:contact.address[locale],addressCountry:'MD'}:undefined},
+ {'@type':'ImageObject','@id':siteUrl+'/#logo',url:siteUrl+'/branding/artmaster-wordmark.png',contentUrl:siteUrl+'/branding/artmaster-wordmark.png',width:720,height:160,caption:'ARTMASTER ADVERTISING GROUP'},
+ {'@type':'WebSite','@id':siteUrl+'/#website',url:siteUrl,name:'ARTMASTER',inLanguage:['ro','ru','en'],publisher:{'@id':siteUrl+'/#organization'}}
+ ]}}/><AnalyticsConsent locale={locale} measurementId={process.env.GA_MEASUREMENT_ID||''} nonce={nonce}/></>;
 }

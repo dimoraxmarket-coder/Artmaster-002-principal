@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { randomBytes } from 'node:crypto';
+import { isIndexable } from '@/lib/site';
 export function proxy(request: NextRequest) {
  const nonce = randomBytes(18).toString('base64');
  const production = process.env.NODE_ENV === 'production';
@@ -21,7 +22,7 @@ export function proxy(request: NextRequest) {
  response.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=(), payment=()');
  if (request.nextUrl.protocol === 'https:') response.headers.set('Strict-Transport-Security', 'max-age=31536000');
  const isPrivate = /^\/(admin|api)(\/|$)/.test(request.nextUrl.pathname);
- if (isPrivate || process.env.SITE_INDEXABLE !== 'true') response.headers.set('X-Robots-Tag', 'noindex, nofollow');
+ if (isPrivate || !isIndexable) response.headers.set('X-Robots-Tag', 'noindex, nofollow');
  if (isPrivate) response.headers.set('Cache-Control','private, no-store, max-age=0');
  return response;
 }

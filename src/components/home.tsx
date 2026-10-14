@@ -5,14 +5,19 @@ import { t } from '@/lib/i18n';
 import { isConceptImage } from '@/lib/media';
 import { Icon, type IconName } from './icons';
 import { QuoteForm } from './quote-form';
+import { PartnersMarquee } from './partners-marquee';
+import { partners, examplePartners } from '@/lib/partners';
+import { isIndexable } from '@/lib/site';
 
 export function Home({ locale, content }: { locale: Locale; content: SiteContent }) {
   const ui = t(locale);
   const projects = content.projects.filter(project => project.published).slice(0, 4);
+  const partnerPreview = (process.env.PARTNERS_PREVIEW ?? 'true') === 'true' && !isIndexable;
+  const partnerEntries = partners.length ? partners : partnerPreview ? examplePartners : [];
   const advantageIcons: IconName[] = ['layers', 'precision', 'chat'];
   return <>
     <section className="home-hero" aria-labelledby="hero-title">
-      <Image className="hero-background" src="/media/print-workshop.png" alt="" fill sizes="100vw" loading="eager" fetchPriority="high" />
+      <Image className="hero-background" src="/media/print-workshop.png" alt="" fill sizes="100vw" preload quality={70} />
       <div className="container"><div className="hero-content">
         <p className="eyebrow">{ui.hero.eyebrow}</p>
         <h1 id="hero-title">{ui.hero.title}<span>{ui.hero.accent}</span></h1>
@@ -47,6 +52,8 @@ export function Home({ locale, content }: { locale: Locale; content: SiteContent
         </Link>)}</div> : <p className="empty-state">{ui.common.emptyPortfolio}</p>}
       </div>
     </section>
+
+    <PartnersMarquee locale={locale} partners={partnerEntries} exampleMode={!partners.length} />
 
     <section className="section" aria-labelledby="advantages-title"><div className="container">
       <div className="section-heading"><div><p className="eyebrow">ARTMASTER</p><h2 id="advantages-title">{ui.home.advantagesTitle}</h2></div></div>

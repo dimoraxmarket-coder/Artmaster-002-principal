@@ -3,7 +3,7 @@ import type { QuoteStatus } from './schema';
 export type AdminRole='viewer'|'editor'|'admin';
 export type Actor={id:string;email:string;role:AdminRole;aal:'aal1'|'aal2'};
 export type StoredFile={id:string;name:string;mime:string;size:number;path:string};
-export type Quote={id:string;locale:string;service:string;name:string;email:string;phone:string;message:string;company?:string;dimensions?:string;quantity?:string;deadline?:string;createdAt:string;status:QuoteStatus;files:StoredFile[];notification:'pending'|'sent'|'not_configured';payloadHash:string;idempotencyKey:string};
+export type Quote={id:string;locale:string;service:string;name:string;email:string;phone:string;message:string;company?:string;dimensions?:string;quantity?:string;deadline?:string;sourcePath?:string;createdAt:string;status:QuoteStatus;files:StoredFile[];notification:'pending'|'sent'|'not_configured';payloadHash:string;idempotencyKey:string};
 export type IncomingFile={name:string;mime:string;bytes:Buffer};
 export type ContentState={published:SiteContent|null;draft:SiteContent|null;version:number};
 export interface Storage {

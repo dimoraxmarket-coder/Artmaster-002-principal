@@ -13,7 +13,7 @@ export function Footer({ locale, content }: { locale: Locale; content: SiteConte
   return <footer className="site-footer">
     <div className="container">
       <div className="footer-top">
-        <Link href={`/${locale}`} aria-label={`ARTMASTER CREATIVE SOLUTIONS — ${ui.nav.home}`}><Logo light /></Link>
+        <Link href={`/${locale}`} aria-label={`ARTMASTER ADVERTISING GROUP — ${ui.nav.home}`}><Logo light /></Link>
         <div className="footer-tagline"><h2>{ui.footer.tagline}</h2><p>{ui.home.locationLabel}</p></div>
         <Link href={`/${locale}/solicita-oferta`} className="button">{ui.nav.quote}<Icon name="arrow" /></Link>
       </div>

@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import type { SVGProps } from 'react';
 
 export type IconName = 'arrow' | 'chevron' | 'phone' | 'mail' | 'pin' | 'menu' | 'close' | 'check' | 'spark' | 'layers' | 'precision' | 'printer' | 'cube' | 'clock' | 'upload' | 'search' | 'shield' | 'chat' | 'globe';
@@ -30,7 +31,7 @@ export function Icon({ name, className, ...props }: SVGProps<SVGSVGElement> & { 
 
 export function Logo({ light = false }: { light?: boolean }) {
   return <span className={`brand${light ? ' brand-light' : ''}`}>
-    <svg viewBox="0 0 40 48" width="36" height="44" fill="none" aria-hidden="true"><path d="M3 45 20 3h9L13 45H3Z" fill="#FFCA05" /><path d="m22 23 11 22h7L27 14l-5 9Z" fill="#E6A700" /><path d="m16 32 4-9 7 9H16Z" fill="#FFCA05" /></svg>
-    <span className="brand-words"><span className="brand-name">ARTMASTER</span><span className="brand-caption">CREATIVE SOLUTIONS</span></span>
+    <Image src="/branding/artmaster-symbol.webp" width={44} height={40} alt="" aria-hidden="true" className="brand-symbol" unoptimized />
+    <span className="brand-words"><span className="brand-name">ARTMASTER</span><span className="brand-caption">ADVERTISING GROUP</span></span>
   </span>;
 }

@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import type { Contact, Locale } from '@/lib/content/types';
 import { locales } from '@/lib/content/types';
@@ -13,6 +13,8 @@ const languageNames = { ro: 'Română', ru: 'Русский', en: 'English' };
 export function Header({ locale, contact }: { locale: Locale; contact: Contact }) {
   const ui = t(locale);
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const query = searchParams.toString();
   const [open, setOpen] = useState(false);
   const toggleRef = useRef<HTMLButtonElement>(null);
   const mobileRef = useRef<HTMLElement>(null);
@@ -43,12 +45,12 @@ export function Header({ locale, contact }: { locale: Locale; contact: Contact }
 
   return <header className="site-header">
     <div className="container header-inner">
-      <Link href={`/${locale}`} className="brand-link" aria-label={`ARTMASTER CREATIVE SOLUTIONS — ${ui.nav.home}`} onClick={close}><Logo /></Link>
+      <Link href={`/${locale}`} className="brand-link" aria-label={`ARTMASTER ADVERTISING GROUP — ${ui.nav.home}`} onClick={close}><Logo /></Link>
       <nav className="desktop-nav" aria-label={ui.common.language === 'Limba' ? 'Navigare principală' : locale === 'ru' ? 'Основная навигация' : 'Main navigation'}>
         {routes.map(({ path, label }) => <Link key={path} href={`/${locale}${path}`} className="nav-link" aria-current={current(path) ? 'page' : undefined}>{label}</Link>)}
       </nav>
       <nav className="language-switch" aria-label={ui.common.language}>
-        {locales.map(language => <a key={language} href={pathname.replace(/^\/(ro|ru|en)(?=\/|$)/, `/${language}`)} hrefLang={language} lang={language} aria-label={`${language.toUpperCase()} — ${languageNames[language]}`} aria-current={language === locale ? 'page' : undefined} onClick={close}>{language.toUpperCase()}</a>)}
+        {locales.map(language => <a key={language} href={pathname.replace(/^\/(ro|ru|en)(?=\/|$)/, `/${language}`) + (query ? `?${query}` : '')} hrefLang={language} lang={language} aria-label={`${language.toUpperCase()} — ${languageNames[language]}`} aria-current={language === locale ? 'page' : undefined} onClick={close}>{language.toUpperCase()}</a>)}
       </nav>
       <a href={`tel:${contact.phone}`} className="header-phone" aria-label={`${ui.contact.phone}: ${contact.phone}`}><Icon name="phone" /></a>
       <Link href={`/${locale}/solicita-oferta`} className="button header-quote">{ui.nav.quote}<Icon name="arrow" /></Link>

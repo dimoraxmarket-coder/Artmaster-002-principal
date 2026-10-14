@@ -36,6 +36,7 @@ export const quoteSchema=z.object({
   company:z.string().trim().max(150).default(''),dimensions:z.string().trim().max(200).default(''),
   quantity:z.string().regex(/^(?:|[1-9]\d{0,6})$/).default(''),
   deadline:z.string().refine(value=>value===''||(/^\d{4}-\d{2}-\d{2}$/.test(value)&&!Number.isNaN(Date.parse(value))&&new Date(value).toISOString().slice(0,10)===value)).default(''),
+  sourcePath:z.string().max(100).regex(/^(?:|\/(?:ro|ru|en)(?:\/(?:contact|solicita-oferta))?\/?)$/).default(''),
   token:z.string().min(20).max(2000),idempotencyKey:z.uuid(),
 }).strict();
 export type QuoteInput=z.infer<typeof quoteSchema>;

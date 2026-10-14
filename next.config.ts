@@ -4,7 +4,7 @@ const config: NextConfig = {
  poweredByHeader: false,
  allowedDevOrigins: ['127.0.0.1', 'localhost'],
  outputFileTracingExcludes: { '*': ['./.data/**/*', './.env*', './backups/**/*', './artmaster-machete/**/*', './artmaster-machete.zip', './tests/**/*', './docs/**/*'] },
- images: { remotePatterns: process.env.SUPABASE_URL ? [{ protocol: 'https', hostname: new URL(process.env.SUPABASE_URL).hostname, pathname: '/storage/v1/object/public/portfolio/**' }] : [] },
+ images: { formats: ['image/avif', 'image/webp'], qualities: [70, 75, 85], remotePatterns: process.env.SUPABASE_URL ? [{ protocol: 'https', hostname: new URL(process.env.SUPABASE_URL).hostname, pathname: '/storage/v1/object/public/portfolio/**' }] : [] },
  experimental: { cpus: 2 },
  serverExternalPackages: ['node:sqlite'],
  async redirects() {

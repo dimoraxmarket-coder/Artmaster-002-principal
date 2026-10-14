@@ -16,7 +16,7 @@ export async function submitQuote(request:Request){
   let form:FormData;
   try{form=await new Response(bytes,{headers:{'Content-Type':request.headers.get('content-type')!}}).formData();}catch{throw new BackendError('invalid_input',400);}
   const fields=['locale','service','name','email','phone','message','consent','website','token','idempotencyKey'];
-  const optional=['company','dimensions','quantity','deadline'];
+  const optional=['company','dimensions','quantity','deadline','sourcePath'];
   if([...form.keys()].some(key=>key!=='files'&&!fields.includes(key)&&!optional.includes(key))||fields.some(key=>form.getAll(key).length!==1)||optional.some(key=>form.getAll(key).length>1))throw new BackendError('invalid_input',400);
   const parsed=quoteSchema.safeParse(Object.fromEntries([...fields,...optional.filter(key=>form.has(key))].map(key=>[key,form.get(key)])));
   if(!parsed.success)throw new BackendError('invalid_input',400,parsed.error.flatten().fieldErrors);
@@ -25,11 +25,11 @@ export async function submitQuote(request:Request){
   const content=await getContent();
   if(!content.services.some(service=>service.slug===data.service))throw new BackendError('invalid_input',400,{service:['invalid']});
   const files=await validateUploads(form.getAll('files'));
-  const payloadHash=createHash('sha256').update(JSON.stringify({locale:data.locale,service:data.service,name:data.name,email:data.email,phone:data.phone,message:data.message,company:data.company,dimensions:data.dimensions,quantity:data.quantity,deadline:data.deadline,files:files.map(file=>({name:file.name,mime:file.mime,hash:createHash('sha256').update(file.bytes).digest('hex')}))})).digest('hex');
+  const payloadHash=createHash('sha256').update(JSON.stringify({locale:data.locale,service:data.service,name:data.name,email:data.email,phone:data.phone,message:data.message,company:data.company,dimensions:data.dimensions,quantity:data.quantity,deadline:data.deadline,sourcePath:data.sourcePath,files:files.map(file=>({name:file.name,mime:file.mime,hash:createHash('sha256').update(file.bytes).digest('hex')}))})).digest('hex');
   const storage=getStorage(),existing=await storage.findQuote(data.idempotencyKey);
   if(existing){if(existing.payloadHash!==payloadHash)throw new BackendError('idempotency_conflict',409);return {id:existing.id,notification:existing.notification,duplicate:true};}
   if(!await storage.consumeRate(`quotes:${requestBucket(request)}`,5,900000))throw new BackendError('rate_limited',429);
-  const quote:Quote={id:randomUUID(),locale:data.locale,service:data.service,name:data.name,email:data.email,phone:data.phone,message:data.message,company:data.company,dimensions:data.dimensions,quantity:data.quantity,deadline:data.deadline,createdAt:new Date().toISOString(),status:'new',files:files.map(file=>({id:randomUUID(),name:file.name,mime:file.mime,size:file.bytes.length,path:randomUUID()})),notification:emailConfigured()?'pending':'not_configured',payloadHash,idempotencyKey:data.idempotencyKey};
+  const quote:Quote={id:randomUUID(),locale:data.locale,service:data.service,name:data.name,email:data.email,phone:data.phone,message:data.message,company:data.company,dimensions:data.dimensions,quantity:data.quantity,deadline:data.deadline,sourcePath:data.sourcePath||`/${data.locale}/solicita-oferta`,createdAt:new Date().toISOString(),status:'new',files:files.map(file=>({id:randomUUID(),name:file.name,mime:file.mime,size:file.bytes.length,path:randomUUID()})),notification:emailConfigured()?'pending':'not_configured',payloadHash,idempotencyKey:data.idempotencyKey};
   const saved=await storage.createQuote(quote,files);
   const notification=saved.duplicate?saved.quote.notification:saved.quote.notification==='pending'?await notifyQuote(saved.quote):saved.quote.notification;
   return {id:saved.quote.id,notification,duplicate:saved.duplicate};
