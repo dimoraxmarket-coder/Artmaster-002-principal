@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './browser-fixtures';
 import AxeBuilder from '@axe-core/playwright';
 const locales = ['ro', 'ru', 'en'] as const;
 const newSlugs = ['colantare-auto', 'stickere-personalizate', 'print-bannere', 'branding-design', 'standuri-expozitionale'];
@@ -101,4 +101,13 @@ test('new homepage section and custom upload controls meet serious/critical WCAG
     const report = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']).analyze();
     expect(report.violations.filter(value => value.impact === 'serious' || value.impact === 'critical')).toEqual([]);
   }
+});
+
+test('token throttling gives a clear error without submitting or claiming success', async ({ page }) => {
+  let posts = 0; page.on('request', request => { if (request.url().endsWith('/api/quotes') && request.method() === 'POST') posts++; });
+  await page.route('**/api/quote-token', route => route.fulfill({ status: 429, contentType: 'application/json', body: '{"code":"rate_limited"}' }));
+  await page.goto('/ro/solicita-oferta?serviciu=print-uv'); const form = page.locator('main form');
+  await form.locator('[name="name"]').fill('Verificare limitare'); await form.locator('[name="phone"]').fill('+37360010400'); await form.locator('[name="email"]').fill('throttle@example.invalid'); await form.locator('[name="message"]').fill('Verificare de interfață pentru limitarea cererilor.'); await form.locator('[name="consent"]').check();
+  await form.locator('button[type="submit"]').click(); await expect(form.locator('[role="alert"]')).toContainText('prea multe cereri');
+  await expect(form.locator('[role="status"]')).toHaveCount(0); await expect(form.locator('button[type="submit"]')).toBeEnabled(); expect(posts).toBe(0);
 });

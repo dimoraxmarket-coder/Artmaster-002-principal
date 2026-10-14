@@ -5,7 +5,7 @@ const directory = 'public/branding';
 await mkdir(directory, { recursive: true });
 const source = await sharp(`${directory}/artmaster-symbol-source.png`).trim().png().toBuffer();
 await sharp(source).resize({ width: 1024, withoutEnlargement: true }).png({ compressionLevel: 9 }).toFile(`${directory}/artmaster-symbol.png`);
-await sharp(source).resize({ width: 256 }).webp({ lossless: true }).toFile(`${directory}/artmaster-symbol.webp`);
+await sharp(source).resize({ width: 160 }).webp({ lossless: true }).toFile(`${directory}/artmaster-symbol.webp`);
 const sizes = [32, 48, 180, 192, 512];
 for (const size of sizes) {
   const symbol = await sharp(source).resize({ width: Math.round(size * .78), height: Math.round(size * .78), fit: 'inside' }).png().toBuffer();

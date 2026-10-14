@@ -45,7 +45,7 @@ export function Header({ locale, contact }: { locale: Locale; contact: Contact }
 
   return <header className="site-header">
     <div className="container header-inner">
-      <Link href={`/${locale}`} className="brand-link" aria-label={`ARTMASTER ADVERTISING GROUP — ${ui.nav.home}`} onClick={close}><Logo /></Link>
+      <Link href={`/${locale}`} className="brand-link" aria-label={`ARTMASTER ADVERTISING GROUP — ${ui.nav.home}`} onClick={event => { close(); if (pathname === `/${locale}`) { event.preventDefault(); window.scrollTo({ top: 0, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' }); } }}><Logo /></Link>
       <nav className="desktop-nav" aria-label={ui.common.language === 'Limba' ? 'Navigare principală' : locale === 'ru' ? 'Основная навигация' : 'Main navigation'}>
         {routes.map(({ path, label }) => <Link key={path} href={`/${locale}${path}`} className="nav-link" aria-current={current(path) ? 'page' : undefined}>{label}</Link>)}
       </nav>

@@ -1,4 +1,4 @@
-import { test,expect,request as playwrightRequest,type APIRequestContext,type BrowserContext,type Page } from '@playwright/test';
+import { test,expect,request as playwrightRequest,type APIRequestContext,type BrowserContext,type Page } from './browser-fixtures';
 import { randomUUID,randomBytes } from 'node:crypto';
 import { spawnSync } from 'node:child_process';
 import { DatabaseSync } from 'node:sqlite';
@@ -46,6 +46,8 @@ async function saveUI(page:Page,action:'draft'|'publish'){
 
 test.describe.serial('real local production administration',()=>{
   test.beforeAll(async()=>{
+    const readiness=await playwrightRequest.newContext({baseURL});
+    try{expect((await readiness.get('/api/quote-token')).status(),'local backend readiness').toBe(200);}finally{await readiness.dispose();}
     const db=database();originalRow=db.prepare('SELECT published,draft FROM content WHERE id=1').get() as typeof originalRow;db.close();
     for(const account of accounts){
       const env={...process.env,ARTMASTER_STORAGE:'local',ARTMASTER_ALLOW_LOCAL_PRODUCTION:'true',ARTMASTER_DATA_DIR:directory,ADMIN_EMAIL:account.email,ADMIN_ROLE:account.role,ADMIN_PASSWORD:''};

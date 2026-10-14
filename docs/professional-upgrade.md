@@ -4,7 +4,7 @@ Versiune de dezvoltare: 14 octombrie 2026. Site-ul existent este păstrat, cu RO
 
 ## Branding
 
-Simbolul roșu a fost izolat din referința vizuală furnizată, într-un fișier transparent. Este afișat cu proporțiile păstrate în header și footer, lângă ARTMASTER și ADVERTISING GROUP. Sursa raster și variantele PNG/WebP sunt în `public/branding/`; WebP-ul folosit în navigare are 256 px lățime și aproximativ 19 KB. Nu este pretins un vector original al companiei: faviconul SVG este un container pentru imaginea raster, iar faviconul ICO și iconurile PNG sunt generate din același simbol.
+Simbolul roșu a fost izolat din referința vizuală furnizată, într-un fișier transparent. Este afișat cu proporțiile păstrate în header și footer, lângă ARTMASTER și ADVERTISING GROUP. Sursa raster și variantele PNG/WebP sunt în `public/branding/`; WebP-ul folosit în navigare are 160 px lățime și aproximativ 9,5 KB, suficient pentru dimensiunea afișată inclusiv la densitate de 3×. Nu este pretins un vector original al companiei: faviconul SVG este un container pentru imaginea raster, iar faviconul ICO și iconurile PNG sunt generate din același simbol.
 
 `node scripts/build-brand-assets.mjs` regenerează faviconurile, Apple touch icon de 180 px, iconurile 192/512 px, wordmarkul și imaginile sociale RO/RU/EN de 1200×630 px. Sursa se păstrează pentru regenerare.
 
@@ -73,10 +73,14 @@ Proprietarul a cerut exemple până la confirmarea partenerilor reali. `PARTNERS
 
 Supabase și furnizorul de e-mail nu au fost configurate de proprietar. Nu este verificată livrarea reală în inbox, găzduirea publică, HTTPS-ul public sau indexarea live. Fotografiile reale de producție, partenerii și auditul URL-urilor Joomla rămân necesare. O eventuală bază CMS deja publicată păstrează conținutul său: adaugă/publică noile servicii în admin dacă instanța ta folosește date personalizate, nu valorile implicite din cod.
 
-## Verificarea primei etape
+## Performanță și verificare
 
-TypeScript și lint au trecut, iar buildul de producție a fost executat cu succes. Au trecut 30 de teste unitare/PostgreSQL, inclusiv 6 teste ale contractului de e-mail cu furnizor simulat și 4 teste pentru noile protecții/configurări SEO. Cele 10 cazuri noi Playwright sunt verificate: 7 au trecut la rularea inițială, iar cele 3 cazuri de animație au trecut la rerulare după corectarea selectorului de test pentru butonul care își schimbă eticheta din „pauză” în „pornire”. Aplicația nu a necesitat slăbirea verificărilor.
+Imaginea principală își păstrează aspectul și încadrarea, dar folosește variante AVIF/WebP generate înainte de deploy, cu o variantă decupată pentru telefon. Browserul le încarcă prioritar, fără a aștepta prima conversie pe server. `node scripts/optimize-hero.mjs` le regenerează din imaginea de concept existentă. Fotografiile utilajelor trimise ulterior nu sunt aceste imagini.
 
-Verificările browserului includ cele trei limbi la 7 lățimi, iconuri/manifest, toate cele 90 de URL-uri din sitemap, cele 15 pagini noi localizate, limbă/selecție păstrată, erori ale formularului fără succes fals, o înregistrare reală locală și verificări Axe. Nu s-au trimis e-mailuri externe. Capturile desktop, contact mobil și secțiunea partenerilor au fost inspectate vizual; nu au apărut erori de JavaScript în această verificare.
+Fonturile rămân locale și păstrează contururile și greutățile variabile originale. Două subseturi pentru cele șase caractere românești specifice au împreună aproximativ 5,2 KB; fonturile Latin și Cyrillic existente rămân disponibile. Astfel, pagina românească nu descarcă întregul Inter Latin-ext de aproximativ 85 KB. Regenerarea opțională folosește `scripts/subset-romanian-fonts.py`, cu FontTools și Brotli; utilizatorul nu are nevoie de Python pentru instalarea sau rularea site-ului. Licențele OFL sunt în `docs/licenses`.
+
+Configurația Next.js 16.4 folosește opțiunea experimentală `inlineCss` pentru a elimina cererile CSS care blocau prima afișare. Compromisul este includerea stilurilor în fiecare răspuns HTML, în locul unui cache separat de stylesheet. Buildul, navigarea și paginile sunt verificate cu această configurație.
+
+Rezultatele finale, măsurarea Lighthouse și limitele verificării sunt în [upgrade-validation.md](upgrade-validation.md). Nu s-au trimis e-mailuri externe și nu este pretinsă o verificare a găzduirii publice sau a indexării Google. Funcțiile UX adăugate ulterior sunt explicate în [ux-features.md](ux-features.md).
 
 Fișierele principale modificate: `.env.example`, `next.config.ts`, layouturile și ruta de conținut, `globals.css`, header/footer/home/icons/quote-form, valorile implicite ale conținutului, `seo.tsx`, `site.ts`, `proxy.ts`, schema/tipurile/înregistrarea/notificările cererilor. Fișiere noi: `partners-marquee.tsx` și CSS-ul său, `partners.ts`, `seo-content.ts`, `additional-services.ts`, `manifest.ts`, `build-brand-assets.mjs`, asseturile de branding și exemple/ilustrații, `notifications.test.ts`, `seo.test.ts`, `upgrade.e2e.ts` și acest ghid.

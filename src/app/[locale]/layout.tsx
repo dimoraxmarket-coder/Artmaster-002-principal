@@ -7,6 +7,7 @@ import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { JsonLd } from '@/lib/seo';
 import { siteUrl } from '@/lib/site';
+import { FloatingActions } from '@/components/floating-actions';
 export default async function LocaleLayout({children,params}:{children:React.ReactNode;params:Promise<{locale:string}>}){
  const {locale}=await params;
  if(!isLocale(locale))notFound();
@@ -17,5 +18,5 @@ export default async function LocaleLayout({children,params}:{children:React.Rea
  {'@type':['Organization','LocalBusiness'],'@id':siteUrl+'/#organization',name:contact.companyName||'ARTMASTER',url:siteUrl,logo:{'@id':siteUrl+'/#logo'},image:siteUrl+'/branding/artmaster-wordmark.png',telephone:contact.phone||undefined,email:contact.email||undefined,address:contact.address[locale]?{'@type':'PostalAddress',streetAddress:contact.address[locale],addressCountry:'MD'}:undefined},
  {'@type':'ImageObject','@id':siteUrl+'/#logo',url:siteUrl+'/branding/artmaster-wordmark.png',contentUrl:siteUrl+'/branding/artmaster-wordmark.png',width:720,height:160,caption:'ARTMASTER ADVERTISING GROUP'},
  {'@type':'WebSite','@id':siteUrl+'/#website',url:siteUrl,name:'ARTMASTER',inLanguage:['ro','ru','en'],publisher:{'@id':siteUrl+'/#organization'}}
- ]}}/><AnalyticsConsent locale={locale} measurementId={process.env.GA_MEASUREMENT_ID||''} nonce={nonce}/></>;
+ ]}}/><FloatingActions locale={locale} contact={contact} viber={process.env.CONTACT_VIBER_NUMBER||''}/><AnalyticsConsent locale={locale} measurementId={process.env.GA_MEASUREMENT_ID||''} nonce={nonce}/></>;
 }

@@ -1,4 +1,5 @@
 import { resolve } from 'node:path';
+import { resolveSiteUrl } from '../site';
 
 export class BackendError extends Error {
   constructor(public code: string, public status = 400, public fieldErrors?: Record<string, string[]>) { super(code); }
@@ -14,7 +15,7 @@ export function storageMode(): 'local' | 'supabase' {
   return 'local';
 }
 export function dataDirectory() { return resolve(/* turbopackIgnore: true */ process.env.ARTMASTER_DATA_DIR || '.data'); }
-export function publicOrigin() { return new URL(process.env.SITE_URL || 'http://localhost:3000').origin; }
+export function publicOrigin() { return resolveSiteUrl(); }
 export const MAX_REQUEST_BYTES = 12 * 1024 * 1024;
 export const MAX_FILE_BYTES = 5 * 1024 * 1024;
 export const MAX_TOTAL_FILE_BYTES = 10 * 1024 * 1024;

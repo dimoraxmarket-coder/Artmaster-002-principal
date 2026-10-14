@@ -16,6 +16,7 @@ export default defineConfig({
   reporter: [['list'], ['html', { open: 'never' }]],
   use: {
     baseURL,
+    extraHTTPHeaders: { 'x-real-ip': '198.18.0.1' },
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
   },
@@ -37,6 +38,8 @@ export default defineConfig({
       SITE_INDEXABLE: 'false',
       ARTMASTER_ALLOW_LOCAL_PRODUCTION: 'true',
       ARTMASTER_STORAGE: 'local',
+      ARTMASTER_TRUST_PROXY: 'true',
+      ARTMASTER_IP_HEADER: 'x-real-ip',
       ARTMASTER_DATA_DIR: process.env.ARTMASTER_DATA_DIR || '.data/e2e',
       RESEND_API_KEY: '',
       RESEND_FROM_EMAIL: '',

@@ -17,7 +17,12 @@ export function Home({ locale, content }: { locale: Locale; content: SiteContent
   const advantageIcons: IconName[] = ['layers', 'precision', 'chat'];
   return <>
     <section className="home-hero" aria-labelledby="hero-title">
-      <Image className="hero-background" src="/media/print-workshop.png" alt="" fill sizes="100vw" preload quality={70} />
+      <picture className="hero-picture">
+        <source media="(max-width:480px)" type="image/avif" srcSet="/media/hero-narrow.avif" />
+        <source media="(max-width:480px)" type="image/webp" srcSet="/media/hero-narrow.webp" />
+        <source type="image/avif" srcSet="/media/hero-wide.avif" />
+        <img className="hero-background" src="/media/hero-wide.webp" alt="" width={1672} height={941} loading="eager" fetchPriority="high" decoding="async" />
+      </picture>
       <div className="container"><div className="hero-content">
         <p className="eyebrow">{ui.hero.eyebrow}</p>
         <h1 id="hero-title">{ui.hero.title}<span>{ui.hero.accent}</span></h1>

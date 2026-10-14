@@ -34,6 +34,10 @@ Testele E2E pornesc un server de producție local pe portul 3100 când nu exist�
 
 ## Documentație
 
+- [Actualizarea brandingului, serviciilor, formularelor și SEO](docs/professional-upgrade.md)
+- [Contact rapid, buton sus și hartă](docs/ux-features.md)
+- [Fotografiile utilajelor: asociere și originale necesare](docs/equipment-images.md)
+- [Verificarea finală a actualizării](docs/upgrade-validation.md)
 - [Configurare, publicare și servicii externe](docs/deployment.md)
 - [Securitate, administrare și copii de siguranță](docs/security-and-backups.md)
 - [Migrarea Joomla și păstrarea traficului organic](docs/migration.md)

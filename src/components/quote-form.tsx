@@ -112,6 +112,7 @@ export function QuoteForm({ locale, services, contact, compact = false, initialS
     if (tokenRequestRef.current) return tokenRequestRef.current;
     const promise = (async () => {
       const response = await fetch('/api/quote-token', { method: 'GET', cache: 'no-store', credentials: 'same-origin', signal });
+      if (response.status === 429) throw new Error('token_rate_limited');
       if (!response.ok) throw new Error('token_unavailable');
       const payload: unknown = await response.json();
       if (!payload || typeof payload !== 'object' || !('token' in payload) || !('idempotencyKey' in payload)
@@ -245,7 +246,9 @@ export function QuoteForm({ locale, services, contact, compact = false, initialS
       } else setStatus(t.generic);
       requestAnimationFrame(() => statusRef.current?.focus());
     } catch (error) {
-      if (error instanceof Error && error.message === 'token_unavailable') {
+      if (error instanceof Error && error.message === 'token_rate_limited') {
+        setStatus(t.rateLimited);
+      } else if (error instanceof Error && error.message === 'token_unavailable') {
         setUnavailable(true); setStatus(t.unavailable);
       } else setStatus(t.network);
       requestAnimationFrame(() => statusRef.current?.focus());

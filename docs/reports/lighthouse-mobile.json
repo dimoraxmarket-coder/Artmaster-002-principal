@@ -1,0 +1,63 @@
+{
+  "date": "2026-10-14",
+  "environment": "Local production build; simulated Lighthouse mobile throttling, Chromium. Public hosting was not measured.",
+  "lighthouseVersion": "13.5.0",
+  "formFactor": "mobile",
+  "throttling": {
+    "rttMs": 150,
+    "throughputKbps": 1638.4,
+    "requestLatencyMs": 562.5,
+    "downloadThroughputKbps": 1474.5600000000002,
+    "uploadThroughputKbps": 675,
+    "cpuSlowdownMultiplier": 4
+  },
+  "scores": {
+    "performance": 91,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100
+  },
+  "metrics": {
+    "first-contentful-paint": {
+      "value": 967.09265,
+      "unit": "millisecond",
+      "displayValue": "1.0 s"
+    },
+    "largest-contentful-paint": {
+      "value": 2353.1853,
+      "unit": "millisecond",
+      "displayValue": "2.4 s"
+    },
+    "total-blocking-time": {
+      "value": 334.99999999999955,
+      "unit": "millisecond",
+      "displayValue": "330 ms"
+    },
+    "cumulative-layout-shift": {
+      "value": 0.001290118910391126,
+      "unit": "unitless",
+      "displayValue": "0.001"
+    },
+    "speed-index": {
+      "value": 1662.214764210049,
+      "unit": "millisecond",
+      "displayValue": "1.7 s"
+    }
+  },
+  "browserConsoleErrors": [],
+  "productionDependencyAudit": {
+    "command": "npm audit --omit=dev",
+    "vulnerabilities": {
+      "info": 0,
+      "low": 0,
+      "moderate": 0,
+      "high": 0,
+      "critical": 0,
+      "total": 0
+    }
+  },
+  "limits": [
+    "A laboratory measurement does not verify public-domain Core Web Vitals or Google indexing.",
+    "Email provider and Google Maps responses in automated tests were mocked; live delivery and exact map pin were not verified."
+  ]
+}
