@@ -154,10 +154,11 @@ function findIncomplete(value: SiteContent): string | null {
   return null;
 }
 
-export function CmsEditor({ actor }: { actor: Actor }) {
+export function CmsEditor({ actor, workspaceSection, onDirtyChange }: { actor: Actor; workspaceSection?: 'projects'|'contact'|'services'; onDirtyChange?: (dirty:boolean)=>void }) {
   const [content, setContent] = useState<SiteContent | null>(null);
   const [version, setVersion] = useState(0);
-  const [section, setSection] = useState<Section>('contact');
+  const [contentSection, setSection] = useState<Section>(workspaceSection?'services':'contact');
+  const section:Section=workspaceSection&&workspaceSection!=='services'?workspaceSection:contentSection;
   const [locale, setLocale] = useState<Locale>('ro');
   const [selected, setSelected] = useState<Record<EntitySection, number>>({ services: 0, equipment: 0, projects: 0, articles: 0 });
   const [loading, setLoading] = useState(true);
@@ -179,6 +180,8 @@ export function CmsEditor({ actor }: { actor: Actor }) {
     }).catch(failure => { if (!controller.signal.aborted) { setError(failure instanceof Error ? failure.message : 'Conținutul nu a putut fi încărcat.'); setLoading(false); } });
     return () => controller.abort();
   }, [actor.id]);
+
+  useEffect(()=>{onDirtyChange?.(dirty);},[dirty,onDirtyChange]);
 
   useEffect(() => {
     if (!dirty) return;
@@ -326,8 +329,8 @@ export function CmsEditor({ actor }: { actor: Actor }) {
   const project = section === 'projects' ? content.projects[index] : null;
   const article = section === 'articles' ? content.articles[index] : null;
 
-  return <section className="admin-cms" style={{ marginTop: 48 }} aria-busy={busy}>
-    <h2>Conținut, contacte și galerie</h2>
+  return <section className="admin-cms"  aria-busy={busy}>
+    <h2>{workspaceSection==='projects'?'Portofoliu Studio':workspaceSection==='contact'?'Informațiile companiei':'Conținut Studio'}</h2>
     <p>Versiunea {version} · {dirty ? 'Modificări nesalvate' : hasDraft ? 'Ciornă încărcată' : 'Versiune publicată'}.</p>
     <p className="field-hint" style={{ marginBottom: 20 }}>Editează fiecare limbă separat. Ciorna și publicarea sunt operații distincte. {readOnly ? 'Contul tău poate consulta conținutul.' : actor.role === 'editor' ? 'Poți salva ciorne; administratorul le publică.' : 'Poți salva ciorne și publica modificări.'}</p>
     {error && <div role="alert" className="form-status form-status-error">{error}</div>}
@@ -341,7 +344,7 @@ export function CmsEditor({ actor }: { actor: Actor }) {
     </div>
     {actor.role === 'admin' && actor.aal !== 'aal2' && <p className="banner">Publicarea și salvarea protejată necesită autentificare cu doi factori. Dacă serverul solicită acest pas, activează-l în cont și autentifică-te din nou.</p>}
     <nav aria-label="Categorii de conținut" style={{ display: 'flex', gap: 9, flexWrap: 'wrap', marginBottom: 24 }}>
-      {(Object.keys(sectionLabels) as Section[]).map(key => <button type="button" key={key} className={`button${section === key ? ' button-primary' : ''}`} aria-pressed={section === key} disabled={busy} onClick={() => setSection(key)}>{sectionLabels[key]}</button>)}
+      {(workspaceSection?workspaceSection==='services'?['services','equipment','articles','faqs'] as Section[]:[]:Object.keys(sectionLabels) as Section[]).map(key => <button type="button" key={key} className={`button${section === key ? ' button-primary' : ''}`} aria-pressed={section === key} disabled={busy} onClick={() => setSection(key)}>{sectionLabels[key]}</button>)}
     </nav>
     <div role="group" aria-label="Limba conținutului editat" style={{ display: 'flex', gap: 9, flexWrap: 'wrap', marginBottom: 25 }}>
       {(['ro', 'ru', 'en'] as const).map(key => <button type="button" key={key} className={`button${locale === key ? ' button-primary' : ''}`} aria-pressed={locale === key} disabled={busy} onClick={() => setLocale(key)}>{key.toUpperCase()} · {localeLabels[key]}</button>)}
