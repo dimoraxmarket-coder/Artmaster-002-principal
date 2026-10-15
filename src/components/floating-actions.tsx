@@ -1,5 +1,5 @@
 'use client';
-import Link from 'next/link';
+import { PublicLink as Link } from './public-runtime';
 import { useEffect, useId, useRef, useState, type CSSProperties } from 'react';
 import type { Contact, Locale } from '@/lib/content/types';
 import { BackToTop } from './back-to-top';

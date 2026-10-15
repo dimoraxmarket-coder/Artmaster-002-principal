@@ -1,15 +1,18 @@
 'use client';
 
 import Image from 'next/image';
+import { websiteCopy } from '@/lib/content/page-copy';
+import { ContentHistory } from './content-history';
+import { MediaSelector } from './media-selector';
 import { useEffect, useId, useState } from 'react';
 import type { Article, Equipment, Faq, Locale, Localized, Project, Service, SiteContent } from '@/lib/content/types';
 import type { Actor } from '@/lib/server/types';
 
-type Section = 'contact' | 'services' | 'equipment' | 'projects' | 'articles' | 'faqs';
-type EntitySection = Exclude<Section, 'contact' | 'faqs'>;
+type Section = 'copy' | 'contact' | 'services' | 'equipment' | 'projects' | 'articles' | 'faqs';
+type EntitySection = Exclude<Section, 'copy' | 'contact' | 'faqs'>;
 type ContentResponse = { published: SiteContent; draft: SiteContent | null; version: number };
 const sectionLabels: Record<Section, string> = {
-  contact: 'Date de contact', services: 'Servicii', equipment: 'Echipamente',
+  copy: 'Acasă și Despre noi', contact: 'Date de contact', services: 'Servicii', equipment: 'Echipamente',
   projects: 'Galerie și proiecte', articles: 'Articole', faqs: 'Întrebări frecvente',
 };
 const localeLabels: Record<Locale, string> = { ro: 'Română', ru: 'Rusă', en: 'Engleză' };
@@ -38,6 +41,9 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
     const code = typeof body.code === 'string' ? body.code : typeof body.error === 'string' ? body.error : '';
     const messages: Record<string, string> = {
       mfa_required: 'Activează autentificarea cu doi factori și autentifică-te din nou pentru această operație.',
+      asset_unavailable: 'Restaurarea folosește imagini indisponibile. Conținutul actual este păstrat.',
+      asset_in_use: 'Imaginea este arhivată sau indisponibilă. Alege un fișier activ din Media Studio.',
+      history_limit: 'Istoricul a atins limita de stocare. Salvarea este oprită fără pierdere de date; contactează proprietarul.',
       version_conflict: 'Un alt membru al echipei a salvat o versiune nouă. Modificările tale sunt păstrate aici; descarcă o copie înainte să încarci versiunea actuală.',
       unauthorized: 'Sesiunea a expirat. Autentifică-te din nou înainte să salvezi.',
       forbidden: 'Rolul contului tău nu permite această operație.',
@@ -145,6 +151,7 @@ function findIncomplete(value: SiteContent): string | null {
       if ('image' in item && !safeImage(item.image)) return `${label} „${item.title.ro || item.slug}”: încarcă o imagine validă sau folosește o adresă de imagine din biblioteca site-ului.`;
     }
   }
+  if(value.copy) for(const group of Object.values(value.copy)) for(const item of Object.values(group)){const error=check(item,'Acasă / Despre noi');if(error)return error;}
   const allFaqs = [...value.faqs, ...value.services.flatMap(service => service.faqs)];
   for (const faq of allFaqs) for (const field of ['question', 'answer'] as const) { const error = check(faq[field], 'Întrebare frecventă'); if (error) return error; }
   for (const equipment of value.equipment) for (const fact of equipment.facts) { const error = check(fact, `Detaliu pentru „${equipment.title.ro || equipment.slug}”`); if (error) return error; }
@@ -226,7 +233,7 @@ export function CmsEditor({ actor, workspaceSection, onDirtyChange }: { actor: A
       setVersion(result.version); setContent(cleaned); setVerifiedImages(imageURLs(cleaned)); setDirty(false); setHasDraft(action === 'save-draft');
       setMessage(action === 'publish' ? 'Versiunea a fost publicată. Modificările sunt vizibile pe site.' : 'Ciorna a fost salvată. Publicarea se face separat de administrator.');
     } catch (failure) {
-      if (failure instanceof ApiError && failure.status === 409) setConflict(true);
+      if (failure instanceof ApiError && failure.code === 'version_conflict') setConflict(true);
       setError(failure instanceof Error ? failure.message : 'Salvarea nu a reușit.');
     } finally { setBusy(false); }
   }
@@ -304,6 +311,7 @@ export function CmsEditor({ actor, workspaceSection, onDirtyChange }: { actor: A
       <h4>Imagine</h4>
       <TextField label="Adresa imaginii" value={image} hint="Folosește o imagine din biblioteca site-ului sau fotografia proprie încărcată mai jos. Imaginile conceptuale trebuie identificate ca atare. Adresele externe sunt verificate de server înainte de previzualizare." onChange={value => mutate(next => { next[key][index].image = value; })} />
       {image && safeImage(image) && (image.startsWith('/') || verifiedImages.includes(image)) && <div style={{ maxWidth: 540, marginBottom: 16 }}><Image src={image.startsWith('/api/media/')?image.replace('/api/media/','/api/admin/media/'):image} alt="Previzualizarea imaginii selectate" width={540} height={320} unoptimized style={{ width: '100%', height: 'auto', maxHeight: 320, objectFit: 'cover', borderRadius: 8 }} /></div>}
+      {!readOnly && <MediaSelector disabled={busy} onSelect={url=>{mutate(next=>{next[key][index].image=url;});setVerifiedImages(previous=>[...previous,url]);}}/>}
       {!readOnly && <label className="field">Încarcă fotografie PNG / JPEG, maximum 5 MB<input type="file" accept="image/png,image/jpeg" onChange={event => { const file = event.target.files?.[0]; event.target.value = ''; if (file) void uploadImage(key, index, file); }} /></label>}
     </section>;
   }
@@ -320,7 +328,7 @@ export function CmsEditor({ actor, workspaceSection, onDirtyChange }: { actor: A
   if (loading) return <section className="admin-cms" aria-busy="true"><h2>Conținutul site-ului</h2><p role="status">Se încarcă editorul…</p></section>;
   if (!content) return <section className="admin-cms"><h2>Conținutul site-ului</h2><p className="form-status form-status-error" role="alert">{error || 'Conținutul nu este disponibil.'}</p><button type="button" className="button" disabled={busy} onClick={() => void reload()}>Reîncearcă încărcarea</button></section>;
 
-  const entityKey: EntitySection | null = section !== 'contact' && section !== 'faqs' ? section : null;
+  const entityKey: EntitySection | null = section !== 'copy' && section !== 'contact' && section !== 'faqs' ? section : null;
   const index = entityKey ? Math.min(selected[entityKey], Math.max(0, content[entityKey].length - 1)) : 0;
   const entity = entityKey ? content[entityKey][index] : null;
   const blockedDelete = entityKey && entity ? deletionReason(entityKey, index) : null;
@@ -339,12 +347,15 @@ export function CmsEditor({ actor, workspaceSection, onDirtyChange }: { actor: A
     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, marginBottom: 25 }}>
       {!readOnly && <button type="button" className="button" disabled={busy || conflict} onClick={() => void save('save-draft')}>{busy ? 'Se procesează…' : 'Salvează ciorna'}</button>}
       {actor.role === 'admin' && <button type="button" className="button button-primary" disabled={busy || conflict} onClick={() => void save('publish')}>Publică această versiune</button>}
+      <a className="button" href={`/admin-preview/${locale}${entityKey&&entity?'/'+({services:'servicii',equipment:'echipamente',projects:'portofoliu',articles:'blog'})[entityKey]+'/'+entity.slug:section==='contact'?'/contact':section==='faqs'?'/intrebari-frecvente':''}`} target="_blank" rel="noopener noreferrer">Previzualizează ciorna salvată ↗</a>
       <button type="button" className="button" disabled={busy} onClick={() => void reload()}>Încarcă versiunea actuală</button>
       {!conflict && <button type="button" className="button" disabled={busy} onClick={downloadCopy}>Descarcă o copie</button>}
     </div>
+    {dirty && <p role="note" className="banner">Previzualizarea folosește ultima ciornă salvată; salvează modificările locale înainte de verificare.</p>}
+    <ContentHistory onRestoring={setBusy} content={content} version={version} disabled={busy||dirty||conflict} canRestore={!readOnly} onRestored={(restored,nextVersion)=>{setContent(restored);setVersion(nextVersion);setVerifiedImages(imageURLs(restored));setHasDraft(true);setDirty(false);setConflict(false);setMessage('Versiunea a fost restaurată într-o ciornă nouă. Revizuiește previzualizarea înainte de publicare.');}}/>
     {actor.role === 'admin' && actor.aal !== 'aal2' && <p className="banner">Publicarea și salvarea protejată necesită autentificare cu doi factori. Dacă serverul solicită acest pas, activează-l în cont și autentifică-te din nou.</p>}
     <nav aria-label="Categorii de conținut" style={{ display: 'flex', gap: 9, flexWrap: 'wrap', marginBottom: 24 }}>
-      {(workspaceSection?workspaceSection==='services'?['services','equipment','articles','faqs'] as Section[]:[]:Object.keys(sectionLabels) as Section[]).map(key => <button type="button" key={key} className={`button${section === key ? ' button-primary' : ''}`} aria-pressed={section === key} disabled={busy} onClick={() => setSection(key)}>{sectionLabels[key]}</button>)}
+      {(workspaceSection?workspaceSection==='services'?['copy','services','equipment','articles','faqs'] as Section[]:[]:Object.keys(sectionLabels) as Section[]).map(key => <button type="button" key={key} className={`button${section === key ? ' button-primary' : ''}`} aria-pressed={section === key} disabled={busy} onClick={() => setSection(key)}>{sectionLabels[key]}</button>)}
     </nav>
     <div role="group" aria-label="Limba conținutului editat" style={{ display: 'flex', gap: 9, flexWrap: 'wrap', marginBottom: 25 }}>
       {(['ro', 'ru', 'en'] as const).map(key => <button type="button" key={key} className={`button${locale === key ? ' button-primary' : ''}`} aria-pressed={locale === key} disabled={busy} onClick={() => setLocale(key)}>{key.toUpperCase()} · {localeLabels[key]}</button>)}
@@ -358,6 +369,10 @@ export function CmsEditor({ actor, workspaceSection, onDirtyChange }: { actor: A
     </div>}
     <fieldset disabled={readOnly || busy} style={{ border: 0, padding: 0, margin: 0, minWidth: 0 }}>
       <legend className="sr-only">Editare {sectionLabels[section]}</legend>
+      {section === 'copy' && <>
+        <p className="field-hint">Texte structurate pentru paginile publice. Aspectul și destinațiile butoanelor sunt păstrate.</p>
+        {(['hero','about'] as const).map(group=><section key={group}><h4>{group==='hero'?'Acasă · Hero':'Despre noi'}</h4>{Object.entries(websiteCopy(content)[group]).map(([key,value])=><LocalizedField key={key} label={({eyebrow:'Etichetă',title:'Titlu',accent:'Accentul titlului',description:'Descriere',quoteLabel:'Buton · Ofertă',servicesLabel:'Buton · Servicii',summary:'Rezumat pagină',heading:'Titlu companie',body:'Descrierea companiei',approach:'Cum lucrăm',equipmentHeading:'Titlu echipamente'} as Record<string,string>)[key]||key} value={value} locale={locale} multiline={['description','summary','body','approach'].includes(key)} onChange={localized=>mutate(next=>{next.copy=websiteCopy(next);(next.copy[group] as Record<string,Localized>)[key]=localized;})}/>)}</section>)}
+      </>}
       {section === 'contact' && <>
         <div className="form-grid">
           <TextField label="Numele companiei" value={content.contact.companyName} maxLength={120} onChange={value => mutate(next => { next.contact.companyName = value; })} />

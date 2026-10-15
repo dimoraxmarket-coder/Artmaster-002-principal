@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'next/link';
+import { usePublicPreview, PublicLink as Link } from './public-runtime';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import type { Contact, Locale } from '@/lib/content/types';
@@ -12,7 +12,9 @@ const languageNames = { ro: 'Română', ru: 'Русский', en: 'English' };
 
 export function Header({ locale, contact }: { locale: Locale; contact: Contact }) {
   const ui = t(locale);
-  const pathname = usePathname();
+  const rawPathname = usePathname();
+  const preview = usePublicPreview();
+  const pathname = preview ? rawPathname.replace(/^\/admin-preview/, '') : rawPathname;
   const searchParams = useSearchParams();
   const query = searchParams.toString();
   const [open, setOpen] = useState(false);
@@ -50,7 +52,7 @@ export function Header({ locale, contact }: { locale: Locale; contact: Contact }
         {routes.map(({ path, label }) => <Link key={path} href={`/${locale}${path}`} className="nav-link" aria-current={current(path) ? 'page' : undefined}>{label}</Link>)}
       </nav>
       <nav className="language-switch" aria-label={ui.common.language}>
-        {locales.map(language => <a key={language} href={pathname.replace(/^\/(ro|ru|en)(?=\/|$)/, `/${language}`) + (query ? `?${query}` : '')} hrefLang={language} lang={language} aria-label={`${language.toUpperCase()} — ${languageNames[language]}`} aria-current={language === locale ? 'page' : undefined} onClick={close}>{language.toUpperCase()}</a>)}
+        {locales.map(language => <a key={language} href={(preview?'/admin-preview':'')+pathname.replace(/^\/(ro|ru|en)(?=\/|$)/, `/${language}`) + (query ? `?${query}` : '')} hrefLang={language} lang={language} aria-label={`${language.toUpperCase()} — ${languageNames[language]}`} aria-current={language === locale ? 'page' : undefined} onClick={close}>{language.toUpperCase()}</a>)}
       </nav>
       <a href={`tel:${contact.phone}`} className="header-phone" aria-label={`${ui.contact.phone}: ${contact.phone}`}><Icon name="phone" /></a>
       <Link href={`/${locale}/solicita-oferta`} className="button header-quote">{ui.nav.quote}<Icon name="arrow" /></Link>

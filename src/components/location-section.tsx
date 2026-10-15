@@ -1,4 +1,5 @@
 'use client';
+import { PublicLink as Link } from './public-runtime';
 import { useEffect, useId, useState } from 'react';
 import type { Contact, Locale } from '@/lib/content/types';
 import { googleMapLinks } from '@/lib/location';
@@ -21,7 +22,7 @@ export function LocationSection({ locale, contact }: { locale: Locale; contact: 
       <div className={styles.grid}>
         <aside className={styles.card}><h3>ARTMASTER</h3><p className={styles.brand}>ADVERTISING GROUP</p><p className={styles.addressLabel}><Icon name="pin" />{text.address}</p><address>{contact.address[locale]}</address><p className={styles.visit}>{text.visit}</p><a className={styles.contact} href={`tel:${contact.phone}`}><Icon name="phone" />{displayPhone(contact.phone)}</a><a className={styles.contact} href={`mailto:${contact.email}`}><Icon name="mail" />{contact.email}</a>{links && <a href={links.directions} className="button" target="_blank" rel="noopener noreferrer">{text.route}<Icon name="arrow" /></a>}</aside>
         <div className={styles.mapArea}><div className={styles.mapWindow}>
-          {links && enabled && !failed ? <><iframe key={attempt} title={text.mapTitle} src={links.embed} loading="lazy" referrerPolicy="no-referrer" allowFullScreen onLoad={() => setLoading(false)} onError={() => { setLoading(false); setFailed(true); }} />{loading && <p className={styles.loading} role="status">{text.loading}</p>}</> : <div className={styles.placeholder}><Icon name="pin" /><p>{failed ? text.error : links ? text.consent : text.missing}</p>{links && <button type="button" className="button" onClick={load}>{failed ? text.retry : text.load}</button>}<a href={`/${locale}/confidentialitate`}>{text.privacy}</a></div>}
+          {links && enabled && !failed ? <><iframe key={attempt} title={text.mapTitle} src={links.embed} loading="lazy" referrerPolicy="no-referrer" allowFullScreen onLoad={() => setLoading(false)} onError={() => { setLoading(false); setFailed(true); }} />{loading && <p className={styles.loading} role="status">{text.loading}</p>}</> : <div className={styles.placeholder}><Icon name="pin" /><p>{failed ? text.error : links ? text.consent : text.missing}</p>{links && <button type="button" className="button" onClick={load}>{failed ? text.retry : text.load}</button>}<Link href={`/${locale}/confidentialitate`}>{text.privacy}</Link></div>}
         </div><div className={styles.mapFooter}><p>{text.fallback}</p>{links && <a href={links.search} target="_blank" rel="noopener noreferrer">{text.open} ↗</a>}{enabled && <button type="button" onClick={() => { setEnabled(false); setLoading(false); setFailed(false); }}>{text.unload}</button>}</div></div>
       </div>
     </div>
