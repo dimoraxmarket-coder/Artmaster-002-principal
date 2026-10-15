@@ -17,12 +17,12 @@ type ClientRole = 'anon' | 'authenticated' | 'service_role';
 const sqlError = (code: string) => (error: unknown) =>
   typeof error === 'object' && error !== null && 'code' in error && error.code === code;
 
-async function asRole<T>(db: PGlite, role: ClientRole, user: string | null, run: (tx: Transaction) => Promise<T>, aal: string | null = 'aal2'): Promise<T> {
+async function asRole<T>(db: PGlite, role: ClientRole, user: string | null, run: (tx: Transaction) => Promise<T>, aal: string | null = 'aal2', authSession: string | null = user): Promise<T> {
   return db.transaction(async tx => {
     // Role comes only from the closed test union, never from request input.
     await tx.exec(`set local role ${role}`);
     await tx.query("select set_config('request.jwt.claim.sub', $1, true)", [user ?? '']);
-    await tx.query("select set_config('request.jwt.claims', $1, true)", [JSON.stringify(aal ? {aal} : {})]);
+    await tx.query("select set_config('request.jwt.claims', $1, true)", [JSON.stringify(aal ? {aal,session_id:authSession} : {})]);
     const identity = await tx.query<{ name: string; superuser: boolean; bypass: boolean }>(
       'select current_user as name, rolsuper as superuser, rolbypassrls as bypass from pg_roles where rolname=current_user',
     );
@@ -59,9 +59,10 @@ test('PostgreSQL migration enforces client RLS, restricted RPCs and atomic CMS c
       create schema storage;
       create table storage.objects (id uuid primary key, bucket_id text not null);
       alter table storage.objects enable row level security;
-      grant usage on schema storage to authenticated;
-      grant select on storage.objects to authenticated;
+      grant usage on schema storage to anon,authenticated;
+      grant select on storage.objects to anon,authenticated;
       create policy test_team_read on storage.objects for select to authenticated using (true);
+      create policy test_anon_read on storage.objects for select to anon using (bucket_id in ('portfolio','portfolio-private'));
       create table storage.buckets (
         id text primary key, name text not null, public boolean not null default false,
         file_size_limit bigint, allowed_mime_types text[]
@@ -70,9 +71,11 @@ test('PostgreSQL migration enforces client RLS, restricted RPCs and atomic CMS c
     const migration = await readFile(new URL('../supabase/migrations/202610130001_artmaster.sql', import.meta.url), 'utf8');
     await db.exec(migration);
     await db.exec(await readFile(new URL('../supabase/migrations/202610150001_admin_mfa.sql', import.meta.url), 'utf8'));
+    await db.exec(await readFile(new URL('../supabase/migrations/202610150002_admin_validation.sql', import.meta.url), 'utf8'));
     for (const id of Object.values(ids)) await db.query('insert into auth.users(id) values($1)', [id]);
     for (const [id, role] of [[ids.viewer, 'viewer'], [ids.editor, 'editor'], [ids.admin, 'admin']]) {
       await db.query('insert into public.admin_roles(user_id,role) values($1,$2)', [id, role]);
+      await db.query("insert into public.admin_sessions(session_hash,user_id,auth_session_id,expires_at) values($1,$2,$2,now()+interval '1 hour')", [`fixture-${id}`,id]);
     }
     await db.exec(`
       insert into public.quotes(id,idempotency_key,payload_hash,data,notification) values
@@ -121,12 +124,52 @@ test('PostgreSQL migration enforces client RLS, restricted RPCs and atomic CMS c
     });
 
     await suite.test('private object MFA restriction survives a permissive storage read policy; public portfolio stays available', async () => {
-      await db.exec("insert into storage.objects(id,bucket_id) values ('30000000-0000-4000-8000-000000000001','quote-files'),('30000000-0000-4000-8000-000000000002','portfolio')");
+      await db.exec("insert into storage.objects(id,bucket_id) values ('30000000-0000-4000-8000-000000000001','quote-files'),('30000000-0000-4000-8000-000000000002','portfolio'),('30000000-0000-4000-8000-000000000003','portfolio-private')");
       for (const aal of ['aal1', null]) {
         const rows = await asRole(db, 'authenticated', ids.viewer, tx => tx.query<{bucket_id:string}>('select bucket_id from storage.objects'), aal);
         assert.deepEqual(rows.rows, [{bucket_id:'portfolio'}]);
       }
       assert.equal((await asRole(db, 'authenticated', ids.viewer, tx => tx.query('select * from storage.objects'))).rows.length, 2);
+      assert.deepEqual((await asRole(db,'anon',null,tx=>tx.query<{bucket_id:string}>('select bucket_id from storage.objects'))).rows,[{bucket_id:'portfolio'}]);
+      assert.equal((await db.query<{public:boolean}>("select public from storage.buckets where id='portfolio-private'")).rows[0].public,false);
+    });
+
+    await suite.test('AAL2 direct reads require the matching live app session; idle, absolute, pending and revoked sessions cannot read', async () => {
+      for(const user of [ids.viewer,ids.editor,ids.admin]){
+        for(const authSession of [null,'not-a-session',ids.unassigned]){
+          assert.equal((await asRole(db,'authenticated',user,tx=>tx.query('select * from public.quotes'),'aal2',authSession)).rows.length,0);
+        }
+        for(const state of ['idle','absolute','token-expired','pending','unbound','revoked','role-revoked']){
+          if(state==='idle')await db.query("update public.admin_sessions set last_seen_at=now()-interval '16 minutes' where user_id=$1",[user]);
+          if(state==='absolute')await db.query("update public.admin_sessions set created_at=now()-interval '9 hours' where user_id=$1",[user]);
+          if(state==='token-expired')await db.query("update public.admin_sessions set expires_at=now()-interval '1 second' where user_id=$1",[user]);
+          if(state==='pending')await db.query("update public.admin_sessions set purpose='mfa' where user_id=$1",[user]);
+          if(state==='unbound')await db.query("update public.admin_sessions set auth_session_id=null where user_id=$1",[user]);
+          if(state==='revoked')await db.query('delete from public.admin_sessions where user_id=$1',[user]);
+          if(state==='role-revoked')await db.query('delete from public.admin_roles where user_id=$1',[user]);
+          for(const table of ['admin_roles','quotes','site_content','audit_log']){
+            assert.equal((await asRole(db,'authenticated',user,tx=>tx.query(`select * from public.${table}`))).rows.length,0,`${state}: ${table}`);
+          }
+          assert.equal((await asRole(db,'authenticated',user,tx=>tx.query("select * from storage.objects where bucket_id='quote-files'"))).rows.length,0,`${state}: private objects`);
+          if(state==='role-revoked')await db.query('insert into public.admin_roles(user_id,role) values($1,$2)',[user,Object.entries(ids).find(([,id])=>id===user)![0]]);
+          await db.query("delete from public.admin_sessions where user_id=$1",[user]);
+          await db.query("insert into public.admin_sessions(session_hash,user_id,auth_session_id,expires_at) values($1,$2,$2,now()+interval '1 hour')",[`fixture-${user}`,user]);
+        }
+      }
+    });
+
+    await suite.test('only the server may touch active sessions; idle/absolute expiry and revocation cannot be renewed', async () => {
+      const args=[`fixture-${ids.admin}`,ids.admin,ids.admin];
+      const sql='select public.touch_admin_session($1,$2,$3) as active';
+      for(const role of ['anon','authenticated'] as const)await assert.rejects(()=>asRole(db,role,ids.admin,tx=>tx.query(sql,args)),sqlError('42501'));
+      assert.equal((await asRole(db,'service_role',null,tx=>tx.query<{active:boolean}>(sql,args))).rows[0].active,true);
+      assert.equal((await asRole(db,'service_role',null,tx=>tx.query<{active:boolean}>(sql,[args[0],ids.viewer,ids.admin]))).rows[0].active,false);
+      for(const state of ['idle','absolute']){
+        await db.query(state==='idle'?"update public.admin_sessions set last_seen_at=now()-interval '16 minutes' where user_id=$1":"update public.admin_sessions set created_at=now()-interval '9 hours' where user_id=$1",[ids.admin]);
+        assert.equal((await asRole(db,'service_role',null,tx=>tx.query<{active:boolean}>(sql,args))).rows[0].active,false);
+        await db.query('update public.admin_sessions set created_at=now(),last_seen_at=now() where user_id=$1',[ids.admin]);
+      }
+      assert.equal((await asRole(db,'service_role',null,tx=>tx.query<{active:boolean}>(sql,['revoked-hash',ids.admin,ids.admin]))).rows[0].active,false);
     });
 
     await suite.test('viewer sees their own role and team-authorized enquiries, without mutation or escalation', async () => {
@@ -162,7 +205,7 @@ test('PostgreSQL migration enforces client RLS, restricted RPCs and atomic CMS c
       const stored = await asRole(db, 'service_role', null, tx => tx.query<{ user_id: string }>("select user_id from public.admin_sessions where session_hash='hashed-session-test'"));
       assert.deepEqual(stored.rows, [{ user_id: ids.admin }]);
       await asRole(db, 'service_role', null, tx => tx.query("delete from public.admin_sessions where session_hash='hashed-session-test'"));
-      assert.equal((await db.query('select * from public.admin_sessions')).rows.length, 0);
+      assert.equal((await db.query("select * from public.admin_sessions where session_hash='hashed-session-test'")).rows.length, 0);
     });
 
     await suite.test('only service_role clients may execute mutating/rate-limit RPCs', async () => {

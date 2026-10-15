@@ -7,7 +7,7 @@ import { join } from 'node:path';
 import { randomUUID } from 'node:crypto';
 import sharp from 'sharp';
 import { PDFDocument,PDFName,PDFString } from 'pdf-lib';
-import { LocalStorage } from '../src/lib/server/local';
+import { LocalStorage,localDatabase,hashSession } from '../src/lib/server/local';
 import { issueFormToken,validateFormToken,requireSameOrigin,requestBucket,boundedBody } from '../src/lib/server/guards';
 import { validateUploads } from '../src/lib/server/uploads';
 import { storageMode,BackendError } from '../src/lib/server/config';
@@ -26,7 +26,9 @@ function sampleQuote(overrides:Partial<Quote>={}):Quote{return {id:randomUUID(),
 test('production refuses accidental local storage or missing Supabase',()=>{
   const env=process.env.NODE_ENV;Object.assign(process.env,{NODE_ENV:'production'});delete process.env.ARTMASTER_ALLOW_LOCAL_PRODUCTION;
   assert.throws(()=>storageMode(),errorCode('unavailable'));
-  process.env.ARTMASTER_ALLOW_LOCAL_PRODUCTION='true';assert.equal(storageMode(),'local');delete process.env.ARTMASTER_ALLOW_LOCAL_PRODUCTION;
+  process.env.ARTMASTER_ALLOW_LOCAL_PRODUCTION='true';assert.equal(storageMode(),'local');
+  const site=process.env.SITE_URL;process.env.SITE_URL='https://public.example.invalid';assert.throws(()=>storageMode(),errorCode('unavailable'));process.env.SITE_URL=site;
+  delete process.env.ARTMASTER_ALLOW_LOCAL_PRODUCTION;
   Object.assign(process.env,{NODE_ENV:env||'test'});
 });
 test('signed tokens reject tampering, different nonce, too-fast and expired submission',async()=>{
@@ -91,4 +93,20 @@ test('draft edits do not publish, version conflicts cannot overwrite and schema 
 test('quote input cannot skip consent or inject unknown keys and retains structured optional details',()=>{
   const input={locale:'ro',service:'test',name:'User',email:'user@example.com',phone:'+37360010400',message:'Request',consent:'true',website:'',token:'long-form-token-placeholder',idempotencyKey:randomUUID(),company:'Company',quantity:'2',dimensions:'300 x 200 mm',deadline:'2026-12-01'};
   assert.equal(quoteSchema.safeParse(input).success,true);assert.equal(quoteSchema.safeParse({...input,consent:'false'}).success,false);assert.equal(quoteSchema.safeParse({...input,admin:true}).success,false);assert.equal(quoteSchema.safeParse({...input,deadline:'2026-02-31'}).success,false);
+});
+
+test('local sessions enforce idle and absolute expiry without extending their lifetime',async()=>{
+  createLocalAdmin('expiry@example.invalid','a secure expiry password');
+  const db=localDatabase();
+  for(const kind of ['idle','absolute'] as const){
+    const {cookie}=await loginAdmin('expiry@example.invalid','a secure expiry password');
+    const hash=hashSession(cookie.split('.')[0]);
+    const before=db.prepare('SELECT created_at FROM sessions WHERE hash=?').get(hash) as {created_at:number};
+    assert.ok(await actorForSession(cookie));
+    assert.equal((db.prepare('SELECT created_at FROM sessions WHERE hash=?').get(hash) as {created_at:number}).created_at,before.created_at);
+    if(kind==='idle')db.prepare('UPDATE sessions SET last_seen_at=? WHERE hash=?').run(Date.now()-15*60000-1,hash);
+    else db.prepare('UPDATE sessions SET created_at=? WHERE hash=?').run(Date.now()-8*3600000-1,hash);
+    assert.equal(await actorForSession(cookie),null);
+    assert.equal(await actorForSession(cookie),null);
+  }
 });

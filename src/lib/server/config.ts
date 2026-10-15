@@ -10,7 +10,10 @@ export function storageMode(): 'local' | 'supabase' {
     if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY || !process.env.SUPABASE_ANON_KEY) throw new BackendError('unavailable', 503);
     return 'supabase';
   }
-  if (process.env.NODE_ENV === 'production' && !(selected === 'local' && process.env.ARTMASTER_ALLOW_LOCAL_PRODUCTION === 'true')) throw new BackendError('unavailable', 503);
+  if (process.env.NODE_ENV === 'production') {
+    const localSmoke=selected==='local'&&process.env.ARTMASTER_ALLOW_LOCAL_PRODUCTION==='true'&&['localhost','127.0.0.1','[::1]'].includes(new URL(resolveSiteUrl()).hostname);
+    if(!localSmoke)throw new BackendError('unavailable',503);
+  }
   if (selected && selected !== 'local') throw new BackendError('unavailable', 503);
   return 'local';
 }
