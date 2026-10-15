@@ -1,6 +1,6 @@
 import { test, after } from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdir, readFile, rm, stat, symlink, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, rm, stat, symlink, writeFile, cp, rename } from 'node:fs/promises';
 import { mkdtempSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -11,6 +11,7 @@ import { fileURLToPath } from 'node:url';
 import { LocalStorage, localDatabase } from '../src/lib/server/local';
 import { createLocalAdmin, loginAdmin, actorForSession } from '../src/lib/server/auth';
 import { backupLocalData, restoreLocalBackup } from '../src/lib/server/backup';
+import { readPublishedMedia } from '../src/lib/server/media';
 import { defaultContent } from '../src/lib/content/defaults';
 import type { Actor, Quote } from '../src/lib/server/types';
 
@@ -29,7 +30,8 @@ test('backup and restore preserve synthetic data and files, revoke copied sessio
   await mkdir(join(source, 'media'));
   await writeFile(join(source, 'media', image), bytes, { mode: 0o600 });
   const actor: Actor = { id: createLocalAdmin('fixture@example.invalid', 'Synthetic-only passphrase'), email: 'fixture@example.invalid', role: 'admin', aal: 'aal1' };
-  await store.saveContent(defaultContent, true, actor, 0);
+  const published=structuredClone(defaultContent);published.services[0].image=`/api/media/${image}`;
+  await store.saveContent(published, true, actor, 0);
   const login = await loginAdmin(actor.email, 'Synthetic-only passphrase');
   const secret = await store.secret('ARTMASTER_SESSION_SECRET');
   const backup = join(root, 'backup'), restored = join(root, 'restored');
@@ -42,10 +44,13 @@ test('backup and restore preserve synthetic data and files, revoke copied sessio
     assert.equal((db.prepare('SELECT COUNT(*) AS n FROM sessions').get() as { n: number }).n, 0);
     assert.equal((db.prepare('SELECT COUNT(*) AS n FROM admins').get() as { n: number }).n, 1);
     assert.equal((db.prepare('SELECT value FROM meta WHERE key=?').get('secret:ARTMASTER_SESSION_SECRET') as { value: string }).value, secret);
-    assert.deepEqual(JSON.parse((db.prepare('SELECT published FROM content').get() as { published: string }).published), defaultContent);
+    assert.deepEqual(JSON.parse((db.prepare('SELECT published FROM content').get() as { published: string }).published), published);
   } finally { db.close(); }
   assert.deepEqual(await readFile(join(restored, 'uploads', attachment)), bytes);
   assert.deepEqual(await readFile(join(restored, 'media', image)), bytes);
+  process.env.ARTMASTER_DATA_DIR=restored;
+  try{assert.deepEqual(await readPublishedMedia(image),bytes);assert.equal(await actorForSession(login.cookie),null);}
+  finally{process.env.ARTMASTER_DATA_DIR=source;}
   assert.equal((await stat(restored)).mode & 0o777, 0o700);
   assert.equal((await stat(join(restored, 'artmaster.sqlite'))).mode & 0o777, 0o600);
   assert.equal((await stat(join(restored, 'uploads', attachment))).mode & 0o777, 0o600);
@@ -76,4 +81,12 @@ test('corrupt, incomplete and symlinked backups are refused without creating a r
   await symlink(join(source, 'artmaster.sqlite'), join(source, 'uploads', 'unsafe-link'));
   await assert.rejects(() => backupLocalData(source, join(root, 'unsafe-backup')), /symlinks/);
   await assert.rejects(() => restoreLocalBackup(join(root, 'unsafe-backup'), join(root, 'incomplete-restore')), { code: 'ENOENT' });
+});
+
+test('restoration refuses a symlinked parent before reading manifest-selected files',async()=>{
+  const copied=join(root,'parent-link-backup');await cp(join(root,'backup'),copied,{recursive:true});
+  await rename(join(copied,'uploads'),join(root,'elsewhere-uploads'));
+  await symlink(join(root,'elsewhere-uploads'),join(copied,'uploads'));
+  await assert.rejects(()=>restoreLocalBackup(copied,join(root,'parent-link-restored')),/symlinks/);
+  await assert.rejects(()=>stat(join(root,'parent-link-restored')),{code:'ENOENT'});
 });

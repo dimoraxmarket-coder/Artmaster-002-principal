@@ -1,0 +1,51 @@
+import { test, after } from 'node:test';
+import assert from 'node:assert/strict';
+import { mkdtempSync } from 'node:fs';
+import { rm } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import sharp from 'sharp';
+import { createLocalAdmin, loginAdmin } from '../src/lib/server/auth';
+import { LocalStorage } from '../src/lib/server/local';
+import { defaultContent } from '../src/lib/content/defaults';
+import { GET as publicImage } from '../src/app/api/media/[name]/route';
+import { GET as preview } from '../src/app/api/admin/media/[name]/route';
+import { POST as upload } from '../src/app/api/admin/media/route';
+import type { Actor } from '../src/lib/server/types';
+
+const directory=mkdtempSync(join(tmpdir(),'artmaster-media-security-'));
+Object.assign(process.env,{ARTMASTER_STORAGE:'local',ARTMASTER_DATA_DIR:directory,SITE_URL:'http://localhost:3000'});
+after(()=>rm(directory,{recursive:true,force:true}));
+const url='http://localhost:3000';
+function request(cookie?:string){return new Request(url,{headers:cookie?{Cookie:`artmaster_admin=${cookie}`}:{}});}
+
+test('new media stays confidential until referenced in visible published content; authorized previews and existing publication work',async()=>{
+  const id=createLocalAdmin('media@example.invalid','synthetic-media-password');
+  const actor:Actor={id,email:'media@example.invalid',role:'admin',aal:'aal1'};
+  const {cookie}=await loginAdmin(actor.email,'synthetic-media-password');
+  const png=await sharp({create:{width:5,height:5,channels:3,background:'#ffca05'}}).png().toBuffer();
+  const form=new FormData();form.set('file',new File([Uint8Array.from(png)],'synthetic.png',{type:'image/png'}));
+  const response=await upload(new Request(url+'/api/admin/media',{method:'POST',headers:{Origin:url,Cookie:`artmaster_admin=${cookie}`},body:form}));
+  assert.equal(response.status,201);const {url:canonical}=await response.json();
+  const name=canonical.split('/').pop(),params={params:Promise.resolve({name})};
+  assert.equal((await publicImage(request(),params)).status,404,'upload alone must not expose bytes');
+  assert.equal((await preview(request(),params)).status,401);
+  const authorized=await preview(request(cookie),params);assert.equal(authorized.status,200);assert.match(authorized.headers.get('cache-control')!,/no-store/);
+  assert.equal((await sharp(Buffer.from(await authorized.arrayBuffer())).metadata()).format,'webp');
+  const viewer=createLocalAdmin('media-viewer@example.invalid','synthetic-viewer-password','viewer');assert.ok(viewer);
+  const viewerLogin=await loginAdmin('media-viewer@example.invalid','synthetic-viewer-password');
+  assert.equal((await preview(request(viewerLogin.cookie),params)).status,200);
+  const store=new LocalStorage(),content=structuredClone(defaultContent);
+  content.projects[0].image=canonical;content.projects[0].published=false;
+  let version=await store.saveContent(content,false,actor,0);
+  assert.equal((await publicImage(request(),params)).status,404,'draft must not expose bytes');
+  version=await store.saveContent(content,true,actor,version);
+  assert.equal((await publicImage(request(),params)).status,404,'hidden project must not expose bytes');
+  content.projects[0].published=true;version=await store.saveContent(content,true,actor,version);
+  const published=await publicImage(request(),params);assert.equal(published.status,200);assert.match(published.headers.get('cache-control')!,/no-store/);
+  await store.saveContent(defaultContent,false,actor,version++);
+  assert.equal((await publicImage(request(),params)).status,200,'saving a draft must preserve public image availability');
+  await store.saveContent(defaultContent,true,actor,version);
+  assert.equal((await publicImage(request(),params)).status,404,'unreferenced private original is no longer served');
+  assert.equal((await preview(request(cookie),params)).status,200,'unpublishing preserves the original');
+});

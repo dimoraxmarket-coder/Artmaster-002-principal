@@ -92,6 +92,8 @@ export async function restoreLocalBackup(source: string, target: string) {
   await regularFile(join(origin, 'manifest.json'));
   const manifest: Manifest = JSON.parse(await readFile(join(origin, 'manifest.json'), 'utf8'));
   if (manifest.format !== 1 || !Array.isArray(manifest.files)) throw new Error('Unsupported backup manifest.');
+  // Reject symlinked parent directories before touching any manifest paths.
+  const actual = (await filesUnder(origin)).filter(path => path !== 'manifest.json');
   const seen = new Set<string>();
   for (const file of manifest.files) {
     if (typeof file.path !== 'string' || !/^(artmaster\.sqlite|(?:uploads|media)\/[a-zA-Z0-9._/-]+)$/.test(file.path) || file.path.split('/').some(part => part === '..' || part === '.') || seen.has(file.path) || !/^[a-f0-9]{64}$/.test(file.sha256)) throw new Error('Unsafe backup manifest.');
@@ -99,7 +101,6 @@ export async function restoreLocalBackup(source: string, target: string) {
     await regularFile(join(origin, file.path));
     if (digest(await readFile(join(origin, file.path))) !== file.sha256) throw new Error('Backup checksum mismatch.');
   }
-  const actual = (await filesUnder(origin)).filter(path => path !== 'manifest.json');
   if (!seen.has('artmaster.sqlite') || actual.length !== seen.size || actual.some(path => !seen.has(path))) throw new Error('Incomplete backup manifest.');
   for (const file of checkDatabase(join(origin, 'artmaster.sqlite'))) if (!seen.has(file)) throw new Error('Backup is missing a referenced attachment.');
   const { destination } = await exclusiveTarget(origin, target);

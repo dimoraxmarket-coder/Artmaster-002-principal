@@ -127,11 +127,15 @@ test.describe.serial('real local production administration',()=>{
     const uploadPromise=page.waitForResponse(response=>response.url().endsWith('/api/admin/media')&&response.request().method()==='POST');
     await page.getByLabel('Încarcă fotografie PNG / JPEG, maximum 5 MB',{exact:true}).setInputFiles({name:'owned-test.png',mimeType:'image/png',buffer:png});
     const response=await uploadPromise;expect(response.status()).toBe(201);const image:{url:string;width:number;height:number}=await response.json();expect(image).toMatchObject({width:32,height:24});expect(image.url).toMatch(/^\/api\/media\/[a-f0-9-]{36}\.webp$/);uploaded.push(image.url.split('/').pop()!);
-    const media=await request.get(image.url);expect(media.status()).toBe(200);expect(media.headers()['content-type']).toBe('image/webp');const metadata=await sharp(await media.body()).metadata();expect(metadata.format).toBe('webp');expect(metadata.exif).toBeUndefined();expect(metadata.icc).toBeUndefined();
+    expect((await request.get(image.url)).status()).toBe(404);
+    expect((await request.get(`/_next/image?url=${encodeURIComponent(image.url)}&w=640&q=75`)).status()).not.toBe(200);
+    expect((await request.get(image.url.replace('/api/media/','/api/admin/media/'))).status()).toBe(401);
+    const media=await administrator.get(image.url.replace('/api/media/','/api/admin/media/'));expect(media.status()).toBe(200);expect(media.headers()['content-type']).toBe('image/webp');const metadata=await sharp(await media.body()).metadata();expect(metadata.format).toBe('webp');expect(metadata.exif).toBeUndefined();expect(metadata.icc).toBeUndefined();
     await page.getByLabel('Afișează în portofoliu după publicarea versiunii',{exact:true}).check();await saveUI(page,'draft');
     expect(await (await request.get('/ro/portofoliu')).text()).not.toContain(title);
     await saveUI(page,'publish');
-    for(const locale of ['ro','ru','en']){await page.goto(`/${locale}/portofoliu`);await expect(page.locator('main')).toContainText(title);}
+    expect((await request.get(image.url)).status()).toBe(200);
+    for(const locale of ['ro','ru','en']){await page.goto(`/${locale}/portofoliu`);await expect(page.locator('main')).toContainText(title);const photo=page.locator(`a[href*="/portofoliu/"]`).filter({hasText:title}).locator('img');await expect(photo).toBeVisible();await expect.poll(()=>photo.evaluate((img:HTMLImageElement)=>img.naturalWidth)).toBeGreaterThan(0);}
     const state:State=await (await administrator.get('/api/admin/content')).json(),project=state.published.projects.find(project=>project.title.ro===title)!;expect(project.image).toBe(image.url);expect(project.published).toBe(true);expect(project.kind).toBe('concept');
   });
 

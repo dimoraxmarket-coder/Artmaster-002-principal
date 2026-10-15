@@ -300,7 +300,7 @@ export function CmsEditor({ actor }: { actor: Actor }) {
     return <section style={{ marginBlock: 20 }}>
       <h4>Imagine</h4>
       <TextField label="Adresa imaginii" value={image} hint="Folosește o imagine din biblioteca site-ului sau fotografia proprie încărcată mai jos. Imaginile conceptuale trebuie identificate ca atare. Adresele externe sunt verificate de server înainte de previzualizare." onChange={value => mutate(next => { next[key][index].image = value; })} />
-      {image && safeImage(image) && (image.startsWith('/') || verifiedImages.includes(image)) && <div style={{ maxWidth: 540, marginBottom: 16 }}><Image src={image} alt="Previzualizarea imaginii selectate" width={540} height={320} unoptimized style={{ width: '100%', height: 'auto', maxHeight: 320, objectFit: 'cover', borderRadius: 8 }} /></div>}
+      {image && safeImage(image) && (image.startsWith('/') || verifiedImages.includes(image)) && <div style={{ maxWidth: 540, marginBottom: 16 }}><Image src={image.startsWith('/api/media/')?image.replace('/api/media/','/api/admin/media/'):image} alt="Previzualizarea imaginii selectate" width={540} height={320} unoptimized style={{ width: '100%', height: 'auto', maxHeight: 320, objectFit: 'cover', borderRadius: 8 }} /></div>}
       {!readOnly && <label className="field">Încarcă fotografie PNG / JPEG, maximum 5 MB<input type="file" accept="image/png,image/jpeg" onChange={event => { const file = event.target.files?.[0]; event.target.value = ''; if (file) void uploadImage(key, index, file); }} /></label>}
     </section>;
   }

@@ -26,6 +26,9 @@ export function localDatabase() {
     CREATE TABLE IF NOT EXISTS sessions(hash TEXT PRIMARY KEY,admin_id TEXT NOT NULL REFERENCES admins(id) ON DELETE CASCADE,expires INTEGER NOT NULL);
     CREATE TABLE IF NOT EXISTS audit(id INTEGER PRIMARY KEY,actor TEXT NOT NULL,action TEXT NOT NULL,target TEXT NOT NULL,time TEXT NOT NULL);
   `);
+  // Additive migration: unknown-age legacy sessions fail closed (timestamps 0).
+  const sessionColumns=new Set((db.prepare('PRAGMA table_info(sessions)').all() as {name:string}[]).map(column=>column.name));
+  for(const name of ['created_at','last_seen_at'])if(!sessionColumns.has(name))db.exec(`ALTER TABLE sessions ADD COLUMN ${name} INTEGER NOT NULL DEFAULT 0`);
   chmodSync(join(dir,'artmaster.sqlite'),0o600);
   databases.set(dir,db);
   return db;
