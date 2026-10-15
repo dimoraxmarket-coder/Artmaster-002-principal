@@ -1,11 +1,16 @@
 import { test, beforeEach, afterEach } from 'node:test';
 import assert from 'node:assert/strict';
 import sharp from 'sharp';
-import { createCipheriv, createHash, randomBytes } from 'node:crypto';
+import { createCipheriv, createHash, randomBytes,randomUUID } from 'node:crypto';
 import { loginAdmin, verifyAdminMfa, actorForSession, requireActor, logoutAdmin, pendingMfaState } from '../src/lib/server/auth';
 import { BackendError } from '../src/lib/server/config';
 import { GET as publicImage } from '../src/app/api/media/[name]/route';
 import { GET as preview } from '../src/app/api/admin/media/[name]/route';
+import { GET as securitySessions,DELETE as securityRevoke } from '../src/app/api/admin/security/sessions/route';
+import { GET as securityAccounts } from '../src/app/api/admin/security/accounts/route';
+import { GET as securityAudit } from '../src/app/api/admin/security/audit/route';
+import { GET as securityMfa } from '../src/app/api/admin/security/mfa/route';
+import { PATCH as securityChange } from '../src/app/api/admin/security/accounts/[id]/route';
 import { GET as team } from '../src/app/api/admin/team/route';
 import { GET as detail } from '../src/app/api/admin/quotes/[id]/route';
 import { GET as inventory } from '../src/app/api/admin/media/route';
@@ -34,9 +39,10 @@ const names = ['ARTMASTER_STORAGE','SUPABASE_URL','SUPABASE_ANON_KEY','SUPABASE_
 const originalEnv = Object.fromEntries(names.map(name => [name, process.env[name]]));
 let role: AdminRole, verifiedFactor: boolean, userEnabled: boolean, roleEnabled: boolean, verifyAal: string, badCode: boolean, allowRate: boolean;
 let dataReads: number;
+let accountEnabled:boolean,roleGeneration:number,changeDuringSessionInsert:boolean;
 let failTouch: boolean, publishedImage: string | null;
 const storagePaths:string[]=[];
-const sessions = new Map<string, { user_id: string; session_hash: string; expires_at: string; purpose: string; created_at: string; last_seen_at: string; auth_session_id: string }>();
+const sessions = new Map<string, { user_id: string; session_hash: string; expires_at: string; purpose: string; created_at: string; last_seen_at: string; auth_session_id: string;reference?:string;verified_at?:string|null;role_version?:number }>();
 function token(aal = 'aal1') {
   return [Buffer.from(JSON.stringify({alg:'HS256',typ:'JWT'})).toString('base64url'), Buffer.from(JSON.stringify({sub:userId,aal,exp:Math.floor(Date.now()/1000)+3600,iat:Math.floor(Date.now()/1000),role:'authenticated',session_id:authSessionId})).toString('base64url'), 'synthetic-signature'].join('.');
 }
@@ -54,7 +60,7 @@ function encrypted(value: object) {
 }
 beforeEach(() => {
   Object.assign(process.env,{ARTMASTER_STORAGE:'supabase',SUPABASE_URL:'https://supabase.example.invalid',SUPABASE_ANON_KEY:'synthetic-anon',SUPABASE_SERVICE_ROLE_KEY:'synthetic-service',ARTMASTER_SESSION_SECRET:secret,SITE_URL:'https://site.example.invalid',NODE_ENV:'development'});
-  role='admin';verifiedFactor=false;userEnabled=true;roleEnabled=true;verifyAal='aal2';badCode=false;allowRate=true;dataReads=0;failTouch=false;publishedImage=null;storagePaths.length=0;sessions.clear();
+  role='admin';accountEnabled=true;roleGeneration=0;changeDuringSessionInsert=false;verifiedFactor=false;userEnabled=true;roleEnabled=true;verifyAal='aal2';badCode=false;allowRate=true;dataReads=0;failTouch=false;publishedImage=null;storagePaths.length=0;sessions.clear();
   globalThis.fetch=async (input, init) => {
     const url=new URL(typeof input==='string'?input:input instanceof URL?input.href:input.url);
     assert.equal(url.hostname,'supabase.example.invalid','fixture must never reach another host');
@@ -65,9 +71,13 @@ beforeEach(() => {
     if(url.pathname===`/auth/v1/factors/${factorId}/challenge`)return response({id:'synthetic-challenge',expires_at:Math.floor(Date.now()/1000)+300});
     if(url.pathname===`/auth/v1/factors/${factorId}/verify`){if(badCode)return response({msg:'bad code'},422);verifiedFactor=true;return response(authSession(verifyAal));}
     if(url.pathname==='/auth/v1/logout')return response(undefined,204);
-    if(url.pathname==='/rest/v1/admin_roles')return response(roleEnabled?[{role}]:[]);
+    if(url.pathname==='/rest/v1/admin_roles')return response(roleEnabled?[{role,enabled:accountEnabled,version:roleGeneration}]:[]);
     if(url.pathname==='/rest/v1/admin_sessions'){
-      if(method==='POST'){sessions.set(body.session_hash,{...body,created_at:new Date().toISOString(),last_seen_at:new Date().toISOString()});return response(undefined,201);}
+      if(method==='POST'){
+        if(changeDuringSessionInsert&&body.purpose==='admin'){roleGeneration++;sessions.clear();}
+        if(!accountEnabled||(body.role_version??0)!==roleGeneration)return response({code:'P0401',message:'account changed'},401);
+        sessions.set(body.session_hash,{...body,reference:randomUUID(),created_at:new Date().toISOString(),last_seen_at:new Date().toISOString()});return response(undefined,201);
+      }
       const hash=url.searchParams.get('session_hash')?.replace(/^eq\./,'');
       const row=hash?sessions.get(hash):undefined;
       const purpose=url.searchParams.get('purpose')?.replace(/^eq\./,'');
@@ -82,9 +92,22 @@ beforeEach(() => {
     if(url.pathname==='/rest/v1/rpc/touch_admin_session'){
       if(failTouch)return response({message:'synthetic unavailable'},503);
       const row=sessions.get(body.p_session_hash),now=Date.now();
-      if(!row||row.user_id!==body.p_user_id||row.auth_session_id!==body.p_auth_session_id||row.purpose!=='admin'||Date.parse(row.expires_at)<=now||Date.parse(row.created_at)<=now-8*3600000||Date.parse(row.last_seen_at)<=now-15*60000)return response(false);
+      if(!accountEnabled||!row||(row.role_version??0)!==roleGeneration||row.user_id!==body.p_user_id||row.auth_session_id!==body.p_auth_session_id||row.purpose!=='admin'||Date.parse(row.expires_at)<=now||Date.parse(row.created_at)<=now-8*3600000||Date.parse(row.last_seen_at)<=now-15*60000)return response(false);
       row.last_seen_at=new Date().toISOString();return response(true);
     }
+    if(url.pathname==='/rest/v1/rpc/complete_admin_mfa'){
+      if(changeDuringSessionInsert){roleGeneration++;sessions.clear();}
+      const pending=sessions.get(body.p_pending);
+      if(!pending||pending.purpose!=='mfa'||pending.user_id!==body.p_actor||pending.auth_session_id!==body.p_auth||!accountEnabled||roleGeneration!==body.p_generation)return response({code:'P0401'},401);
+      sessions.delete(body.p_pending);sessions.set(body.p_hash,{...pending,session_hash:body.p_hash,purpose:'admin',role_version:body.p_generation,expires_at:body.p_expires,created_at:new Date().toISOString(),last_seen_at:new Date().toISOString(),verified_at:new Date().toISOString(),reference:randomUUID()});return response(true);
+    }
+    if(url.pathname==='/rest/v1/rpc/security_sessions'){
+      dataReads++;const row=sessions.get(body.p_hash);if(!row)return response({code:'P0401'},401);
+      return response({sessions:[],total:0,page:body.p_page,pageSize:body.p_size,owner:{id:userId,email:'fixture@example.invalid'},freshUntil:row.verified_at?new Date(Date.parse(row.verified_at)+300000).toISOString():null});
+    }
+    if(url.pathname==='/rest/v1/rpc/security_audit')return role==='admin'?response({events:[],total:0,page:1,pageSize:10}):response({code:'P0403'},403);
+    if(url.pathname==='/rest/v1/rpc/security_change_account')return response({code:'P0403'},403);
+    if(url.pathname==='/rest/v1/rpc/security_logout'){for(const [key,row] of sessions)if(key===body.p_hash||row.auth_session_id===body.p_auth)sessions.delete(key);return response(undefined,204);}
     if(url.pathname==='/rest/v1/rpc/consume_rate')return response(allowRate);
     if(url.pathname==='/rest/v1/audit_log')return response(undefined,201);
     if(url.pathname==='/rest/v1/rpc/crm_list'){dataReads++;return response({quotes:[],total:0,page:body.p_query.page,pageSize:body.p_query.pageSize,totals:{total:0,new:0,in_progress:0,completed:0,archived:0}});}
@@ -111,12 +134,12 @@ for(const selectedRole of ['viewer','editor','admin'] as const)test(`${selectedR
   for(const cookie of [undefined,result.cookie]){
     const req=request(cookie);
     const responses=await Promise.all([
-      team(req),detail(req,{params:Promise.resolve({id:userId})}),inventory(req),archive(request(cookie,false,'DELETE',{confirm:true}),{params:Promise.resolve({name:`${factorId}.webp`})}),replace(request(cookie,false,'POST',{})),quotes(req),content(req),preview(req,{params:Promise.resolve({name:`${factorId}.webp`})}),attachment(req,{params:Promise.resolve({id:userId,fileId:factorId})}),
+      securitySessions(req),securityAccounts(req),securityAudit(req),securityMfa(req),securityRevoke(request(cookie,false,'DELETE',{allOthers:true,confirm:true})),securityChange(request(cookie,false,'PATCH',{role:'admin',enabled:true,expectedVersion:0,confirm:true}),{params:Promise.resolve({id:userId})}),team(req),detail(req,{params:Promise.resolve({id:userId})}),inventory(req),archive(request(cookie,false,'DELETE',{confirm:true}),{params:Promise.resolve({name:`${factorId}.webp`})}),replace(request(cookie,false,'POST',{})),quotes(req),content(req),preview(req,{params:Promise.resolve({name:`${factorId}.webp`})}),attachment(req,{params:Promise.resolve({id:userId,fileId:factorId})}),
       status(request(cookie,false,'PATCH',{status:'in_progress'}),{params:Promise.resolve({id:userId})}),
       media(request(cookie,false,'POST')),retry(request(cookie,false,'POST')),
       saveContent(request(cookie,false,'PUT',{content:defaultContent,version:0,action:'save-draft'})),
     ]);
-    assert.deepEqual(responses.map(response=>response.status),[401,401,401,401,401,401,401,401,401,401,401,401,401]);
+    assert.deepEqual(responses.map(response=>response.status),[401,401,401,401,401,401,401,401,401,401,401,401,401,401,401,401,401,401,401]);
   }
   assert.equal(dataReads,0,'no protected records read before MFA');
   const setup=await enroll(request(result.cookie,true,'POST'));
@@ -134,7 +157,10 @@ for(const selectedRole of ['viewer','editor','admin'] as const)test(`${selectedR
     assert.equal((await media(request(session,false,'POST'))).status,403);
     assert.equal((await saveContent(request(session,false,'PUT',{content:defaultContent,version:0,action:'save-draft'}))).status,403);
   }
+  const liveMfa=await securityMfa(request(session));assert.equal(liveMfa.status,200);assert.equal((await liveMfa.json()).verifiedTotpFactors,1);
   if(selectedRole!=='admin'){
+    assert.equal((await securityAudit(request(session))).status,403);
+    assert.equal((await securityChange(request(session,false,'PATCH',{role:'admin',enabled:true,expectedVersion:0,confirm:true}),{params:Promise.resolve({id:userId})})).status,403);
     assert.equal((await retry(request(session,false,'POST'))).status,403);
     assert.equal((await saveContent(request(session,false,'PUT',{content:defaultContent,version:0,action:'publish'}))).status,403);
   }
@@ -209,7 +235,7 @@ test('Supabase sessions expire on idle and absolute deadlines; activity never re
     if(kind==='revoked')sessions.delete(hash);
     assert.equal((await quotes(request(cookie))).status,401);
     assert.equal((await preview(request(cookie),{params:Promise.resolve({name:`${factorId}.webp`})})).status,401);
-    for(const response of await Promise.all([team(request(cookie)),detail(request(cookie),{params:Promise.resolve({id:userId})}),inventory(request(cookie)),replace(request(cookie,false,'POST',{})),archive(request(cookie,false,'DELETE',{confirm:true}),{params:Promise.resolve({name:`${factorId}.webp`})})]))assert.equal(response.status,401);
+    for(const response of await Promise.all([securitySessions(request(cookie)),securityAccounts(request(cookie)),securityAudit(request(cookie)),securityMfa(request(cookie)),securityRevoke(request(cookie,false,'DELETE',{allOthers:true,confirm:true})),securityChange(request(cookie,false,'PATCH',{role:'admin',enabled:true,expectedVersion:0,confirm:true}),{params:Promise.resolve({id:userId})}),team(request(cookie)),detail(request(cookie),{params:Promise.resolve({id:userId})}),inventory(request(cookie)),replace(request(cookie,false,'POST',{})),archive(request(cookie,false,'DELETE',{confirm:true}),{params:Promise.resolve({name:`${factorId}.webp`})})]))assert.equal(response.status,401);
     sessions.clear();
   }
 });
@@ -244,4 +270,18 @@ test('Supabase client uploads only private originals; public gateway checks publ
   assert.equal((await preview(request(cookie),params)).status,200);
   publishedImage=url;assert.equal((await publicImage(request(),params)).status,200);
   assert.equal(storagePaths.length,3);
+});
+
+
+test('disabled and generation-changed Supabase accounts cannot regain access through old full or pending sessions',async()=>{
+ const pending=await loginAdmin('fixture@example.invalid','synthetic password');
+ accountEnabled=false;assert.equal((await enroll(request(pending.cookie,true,'POST'))).status,401);
+ accountEnabled=true;roleGeneration++;assert.equal((await enroll(request(pending.cookie,true,'POST'))).status,401);
+ roleGeneration=0;verifiedFactor=true;const challenge=await loginAdmin('fixture@example.invalid','synthetic password'),cookie=await verifyAdminMfa(challenge.cookie,'123456');
+ accountEnabled=false;assert.equal((await securityMfa(request(cookie))).status,401);accountEnabled=true;roleGeneration++;assert.equal((await securityMfa(request(cookie))).status,401);
+});
+test('a role change between MFA completion and full session insertion fails closed',async()=>{
+ verifiedFactor=true;const pending=await loginAdmin('fixture@example.invalid','synthetic password');changeDuringSessionInsert=true;
+ await assert.rejects(()=>verifyAdminMfa(pending.cookie,'123456'));
+ assert.equal([...sessions.values()].filter(row=>row.purpose==='admin').length,0);
 });

@@ -9,9 +9,10 @@ import { DatabaseSync } from 'node:sqlite';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { LocalStorage, localDatabase } from '../src/lib/server/local';
-import { createLocalAdmin, loginAdmin, actorForSession } from '../src/lib/server/auth';
+import { createLocalAdmin, loginAdmin, actorForSession,requireSecurityContext } from '../src/lib/server/auth';
 import { backupLocalData, restoreLocalBackup } from '../src/lib/server/backup';
 import { readPublishedMedia } from '../src/lib/server/media';
+import { changeAccount } from '../src/lib/server/security';
 import { changeQuote } from '../src/lib/server/crm';
 import { registerMedia } from '../src/lib/server/media-inventory';
 import { defaultContent } from '../src/lib/content/defaults';
@@ -37,6 +38,9 @@ test('backup and restore preserve synthetic data and files, revoke copied sessio
   await changeQuote(quote.id,{note:'Synthetic backup note',assignedTo:actor.id,expectedVersion:0},actor);
   await registerMedia({url:`/api/media/${image}`,name:'Synthetic backup image',bytes:bytes.length,width:1,height:1,createdAt:new Date().toISOString()},actor);
   const login = await loginAdmin(actor.email, 'Synthetic-only passphrase');
+  const disabled=createLocalAdmin('disabled-fixture@example.invalid','Synthetic-only staff passphrase','editor');
+  const context=await requireSecurityContext(new Request('http://localhost:3000',{headers:{Cookie:`artmaster_admin=${login.cookie}`}}));
+  await changeAccount(context,disabled,{role:'viewer',enabled:false,expectedVersion:0,confirm:true});
   const secret = await store.secret('ARTMASTER_SESSION_SECRET');
   const backup = join(root, 'backup'), restored = join(root, 'restored');
   await backupLocalData(source, backup);
@@ -49,7 +53,10 @@ test('backup and restore preserve synthetic data and files, revoke copied sessio
     assert.equal((db.prepare('SELECT assigned_to FROM quotes').get() as {assigned_to:string}).assigned_to,actor.id);
     assert.equal((db.prepare('SELECT COUNT(*) AS n FROM media_assets').get() as {n:number}).n,1);
     assert.equal((db.prepare('SELECT COUNT(*) AS n FROM sessions').get() as { n: number }).n, 0);
-    assert.equal((db.prepare('SELECT COUNT(*) AS n FROM admins').get() as { n: number }).n, 1);
+    assert.equal((db.prepare('SELECT COUNT(*) AS n FROM admins').get() as { n: number }).n, 2);
+    assert.deepEqual({...db.prepare('SELECT enabled,version,role FROM admins WHERE id=?').get(disabled)},{enabled:0,version:1,role:'viewer'});
+    assert.equal((db.prepare("SELECT count(*) n FROM audit WHERE action='security.team.change'").get() as {n:number}).n,1);
+    assert.throws(()=>db.prepare("DELETE FROM audit WHERE id=1").run());
     assert.equal((db.prepare('SELECT value FROM meta WHERE key=?').get('secret:ARTMASTER_SESSION_SECRET') as { value: string }).value, secret);
     assert.deepEqual(JSON.parse((db.prepare('SELECT published FROM content').get() as { published: string }).published), published);
   } finally { db.close(); }

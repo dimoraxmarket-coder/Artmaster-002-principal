@@ -1,5 +1,5 @@
 import { DatabaseSync } from 'node:sqlite';
-import { randomBytes, createHash } from 'node:crypto';
+import { randomBytes, createHash, randomUUID } from 'node:crypto';
 import { mkdirSync, chmodSync } from 'node:fs';
 import { readFile, writeFile, unlink } from 'node:fs/promises';
 import { join } from 'node:path';
@@ -29,6 +29,21 @@ export function localDatabase() {
   // Additive migration: unknown-age legacy sessions fail closed (timestamps 0).
   const sessionColumns=new Set((db.prepare('PRAGMA table_info(sessions)').all() as {name:string}[]).map(column=>column.name));
   for(const name of ['created_at','last_seen_at'])if(!sessionColumns.has(name))db.exec(`ALTER TABLE sessions ADD COLUMN ${name} INTEGER NOT NULL DEFAULT 0`);
+  const adminColumns=new Set((db.prepare('PRAGMA table_info(admins)').all() as {name:string}[]).map(column=>column.name));
+  if(!adminColumns.has('enabled'))db.exec('ALTER TABLE admins ADD COLUMN enabled INTEGER NOT NULL DEFAULT 1 CHECK(enabled IN (0,1))');
+  if(!adminColumns.has('version'))db.exec('ALTER TABLE admins ADD COLUMN version INTEGER NOT NULL DEFAULT 0');
+  if(!sessionColumns.has('reference'))db.exec('ALTER TABLE sessions ADD COLUMN reference TEXT');
+  if(!sessionColumns.has('verified_at'))db.exec('ALTER TABLE sessions ADD COLUMN verified_at INTEGER');
+  if(!sessionColumns.has('role_version'))db.exec('ALTER TABLE sessions ADD COLUMN role_version INTEGER NOT NULL DEFAULT 0');
+  for(const row of db.prepare('SELECT hash FROM sessions WHERE reference IS NULL').all() as {hash:string}[])db.prepare('UPDATE sessions SET reference=? WHERE hash=?').run(randomUUID(),row.hash);
+  const auditColumns=new Set((db.prepare('PRAGMA table_info(audit)').all() as {name:string}[]).map(column=>column.name));
+  if(!auditColumns.has('context'))db.exec("ALTER TABLE audit ADD COLUMN context TEXT NOT NULL DEFAULT '{}'");
+  db.exec(`CREATE UNIQUE INDEX IF NOT EXISTS session_reference ON sessions(reference);
+    CREATE INDEX IF NOT EXISTS session_account ON sessions(admin_id);
+    CREATE INDEX IF NOT EXISTS audit_security ON audit(action,time,id);
+    CREATE TRIGGER IF NOT EXISTS audit_append_only_update BEFORE UPDATE ON audit BEGIN SELECT RAISE(ABORT,'audit is append only'); END;
+    CREATE TRIGGER IF NOT EXISTS audit_append_only_delete BEFORE DELETE ON audit BEGIN SELECT RAISE(ABORT,'audit is append only'); END;
+  `);
   const quoteColumns=new Set((db.prepare('PRAGMA table_info(quotes)').all() as {name:string}[]).map(column=>column.name));
   if(!quoteColumns.has('version'))db.exec('ALTER TABLE quotes ADD COLUMN version INTEGER NOT NULL DEFAULT 0');
   if(!quoteColumns.has('assigned_to'))db.exec('ALTER TABLE quotes ADD COLUMN assigned_to TEXT REFERENCES admins(id) ON DELETE SET NULL');

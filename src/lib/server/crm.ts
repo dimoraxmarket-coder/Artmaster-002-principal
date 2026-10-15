@@ -135,7 +135,7 @@ export async function queryQuotes(input: QuoteQuery): Promise<QuotePage> {
 export async function staffDirectory(): Promise<StaffMember[]> {
   if (storageMode() === "local")
     return localDatabase()
-      .prepare("SELECT id,email,role FROM admins ORDER BY email")
+      .prepare("SELECT id,email,role FROM admins WHERE enabled=1 ORDER BY email")
       .all() as StaffMember[];
   const { data, error } = await supabaseService().rpc("crm_staff");
   rpcError(error);
@@ -209,7 +209,7 @@ export async function changeQuote(
       input.assignedTo &&
       !db
         .prepare(
-          "SELECT id FROM admins WHERE id=? AND role IN ('editor','admin')",
+          "SELECT id FROM admins WHERE id=? AND enabled=1 AND role IN ('editor','admin')",
         )
         .get(input.assignedTo)
     )

@@ -23,5 +23,10 @@ export async function POST(request:Request){
     const response=Response.json({ok:!result.mfaRequired,mfaRequired:result.mfaRequired,enrollmentRequired:'enrollmentRequired' in result&&result.enrollmentRequired},{headers:{'Cache-Control':'no-store'}});
     response.headers.append('Set-Cookie',sessionCookie(result.cookie,result.mfaRequired?PREAUTH_COOKIE:undefined,result.mfaRequired?300:undefined));
     response.headers.append('Set-Cookie',sessionCookie('',result.mfaRequired?undefined:PREAUTH_COOKIE,0));return response;
-  }catch(error){return errorResponse(error);}
+  }catch(error){
+    if(error instanceof BackendError&&['unauthorized','mfa_required'].includes(error.code)){
+      try{await getStorage().audit({id:'00000000-0000-0000-0000-000000000000',email:'',role:'viewer',aal:'aal1'},'admin.login.failed','session');}catch{return errorResponse(new BackendError('unavailable',503));}
+    }
+    return errorResponse(error);
+  }
 }
