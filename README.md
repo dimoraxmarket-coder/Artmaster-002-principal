@@ -42,6 +42,7 @@ Testele E2E pornesc un server de producție local pe portul 3100 când nu exist�
 - [Securitate, administrare și copii de siguranță](docs/security-and-backups.md)
 - [Phase 1: protejarea datelor, restaurare verificată și MFA obligatorie](docs/security-foundation.md)
 - [Phase 2: sesiuni, imagini private și validarea securității](docs/admin-security-validation.md)
+- [Phase 3: cabinetul administrativ și capturi de ecran](docs/premium-admin.md)
 - [Configurarea și verificarea Supabase staging](docs/supabase-staging-validation.md)
 - [Recuperarea MFA cu verificare și aprobare separată](docs/mfa-recovery.md)
 - [Migrarea Joomla și păstrarea traficului organic](docs/migration.md)
