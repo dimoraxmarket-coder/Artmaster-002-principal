@@ -702,7 +702,7 @@ function Workspace({
               sessionPolicy={sessionPolicy}
             />
           )}{" "}
-          {view === "team" && <TeamView actor={actor} />}{" "}
+          {view === "team" && <TeamView actor={actor} onLogout={logout} />}{" "}
           {view === "inbox" && actor.role === "admin" && (
             <div className={styles.retryBar}>
               <div>

@@ -22,6 +22,13 @@ export async function adminApi<T>(
       unauthorized:
         "Sesiunea a expirat. Autentifică-te din nou pentru a continua.",
       mfa_required: "Confirmă autentificarea în doi pași pentru a continua.",
+      reauth_required:
+        "Confirmarea recentă a expirat. Încheie sesiunea și autentifică-te din nou, apoi reîncarcă datele.",
+      last_admin:
+        "Ultimul administrator activ trebuie păstrat. Adaugă sau activează alt administrator înainte de această modificare.",
+      self_change: "Un alt administrator trebuie să îți modifice accesul.",
+      current_session:
+        "Pentru această sesiune folosește acțiunea de ieșire din cont.",
       forbidden: "Rolul contului tău nu permite această acțiune.",
       rate_limited: "Prea multe încercări. Așteaptă puțin și încearcă din nou.",
       version_conflict:

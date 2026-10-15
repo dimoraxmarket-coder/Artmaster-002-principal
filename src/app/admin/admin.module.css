@@ -2281,3 +2281,38 @@
 .assetBody label:focus-within { outline: 2px solid var(--yellow); outline-offset: 3px; }
 .assetBody > .action { margin-top: 10px; }
 .inboxToolbar { flex-wrap: wrap; }
+
+.securityDialog { width: min(900px, calc(100vw - 32px)); max-height: calc(100dvh - 40px); border: 1px solid #434854; border-radius: 16px; padding: 0; background: #191b20; color: #f2f3f6; }
+.securityDialog::backdrop { background: #07090dcc; backdrop-filter: blur(4px); }
+.securityDialog .panel { margin-bottom: 20px; }
+.securityDialog h2 { font-size: 20px; }
+.securityDialog .dialogBody { padding: 24px; }
+.securityDialog .field { margin-block: 20px; }
+.dialogActions { display: flex; justify-content: flex-end; gap: 12px; margin-block: 20px; flex-wrap: wrap; }
+.sessionCards { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 18px; padding: 0 24px 24px; }
+.sessionCard { border: 1px solid #3a404b; border-radius: 12px; padding: 22px; background: #15171c; }
+.currentSession { border-color: #8b792b; background: linear-gradient(120deg,#f5cc2708,#15171c); }
+.sessionCardHeading { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
+.sessionCardHeading h3 { margin: 0; font-size: 15px; }
+.sessionCardHeading p { color: #b8bdc7; font-size: 12px; margin: 2px 0 0; }
+.sessionDates { display: grid; gap: 12px; margin-bottom: 20px; }
+.sessionDates div { display: flex; justify-content: space-between; gap: 12px; }
+.sessionDates dt { color: #b8bdc7; font-size: 12px; }
+.sessionDates dd { margin: 0; text-align: right; font-size: 12px; }
+.securityFilters { display: flex; flex-wrap: wrap; gap: 16px; padding: 20px 24px; }
+.securityFilters .field { flex: 1; min-width: 170px; }
+.teamActions { display: flex; flex-wrap: wrap; gap: 8px; }
+.securityCheckbox { display: flex; gap: 12px; align-items: center; margin-block: 20px; }
+.root .securityCheckbox input { width: 20px; height: 20px; min-height: 20px; flex: none; accent-color: var(--yellow); }
+.recoverySteps { padding-left: 20px; display: grid; gap: 12px; color: #c5cad4; }
+.managedEmail { overflow-wrap: anywhere; font-weight: 650; }
+@media (max-width: 650px) {
+ .sessionCards { grid-template-columns: 1fr; padding-inline: 16px; }
+ .sessionCard { padding: 18px; }
+ .sessionDates div { flex-direction: column; gap: 3px; }
+ .sessionDates dd { text-align: left; }
+ .securityDialog { width: calc(100vw - 20px); max-height: calc(100dvh - 20px); }
+ .securityDialog .dialogBody { padding: 18px; }
+ .securityDialog h2 { font-size: 17px; overflow-wrap: anywhere; }
+ .securityFilters { padding-inline: 17px; }
+}

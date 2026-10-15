@@ -81,7 +81,7 @@ test.describe.serial('real local production administration',()=>{
     }finally{
       const db=database();
       if(ownQuote){db.prepare('DELETE FROM quote_events WHERE quote_id=?').run(ownQuote.id);db.prepare('DELETE FROM quotes WHERE id=?').run(ownQuote.id);}
-      for(const account of accounts){const row=db.prepare('SELECT id FROM admins WHERE email=?').get(account.email) as {id:string}|undefined;if(row){db.prepare('DELETE FROM audit WHERE actor=?').run(row.id);db.prepare('DELETE FROM admins WHERE id=?').run(row.id);}}
+      for(const account of accounts){const row=db.prepare('SELECT id FROM admins WHERE email=?').get(account.email) as {id:string}|undefined;if(row){db.prepare('DELETE FROM admins WHERE id=?').run(row.id);}}
       for(const name of uploaded)db.prepare('DELETE FROM media_assets WHERE url=?').run(`/api/media/${name}`);
       db.close();await administrator?.dispose();
       for(const name of uploaded)await unlink(join(directory,'media',name)).catch(()=>{});
@@ -148,17 +148,17 @@ test.describe.serial('real local production administration',()=>{
     await expect(page.getByRole('article').filter({hasText:'Total solicitări'})).toContainText(String(totals.total).padStart(2,'0'));
     const report=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21a','wcag21aa','wcag22aa']).analyze();
     expect(report.violations.filter(value=>value.impact==='serious'||value.impact==='critical')).toEqual([]);
-    if(process.env.ARTMASTER_ADMIN_SCREENSHOTS==='1'){await mkdir('docs/screenshots/admin-phase4',{recursive:true});await page.screenshot({path:'docs/screenshots/admin-phase4/dashboard-desktop.png',fullPage:true,animations:'disabled'});}
+    if(process.env.ARTMASTER_ADMIN_SCREENSHOTS==='1'){await mkdir('docs/screenshots/admin-phase5',{recursive:true});await page.screenshot({path:'docs/screenshots/admin-phase5/dashboard-desktop.png',fullPage:true,animations:'disabled'});}
     await page.getByRole('link',{name:'Mesaje clienți'}).click();
     await page.getByLabel('Caută solicitări').fill(`e2e-quote-${nonce}`);
     await expect(page.getByRole('button',{name:'Deschide solicitarea de la Administration verification'})).toBeVisible();
-    if(process.env.ARTMASTER_ADMIN_SCREENSHOTS==='1')await page.screenshot({path:'docs/screenshots/admin-phase4/inbox-desktop.png',fullPage:true,animations:'disabled'});
+    if(process.env.ARTMASTER_ADMIN_SCREENSHOTS==='1')await page.screenshot({path:'docs/screenshots/admin-phase5/inbox-desktop.png',fullPage:true,animations:'disabled'});
     await page.getByRole('button',{name:'Deschide solicitarea de la Administration verification'}).click();
     const dialog=page.getByRole('dialog',{name:'Administration verification'});await expect(dialog).toBeVisible();
     await expect(dialog.getByRole('link',{name:'Descarcă private-fixture.pdf'})).toHaveAttribute('href',`/api/admin/quotes/${ownQuote!.id}/files/${ownQuote!.files[0].id}`);
     const changed=page.waitForResponse(response=>response.request().method()==='PATCH'&&response.url().includes(`/api/admin/quotes/${ownQuote!.id}`));
     await dialog.getByLabel('Starea solicitării').selectOption('in_progress');expect((await changed).status()).toBe(200);await expect(dialog).toContainText('În lucru');
-    if(process.env.ARTMASTER_ADMIN_SCREENSHOTS==='1')await page.screenshot({path:'docs/screenshots/admin-phase4/request-detail.png',fullPage:true,animations:'disabled'});
+    if(process.env.ARTMASTER_ADMIN_SCREENSHOTS==='1')await page.screenshot({path:'docs/screenshots/admin-phase5/request-detail.png',fullPage:true,animations:'disabled'});
     await page.keyboard.press('Escape');await expect(dialog).not.toBeVisible();
     await expect(page.getByRole('button',{name:'Deschide solicitarea de la Administration verification'})).toBeFocused();
     await page.getByLabel('Caută solicitări').fill('no-synthetic-record-matches-this');await expect(page.getByRole('heading',{name:'Nicio solicitare găsită'})).toBeVisible();
@@ -172,9 +172,9 @@ test.describe.serial('real local production administration',()=>{
     await page.getByRole('link',{name:'Conținut',exact:true}).click();await expect(page.getByRole('heading',{name:'Conținut Studio',exact:true})).toBeVisible();
     await page.getByRole('link',{name:'Setări website',exact:true}).click();await expect(page.getByLabel('Telefon public',{exact:true})).toHaveValue('+37360010403');
     await page.getByLabel('Telefon public',{exact:true}).fill(originalPhone);
-    if(process.env.ARTMASTER_ADMIN_SCREENSHOTS==='1')await page.screenshot({path:'docs/screenshots/admin-phase4/website-settings-desktop.png',fullPage:true,animations:'disabled'});
+    if(process.env.ARTMASTER_ADMIN_SCREENSHOTS==='1')await page.screenshot({path:'docs/screenshots/admin-phase5/website-settings-desktop.png',fullPage:true,animations:'disabled'});
     await page.getByRole('link',{name:'Bibliotecă media',exact:true}).click();await expect(page.getByRole('article').first().getByRole('img')).toBeVisible();
-    if(process.env.ARTMASTER_ADMIN_SCREENSHOTS==='1')await page.screenshot({path:'docs/screenshots/admin-phase4/media-library-desktop.png',fullPage:true,animations:'disabled'});
+    if(process.env.ARTMASTER_ADMIN_SCREENSHOTS==='1')await page.screenshot({path:'docs/screenshots/admin-phase5/media-library-desktop.png',fullPage:true,animations:'disabled'});
     const libraryPNG=await sharp({create:{width:32,height:24,channels:3,background:'#f5cc27'}}).png().toBuffer();
     const libraryResponse=page.waitForResponse(response=>response.url().endsWith('/api/admin/media')&&response.request().method()==='POST');
     await page.getByLabel('Încarcă imagine în bibliotecă').setInputFiles({name:'temporary-library.png',mimeType:'image/png',buffer:libraryPNG});
@@ -182,8 +182,8 @@ test.describe.serial('real local production administration',()=>{
     const anonymousMedia=await playwrightRequest.newContext({baseURL});try{expect((await anonymousMedia.get(libraryAsset.url)).status()).toBe(404);}finally{await anonymousMedia.dispose();}
     await page.getByLabel('Caută imagini').fill('temporary-library.png');await expect(page.getByRole('article')).toHaveCount(1);
     await page.getByRole('link',{name:'Securitate',exact:true}).click();await expect(page.getByRole('heading',{name:'Autentificare locală de dezvoltare.'})).toBeVisible();
-    await expect(page.getByRole('button',{name:'În dezvoltare'})).toHaveCount(3);for(const button of await page.getByRole('button',{name:'În dezvoltare'}).all())await expect(button).toBeDisabled();
-    if(process.env.ARTMASTER_ADMIN_SCREENSHOTS==='1')await page.screenshot({path:'docs/screenshots/admin-phase4/security-desktop.png',fullPage:true,animations:'disabled'});
+    await expect(page.getByRole('heading',{name:'Sesiunile tale active',exact:true})).toBeVisible();await expect(page.getByRole('button',{name:'Sesiune curentă',exact:true})).toBeDisabled();
+    if(process.env.ARTMASTER_ADMIN_SCREENSHOTS==='1')await page.screenshot({path:'docs/screenshots/admin-phase5/security-desktop.png',fullPage:true,animations:'disabled'});
     for(const width of [320,390,768]){
       await page.setViewportSize({width,height:900});
       await page.getByRole('button',{name:'Deschide meniul',exact:true}).click();
@@ -191,7 +191,7 @@ test.describe.serial('real local production administration',()=>{
       await menu.getByRole('link',{name:'Prezentare',exact:true}).click();await expect(menu).not.toBeVisible();
       await expect(page.getByRole('heading',{name:'O zi bună începe cu perspectivă.'})).toBeFocused();
       await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
-      if(width===390&&process.env.ARTMASTER_ADMIN_SCREENSHOTS==='1')await page.screenshot({path:'docs/screenshots/admin-phase4/dashboard-mobile.png',fullPage:true,animations:'disabled'});
+      if(width===390&&process.env.ARTMASTER_ADMIN_SCREENSHOTS==='1')await page.screenshot({path:'docs/screenshots/admin-phase5/dashboard-mobile.png',fullPage:true,animations:'disabled'});
     }
     await page.getByRole('button',{name:'Deschide meniul',exact:true}).click();await page.keyboard.press('Escape');await expect(page.getByRole('button',{name:'Deschide meniul',exact:true})).toBeFocused();
     const report=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21a','wcag21aa','wcag22aa']).analyze();expect(report.violations.filter(value=>value.impact==='serious'||value.impact==='critical')).toEqual([]);
@@ -199,7 +199,7 @@ test.describe.serial('real local production administration',()=>{
 
   test('admin loading, failure, viewer and unauthenticated states never imply access or invented data',async({page})=>{
     await page.goto('/admin#security');await expect(page.getByRole('heading',{name:'Bine ai revenit.'})).toBeVisible();await expect(page.getByRole('navigation',{name:'Navigare administrare'})).toHaveCount(0);
-    if(process.env.ARTMASTER_ADMIN_SCREENSHOTS==='1')await page.screenshot({path:'docs/screenshots/admin-phase4/sign-in.png',fullPage:true,animations:'disabled'});
+    if(process.env.ARTMASTER_ADMIN_SCREENSHOTS==='1')await page.screenshot({path:'docs/screenshots/admin-phase5/sign-in.png',fullPage:true,animations:'disabled'});
     await browserSession(page.context());
     let release!:()=>void;const pending=new Promise<void>(resolve=>{release=resolve;});
     await page.route('**/api/admin/quotes*',async route=>{await pending;await route.fulfill({status:503,contentType:'application/json',body:JSON.stringify({code:'unavailable'})});});
@@ -224,7 +224,7 @@ test.describe.serial('real local production administration',()=>{
       await page.getByRole('button',{name:'Înainte',exact:true}).click();expect((await nextResponse).status()).toBe(200);await expect(page.getByText('9–9 din 9 solicitări',{exact:true})).toBeVisible();await expect(page.getByRole('button',{name:'Înainte',exact:true})).toBeDisabled();
       await page.getByRole('button',{name:'Înapoi',exact:true}).click();await expect(page.getByText('1–8 din 9 solicitări',{exact:true})).toBeVisible();await page.getByLabel('Filtrează solicitările după stare').selectOption('completed');await expect(page.getByText('1–4 din 4 solicitări',{exact:true})).toBeVisible();
       const totals=await (await administrator.get('/api/admin/quotes?pageSize=1')).json();expect(totals.quotes).toHaveLength(1);expect(totals.totals.total).toBeGreaterThanOrEqual(10);
-      if(process.env.ARTMASTER_ADMIN_SCREENSHOTS==='1')await page.screenshot({path:'docs/screenshots/admin-phase4/inbox-filtered.png',fullPage:true,animations:'disabled'});
+      if(process.env.ARTMASTER_ADMIN_SCREENSHOTS==='1')await page.screenshot({path:'docs/screenshots/admin-phase5/inbox-filtered.png',fullPage:true,animations:'disabled'});
     }finally{const cleanup=database();for(const id of ids)cleanup.prepare('DELETE FROM quotes WHERE id=?').run(id);cleanup.close();}
   });
 
@@ -242,12 +242,12 @@ test.describe.serial('real local production administration',()=>{
     await dialog.getByLabel('Notă internă').fill('Această notă rămâne în formular în caz de conflict.');await dialog.getByRole('button',{name:'Salvează nota'}).click();
     await expect(dialog.getByRole('alert')).toContainText('modificate între timp');await expect(dialog.getByLabel('Notă internă')).toHaveValue('Această notă rămâne în formular în caz de conflict.');
     await dialog.getByRole('button',{name:'Încarcă versiunea actuală'}).click();await expect(dialog.getByRole('alert')).not.toBeVisible();await dialog.getByLabel('Notă internă').fill('');
-    if(process.env.ARTMASTER_ADMIN_SCREENSHOTS==='1'){await dialog.getByRole('heading',{name:'Note interne',exact:true}).scrollIntoViewIfNeeded();await page.screenshot({path:'docs/screenshots/admin-phase4/crm-notes-activity.png',animations:'disabled'});}
+    if(process.env.ARTMASTER_ADMIN_SCREENSHOTS==='1'){await dialog.getByRole('heading',{name:'Note interne',exact:true}).scrollIntoViewIfNeeded();await page.screenshot({path:'docs/screenshots/admin-phase5/crm-notes-activity.png',animations:'disabled'});}
     const report=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21a','wcag21aa','wcag22aa']).analyze();expect(report.violations.filter(value=>value.impact==='serious'||value.impact==='critical')).toEqual([]);
     await page.keyboard.press('Escape');await page.reload();await page.getByLabel('Caută solicitări').fill(`e2e-quote-${nonce}`);await page.getByLabel('Filtrează după responsabil').selectOption(editor.id);await expect(page.getByRole('button',{name:'Deschide solicitarea de la Administration verification'})).toBeVisible();
     await page.getByRole('button',{name:'Deschide solicitarea de la Administration verification'}).click();await expect(page.getByLabel('Atribuie solicitarea')).toHaveValue(editor.id);await expect(page.getByText('Notă internă sintetică: confirmarea dimensiunilor înainte de ofertă.',{exact:true})).toBeVisible();
     await page.keyboard.press('Escape');await page.setViewportSize({width:390,height:900});await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
-    if(process.env.ARTMASTER_ADMIN_SCREENSHOTS==='1')await page.screenshot({path:'docs/screenshots/admin-phase4/inbox-mobile.png',fullPage:true,animations:'disabled'});
+    if(process.env.ARTMASTER_ADMIN_SCREENSHOTS==='1')await page.screenshot({path:'docs/screenshots/admin-phase5/inbox-mobile.png',fullPage:true,animations:'disabled'});
   });
 
   test('Media Studio persists uploads, replaces draft references and safely archives unused inventory',async({page,request})=>{
@@ -265,13 +265,13 @@ test.describe.serial('real local production administration',()=>{
     await expect(page.getByRole('status').filter({hasText:'Imagine înlocuită în ciorna salvată'})).toBeVisible();
     state=await (await administrator.get('/api/admin/content')).json();expect(state.published.services[0].image).toBe(first.url);expect(state.draft!.services[0].image).toBe(second.url);expect((await request.get(first.url)).status()).toBe(200);expect((await request.get(second.url)).status()).toBe(404);
     await page.getByLabel('Caută imagini').fill('phase4-');await expect(page.getByRole('article')).toHaveCount(2);
-    if(process.env.ARTMASTER_ADMIN_SCREENSHOTS==='1')await page.screenshot({path:'docs/screenshots/admin-phase4/media-replacement.png',fullPage:true,animations:'disabled'});
+    if(process.env.ARTMASTER_ADMIN_SCREENSHOTS==='1')await page.screenshot({path:'docs/screenshots/admin-phase5/media-replacement.png',fullPage:true,animations:'disabled'});
     const report=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21a','wcag21aa','wcag22aa']).analyze();expect(report.violations.filter(value=>value.impact==='serious'||value.impact==='critical')).toEqual([]);
     expect((await administrator.put('/api/admin/content',{data:{content:state.draft,action:'publish',version:state.version}})).status()).toBe(200);
     await page.getByRole('button',{name:'Actualizează',exact:true}).click();await expect(card.getByRole('button',{name:'Arhivează',exact:true})).toBeEnabled();page.once('dialog',dialog=>dialog.accept());await card.getByRole('button',{name:'Arhivează',exact:true}).click();await expect(card).toHaveCount(0);await expect(page.getByRole('status').filter({hasText:'Imagine arhivată.'})).toBeVisible();
     expect((await administrator.get(first.url.replace('/api/media/','/api/admin/media/'))).status()).toBe(200);expect((await request.get(first.url)).status()).toBe(404);expect((await request.get(second.url)).status()).toBe(200);
     await page.setViewportSize({width:390,height:900});await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
-    if(process.env.ARTMASTER_ADMIN_SCREENSHOTS==='1')await page.screenshot({path:'docs/screenshots/admin-phase4/media-mobile.png',fullPage:true,animations:'disabled'});
+    if(process.env.ARTMASTER_ADMIN_SCREENSHOTS==='1')await page.screenshot({path:'docs/screenshots/admin-phase5/media-mobile.png',fullPage:true,animations:'disabled'});
   });
 
   test('roles guard writes and private file access; logout revokes even replayed session',async({request})=>{

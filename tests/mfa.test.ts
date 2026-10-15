@@ -42,6 +42,7 @@ let dataReads: number;
 let accountEnabled:boolean,roleGeneration:number,changeDuringSessionInsert:boolean;
 let failTouch: boolean, publishedImage: string | null;
 const storagePaths:string[]=[];
+const auditEvents:{action:string;target:string}[]=[];
 const sessions = new Map<string, { user_id: string; session_hash: string; expires_at: string; purpose: string; created_at: string; last_seen_at: string; auth_session_id: string;reference?:string;verified_at?:string|null;role_version?:number }>();
 function token(aal = 'aal1') {
   return [Buffer.from(JSON.stringify({alg:'HS256',typ:'JWT'})).toString('base64url'), Buffer.from(JSON.stringify({sub:userId,aal,exp:Math.floor(Date.now()/1000)+3600,iat:Math.floor(Date.now()/1000),role:'authenticated',session_id:authSessionId})).toString('base64url'), 'synthetic-signature'].join('.');
@@ -60,7 +61,7 @@ function encrypted(value: object) {
 }
 beforeEach(() => {
   Object.assign(process.env,{ARTMASTER_STORAGE:'supabase',SUPABASE_URL:'https://supabase.example.invalid',SUPABASE_ANON_KEY:'synthetic-anon',SUPABASE_SERVICE_ROLE_KEY:'synthetic-service',ARTMASTER_SESSION_SECRET:secret,SITE_URL:'https://site.example.invalid',NODE_ENV:'development'});
-  role='admin';accountEnabled=true;roleGeneration=0;changeDuringSessionInsert=false;verifiedFactor=false;userEnabled=true;roleEnabled=true;verifyAal='aal2';badCode=false;allowRate=true;dataReads=0;failTouch=false;publishedImage=null;storagePaths.length=0;sessions.clear();
+  role='admin';accountEnabled=true;roleGeneration=0;changeDuringSessionInsert=false;verifiedFactor=false;userEnabled=true;roleEnabled=true;verifyAal='aal2';badCode=false;allowRate=true;dataReads=0;failTouch=false;publishedImage=null;storagePaths.length=0;auditEvents.length=0;sessions.clear();
   globalThis.fetch=async (input, init) => {
     const url=new URL(typeof input==='string'?input:input instanceof URL?input.href:input.url);
     assert.equal(url.hostname,'supabase.example.invalid','fixture must never reach another host');
@@ -109,7 +110,7 @@ beforeEach(() => {
     if(url.pathname==='/rest/v1/rpc/security_change_account')return response({code:'P0403'},403);
     if(url.pathname==='/rest/v1/rpc/security_logout'){for(const [key,row] of sessions)if(key===body.p_hash||row.auth_session_id===body.p_auth)sessions.delete(key);return response(undefined,204);}
     if(url.pathname==='/rest/v1/rpc/consume_rate')return response(allowRate);
-    if(url.pathname==='/rest/v1/audit_log')return response(undefined,201);
+    if(url.pathname==='/rest/v1/audit_log'){auditEvents.push(body);return response(undefined,201);}
     if(url.pathname==='/rest/v1/rpc/crm_list'){dataReads++;return response({quotes:[],total:0,page:body.p_query.page,pageSize:body.p_query.pageSize,totals:{total:0,new:0,in_progress:0,completed:0,archived:0}});}
     if(url.pathname==='/rest/v1/media_assets'&&method==='POST')return response(undefined,201);
     if(url.pathname==='/rest/v1/quotes'){dataReads++;return response([]);}
@@ -284,4 +285,12 @@ test('a role change between MFA completion and full session insertion fails clos
  verifiedFactor=true;const pending=await loginAdmin('fixture@example.invalid','synthetic password');changeDuringSessionInsert=true;
  await assert.rejects(()=>verifyAdminMfa(pending.cookie,'123456'));
  assert.equal([...sessions.values()].filter(row=>row.purpose==='admin').length,0);
+});
+
+test('MFA refusal is audited separately without seeds, codes, cookies or hashes',async()=>{
+ verifiedFactor=true;const pending=await loginAdmin('fixture@example.invalid','synthetic password');badCode=true;
+ const failed=await loginRoute(request(pending.cookie,true,'POST',{code:'000000'}));assert.equal(failed.status,401);
+ assert.deepEqual(auditEvents.map(event=>({action:event.action,target:event.target})),[{action:'admin.mfa.failed',target:'session'}]);
+ const serialized=JSON.stringify(auditEvents);assert.equal(serialized.includes(JSON.stringify('000000')),false);
+ for(const value of ['synthetic-totp',pending.cookie,createHash('sha256').update(pending.cookie).digest('hex')])assert.equal(serialized.includes(value),false);
 });
