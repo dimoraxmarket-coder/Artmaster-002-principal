@@ -12,6 +12,8 @@ import { LocalStorage, localDatabase } from '../src/lib/server/local';
 import { createLocalAdmin, loginAdmin, actorForSession } from '../src/lib/server/auth';
 import { backupLocalData, restoreLocalBackup } from '../src/lib/server/backup';
 import { readPublishedMedia } from '../src/lib/server/media';
+import { changeQuote } from '../src/lib/server/crm';
+import { registerMedia } from '../src/lib/server/media-inventory';
 import { defaultContent } from '../src/lib/content/defaults';
 import type { Actor, Quote } from '../src/lib/server/types';
 
@@ -32,6 +34,8 @@ test('backup and restore preserve synthetic data and files, revoke copied sessio
   const actor: Actor = { id: createLocalAdmin('fixture@example.invalid', 'Synthetic-only passphrase'), email: 'fixture@example.invalid', role: 'admin', aal: 'aal1' };
   const published=structuredClone(defaultContent);published.services[0].image=`/api/media/${image}`;
   await store.saveContent(published, true, actor, 0);
+  await changeQuote(quote.id,{note:'Synthetic backup note',assignedTo:actor.id,expectedVersion:0},actor);
+  await registerMedia({url:`/api/media/${image}`,name:'Synthetic backup image',bytes:bytes.length,width:1,height:1,createdAt:new Date().toISOString()},actor);
   const login = await loginAdmin(actor.email, 'Synthetic-only passphrase');
   const secret = await store.secret('ARTMASTER_SESSION_SECRET');
   const backup = join(root, 'backup'), restored = join(root, 'restored');
@@ -41,6 +45,9 @@ test('backup and restore preserve synthetic data and files, revoke copied sessio
   const db = new DatabaseSync(join(restored, 'artmaster.sqlite'), { readOnly: true });
   try {
     assert.deepEqual(JSON.parse((db.prepare('SELECT data FROM quotes').get() as { data: string }).data), quote);
+    assert.equal((db.prepare('SELECT COUNT(*) AS n FROM quote_events').get() as {n:number}).n,2);
+    assert.equal((db.prepare('SELECT assigned_to FROM quotes').get() as {assigned_to:string}).assigned_to,actor.id);
+    assert.equal((db.prepare('SELECT COUNT(*) AS n FROM media_assets').get() as {n:number}).n,1);
     assert.equal((db.prepare('SELECT COUNT(*) AS n FROM sessions').get() as { n: number }).n, 0);
     assert.equal((db.prepare('SELECT COUNT(*) AS n FROM admins').get() as { n: number }).n, 1);
     assert.equal((db.prepare('SELECT value FROM meta WHERE key=?').get('secret:ARTMASTER_SESSION_SECRET') as { value: string }).value, secret);

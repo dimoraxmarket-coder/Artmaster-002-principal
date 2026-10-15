@@ -10,6 +10,7 @@ import {
 } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import type { QuotePage } from "@/lib/server/workflow-types";
 import type { Actor, Quote } from "@/lib/server/types";
 import { adminApi, jsonBody, AdminApiError } from "./api";
 import {
@@ -329,6 +330,7 @@ function Workspace({
   const [view, setView] = useState<View>("overview"),
     [menuOpen, setMenuOpen] = useState(false),
     [quotes, setQuotes] = useState<Quote[]>([]),
+    [totals, setTotals] = useState<Record<string, number>>({}),
     [loading, setLoading] = useState(true),
     [error, setError] = useState(""),
     [message, setMessage] = useState(""),
@@ -404,8 +406,11 @@ function Workspace({
     setLoading(true);
     setError("");
     try {
-      const data = await adminApi<{ quotes: Quote[] }>("/api/admin/quotes");
-      if (id === requestId.current) setQuotes(data.quotes);
+      const data = await adminApi<QuotePage>("/api/admin/quotes?pageSize=5");
+      if (id === requestId.current) {
+        setQuotes(data.quotes);
+        setTotals(data.totals);
+      }
     } catch (failure) {
       if (id === requestId.current) setError((failure as Error).message);
     } finally {
@@ -415,9 +420,12 @@ function Workspace({
   useEffect(() => {
     let cancelled = false;
     const id = ++requestId.current;
-    adminApi<{ quotes: Quote[] }>("/api/admin/quotes")
+    adminApi<QuotePage>("/api/admin/quotes?pageSize=5")
       .then((data) => {
-        if (!cancelled && id === requestId.current) setQuotes(data.quotes);
+        if (!cancelled && id === requestId.current) {
+          setQuotes(data.quotes);
+          setTotals(data.totals);
+        }
       })
       .catch((failure) => {
         if (!cancelled) setError(failure.message);
@@ -453,18 +461,8 @@ function Workspace({
       setBusy(false);
     }
   }
-  async function updateStatus(id: string, status: Quote["status"]) {
-    await adminApi(`/api/admin/quotes/${id}`, {
-      method: "PATCH",
-      ...jsonBody({ status }),
-    });
-    setQuotes((previous) =>
-      previous.map((quote) => (quote.id === id ? { ...quote, status } : quote)),
-    );
-    setMessage("Starea solicitării a fost actualizată.");
-  }
   const current = navigation.find((item) => item.id === view)!;
-  const newCount = quotes.filter((quote) => quote.status === "new").length;
+  const newCount = totals.new || 0;
   return (
     <div className={styles.workspace}>
       <a className={styles.skipLink} href="#admin-main">
@@ -652,6 +650,7 @@ function Workspace({
           {message && <Notice>{message}</Notice>}
           {view === "overview" && (
             <Overview
+              totals={totals}
               quotes={quotes}
               loading={loading}
               error={error}
@@ -666,11 +665,7 @@ function Workspace({
           )}{" "}
           {view === "inbox" && (
             <ClientInbox
-              quotes={quotes}
-              loading={loading}
-              error={error}
-              onRefresh={load}
-              onStatus={updateStatus}
+              onChanged={() => void load()}
               actor={actor}
               selected={selected}
               onSelect={setSelected}
@@ -753,6 +748,7 @@ function Workspace({
   );
 }
 function Overview({
+  totals,
   quotes,
   loading,
   error,
@@ -761,6 +757,7 @@ function Overview({
   onSelect,
   actor,
 }: {
+  totals: Record<string, number>;
   quotes: Quote[];
   loading: boolean;
   error: string;
@@ -771,26 +768,26 @@ function Overview({
 }) {
   const stats: [string, number, string, IconName][] = [
     [
-      "Solicitări încărcate",
-      quotes.length,
-      "Cel mult 200 de înregistrări",
+      "Total solicitări",
+      totals.total || 0,
+      "Toate solicitările înregistrate",
       "inbox",
     ],
     [
       "Așteaptă un răspuns",
-      quotes.filter((q) => q.status === "new").length,
+      totals.new || 0,
       "Solicitări cu starea „Nouă”",
       "mail",
     ],
     [
       "Solicitări în lucru",
-      quotes.filter((q) => q.status === "in_progress").length,
+      totals.in_progress || 0,
       "Solicitări preluate de echipă",
       "portfolio",
     ],
     [
       "Finalizate",
-      quotes.filter((q) => q.status === "completed").length,
+      totals.completed || 0,
       "Solicitări marcate finalizate",
       "check",
     ],
@@ -861,8 +858,8 @@ function Overview({
             </EmptyState>
           )}
           <p className={styles.dataScope}>
-            Activitate bazată pe solicitările primite. Datele sunt limitate la
-            ultimele 200 de înregistrări.
+            Totalurile includ toate solicitările înregistrate, indiferent de
+            pagina afișată.
           </p>
         </section>
         <aside className={styles.rightRail}>

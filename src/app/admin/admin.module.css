@@ -594,6 +594,7 @@
   color: #a1a8b6;
 }
 .tableScroll {
+  position: relative;
   overflow-x: auto;
   overscroll-behavior-inline: contain;
 }
@@ -2272,3 +2273,11 @@
     scroll-behavior: auto !important;
   }
 }
+
+.activityList { list-style: none; padding: 0; display: grid; gap: 12px; }
+.activityList li { border-left: 2px solid #f6cc38; padding: 4px 0 4px 16px; overflow-wrap: anywhere; }
+.activityList small { display: block; color: #b3b3bc; margin-top: 4px; }
+.activityList p { white-space: pre-wrap; margin: 8px 0; }
+.assetBody label:focus-within { outline: 2px solid var(--yellow); outline-offset: 3px; }
+.assetBody > .action { margin-top: 10px; }
+.inboxToolbar { flex-wrap: wrap; }

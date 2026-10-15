@@ -25,7 +25,10 @@ export async function adminApi<T>(
       forbidden: "Rolul contului tău nu permite această acțiune.",
       rate_limited: "Prea multe încercări. Așteaptă puțin și încearcă din nou.",
       version_conflict:
-        "Conținutul a fost modificat între timp. Încarcă versiunea actuală.",
+        "Datele au fost modificate între timp. Încarcă versiunea actuală.",
+      asset_in_use:
+        "Imaginea este folosită în conținut salvat sau a fost arhivată. Actualizează biblioteca înainte de a continua.",
+      not_found: "Înregistrarea nu mai este disponibilă. Actualizează datele.",
       invalid_input: "Verifică datele introduse și încearcă din nou.",
     };
     throw new AdminApiError(
