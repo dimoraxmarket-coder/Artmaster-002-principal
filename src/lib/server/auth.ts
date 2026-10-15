@@ -35,7 +35,7 @@ async function unsigned(value:string){
   const expected=Buffer.from((await signed(token)).split('.')[1]),actual=Buffer.from(mac);
   return expected.length===actual.length&&timingSafeEqual(expected,actual)?token:null;
 }
-type SupabaseSession={access:string;refresh:string;expires:number;factor?:string;challenge?:string;sid?:string};
+type SupabaseSession={access:string;refresh:string;expires:number;factor?:string;challenge?:string;sid?:string;purpose?:'enroll'|'challenge'};
 async function encryptSession(value:SupabaseSession){
   const secret=await getStorage().secret('ARTMASTER_SESSION_SECRET'),key=createHash('sha256').update(secret).digest(),iv=randomBytes(12),cipher=createCipheriv('aes-256-gcm',key,iv);
   const ciphertext=Buffer.concat([cipher.update(JSON.stringify(value),'utf8'),cipher.final()]);
@@ -47,9 +47,10 @@ async function decryptSession(value:string):Promise<SupabaseSession|null>{
 function jwtAal(token:string):Actor['aal']{try{return JSON.parse(Buffer.from(token.split('.')[1],'base64url').toString('utf8')).aal==='aal2'?'aal2':'aal1';}catch{return 'aal1';}}
 async function supabaseRole(id:string){const {data,error}=await supabaseService().from('admin_roles').select('role').eq('user_id',id).maybeSingle();if(error||!data||!['viewer','editor','admin'].includes(data.role))throw new BackendError('unauthorized',401);return data.role as AdminRole;}
 async function establishSupabaseSession(session:SupabaseSession,userId:string){
+  if(!session.purpose&&jwtAal(session.access)!=='aal2')throw new BackendError('mfa_required',403);
   const service=supabaseService();
   const {error:cleanupError}=await service.from('admin_sessions').delete().lt('expires_at',new Date().toISOString());if(cleanupError)throw new BackendError('unavailable',503);
-  const sid=randomBytes(32).toString('base64url'),{error}=await service.from('admin_sessions').insert({session_hash:hashSession(sid),user_id:userId,expires_at:new Date(session.expires).toISOString()});
+  const sid=randomBytes(32).toString('base64url'),{error}=await service.from('admin_sessions').insert({session_hash:hashSession(sid),user_id:userId,expires_at:new Date(session.expires).toISOString(),purpose:session.purpose?'mfa':'admin'});
   if(error)throw new BackendError('unavailable',503);
   return encryptSession({...session,sid});
 }
@@ -68,24 +69,32 @@ export async function loginAdmin(email:string,password:string){
   }
   const client=supabaseAuth(),{data,error}=await client.auth.signInWithPassword({email,password});
   if(error||!data.session||!data.user)throw new BackendError('unauthorized',401);
-  const role=await supabaseRole(data.user.id),session=data.session;
+  await supabaseRole(data.user.id);const session=data.session;
   const factors=data.user.factors?.filter(factor=>factor.factor_type==='totp'&&factor.status==='verified')||[];
   if(factors.length){
     const {data:challenge,error:failure}=await client.auth.mfa.challenge({factorId:factors[0].id});
     if(failure||!challenge)throw new BackendError('unauthorized',401);
-    return {cookie:await encryptSession({access:session.access_token,refresh:session.refresh_token,expires:Date.now()+300000,factor:factors[0].id,challenge:challenge.id}),mfaRequired:true};
+    return {cookie:await establishSupabaseSession({access:session.access_token,refresh:session.refresh_token,expires:Math.min(Date.now()+300000,(session.expires_at||0)*1000),factor:factors[0].id,challenge:challenge.id,purpose:'challenge'},data.user.id),mfaRequired:true,enrollmentRequired:false};
   }
-  await getStorage().audit({id:data.user.id,email,role,aal:jwtAal(session.access_token)},'admin.login','session');
-  return {cookie:await establishSupabaseSession({access:session.access_token,refresh:session.refresh_token,expires:Math.min(Date.now()+SESSION_SECONDS*1000,(session.expires_at||0)*1000)},data.user.id),mfaRequired:false};
+  return {cookie:await establishSupabaseSession({access:session.access_token,refresh:session.refresh_token,expires:Math.min(Date.now()+300000,(session.expires_at||0)*1000),purpose:'enroll'},data.user.id),mfaRequired:true,enrollmentRequired:true};
 }
 export async function verifyAdminMfa(cookie:string,code:string){
   if(!/^\d{6}$/.test(code)||storageMode()!=='supabase')throw new BackendError('unauthorized',401);
-  const session=await decryptSession(cookie);if(!session?.factor||!session.challenge)throw new BackendError('unauthorized',401);
+  const {session,actor}=await requirePendingMfa(cookie);
+  if(session.purpose!=='challenge'||!session.factor||!session.challenge)throw new BackendError('unauthorized',401);
+  if(!await getStorage().consumeRate(`mfa-verify:${session.sid}`,5,300000))throw new BackendError('rate_limited',429);
   const client=supabaseAuth();
   const {error:failure}=await client.auth.setSession({access_token:session.access,refresh_token:session.refresh});if(failure)throw new BackendError('unauthorized',401);
   const {data,error}=await client.auth.mfa.verify({factorId:session.factor,challengeId:session.challenge,code});
   if(error||!data)throw new BackendError('unauthorized',401);
-  const {data:user,error:userError}=await client.auth.getUser(data.access_token);if(userError||!user.user)throw new BackendError('unauthorized',401);await supabaseRole(user.user.id);
+  const {data:user,error:userError}=await client.auth.getUser(data.access_token);if(userError||!user.user||user.user.id!==actor.id)throw new BackendError('unauthorized',401);
+  // Read AAL only after Auth has validated this exact access token. Never trust browser claims.
+  if(jwtAal(data.access_token)!=='aal2')throw new BackendError('mfa_required',403);
+  const role=await supabaseRole(user.user.id);
+  // Atomically consume the pending session: cookie replay cannot mint another session.
+  const {data:consumed,error:consumeError}=await supabaseService().from('admin_sessions').delete().eq('session_hash',hashSession(session.sid!)).eq('user_id',actor.id).eq('purpose','mfa').gt('expires_at',new Date().toISOString()).select('user_id').maybeSingle();
+  if(consumeError||!consumed)throw new BackendError('unauthorized',401);
+  await getStorage().audit({...actor,role,aal:'aal2'},'admin.login','session');
   return await establishSupabaseSession({access:data.access_token,refresh:data.refresh_token,expires:Date.now()+Math.min(SESSION_SECONDS,data.expires_in)*1000},user.user.id);
 }
 export async function actorForSession(value:string|undefined):Promise<Actor|null>{
@@ -95,17 +104,18 @@ export async function actorForSession(value:string|undefined):Promise<Actor|null
     const row=localDatabase().prepare('SELECT a.id,a.email,a.role FROM sessions s JOIN admins a ON s.admin_id=a.id WHERE s.hash=? AND s.expires>?').get(hashSession(token),Date.now()) as {id:string;email:string;role:AdminRole}|undefined;
     return row?{...row,aal:'aal1'}:null;
   }
-  const session=await decryptSession(value);if(!session||session.factor||!session.sid)return null;
+  const session=await decryptSession(value);if(!session||session.purpose||session.factor||!session.sid)return null;
   const {data,error}=await supabaseAuth().auth.getUser(session.access);if(error||!data.user)return null;
-  const {data:active,error:sessionError}=await supabaseService().from('admin_sessions').select('user_id').eq('session_hash',hashSession(session.sid)).eq('user_id',data.user.id).gt('expires_at',new Date().toISOString()).maybeSingle();if(sessionError||!active)return null;
-  return {id:data.user.id,email:data.user.email||'',role:await supabaseRole(data.user.id),aal:jwtAal(session.access)};
+  const {data:active,error:sessionError}=await supabaseService().from('admin_sessions').select('user_id').eq('session_hash',hashSession(session.sid)).eq('user_id',data.user.id).eq('purpose','admin').gt('expires_at',new Date().toISOString()).maybeSingle();if(sessionError||!active)return null;
+  if(jwtAal(session.access)!=='aal2')throw new BackendError('mfa_required',403);
+  return {id:data.user.id,email:data.user.email||'',role:await supabaseRole(data.user.id),aal:'aal2'};
 }
 export function cookieValue(request:Request,name=SESSION_COOKIE){return request.headers.get('cookie')?.split(';').map(part=>part.trim()).find(part=>part.startsWith(`${name}=`))?.slice(name.length+1);}
-export async function requireActor(request?:Request,minimum:AdminRole='viewer',sensitive=false){
+export async function requireActor(request?:Request,minimum:AdminRole='viewer'){
   const value=request?cookieValue(request):(await cookies()).get(SESSION_COOKIE)?.value;
   const actor=await actorForSession(value);if(!actor)throw new BackendError('unauthorized',401);
   const rank={viewer:0,editor:1,admin:2};if(rank[actor.role]<rank[minimum])throw new BackendError('forbidden',403);
-  if(sensitive&&process.env.NODE_ENV==='production'&&storageMode()==='supabase'&&actor.aal!=='aal2')throw new BackendError('mfa_required',403);
+  if(storageMode()==='supabase'&&actor.aal!=='aal2')throw new BackendError('mfa_required',403);
   return actor;
 }
 export async function logoutAdmin(value:string|undefined){
@@ -113,15 +123,34 @@ export async function logoutAdmin(value:string|undefined){
   if(storageMode()==='local'){const token=await unsigned(value);if(token)localDatabase().prepare('DELETE FROM sessions WHERE hash=?').run(hashSession(token));}
   else {const session=await decryptSession(value);if(session){if(session.sid){const {error}=await supabaseService().from('admin_sessions').delete().eq('session_hash',hashSession(session.sid));if(error)throw new BackendError('unavailable',503);}await supabaseService().auth.admin.signOut(session.access,'local');}}
 }
+// Only these restricted sessions may enroll or complete MFA. They never authorize data APIs.
+async function requirePendingMfa(value:string){
+  if(storageMode()!=='supabase')throw new BackendError('unavailable',503);
+  const session=await decryptSession(value);
+  if(!session?.sid||!['enroll','challenge'].includes(session.purpose||''))throw new BackendError('unauthorized',401);
+  const {data,error}=await supabaseAuth().auth.getUser(session.access);
+  if(error||!data.user)throw new BackendError('unauthorized',401);
+  const {data:active,error:failure}=await supabaseService().from('admin_sessions').select('user_id').eq('session_hash',hashSession(session.sid)).eq('user_id',data.user.id).eq('purpose','mfa').gt('expires_at',new Date().toISOString()).maybeSingle();
+  if(failure||!active)throw new BackendError('unauthorized',401);
+  const actor:Actor={id:data.user.id,email:data.user.email||'',role:await supabaseRole(data.user.id),aal:jwtAal(session.access)};
+  return {session,actor};
+}
+export async function pendingMfaState(request?:Request){
+  const value=request?cookieValue(request,PREAUTH_COOKIE):(await cookies()).get(PREAUTH_COOKIE)?.value;
+  if(!value||storageMode()!=='supabase')return null;
+  try{return (await requirePendingMfa(value)).session.purpose||null;}
+  catch(error){if(error instanceof BackendError&&error.code==='unauthorized')return null;throw error;}
+}
 export async function enrollAdminMfa(request:Request){
-  const actor=await requireActor(request,'editor');if(storageMode()!=='supabase')throw new BackendError('unavailable',503);
-  const value=cookieValue(request),session=value?await decryptSession(value):null;if(!session)throw new BackendError('unauthorized',401);
+  const {session,actor}=await requirePendingMfa(cookieValue(request,PREAUTH_COOKIE)||'');
+  if(session.purpose!=='enroll')throw new BackendError('forbidden',403);
+  if(!await getStorage().consumeRate(`mfa-enroll:${actor.id}`,3,3600000))throw new BackendError('rate_limited',429);
   const client=supabaseAuth();const {error:failure}=await client.auth.setSession({access_token:session.access,refresh_token:session.refresh});if(failure)throw new BackendError('unauthorized',401);
   const {data:factors,error:factorError}=await client.auth.mfa.listFactors();if(factorError||factors?.totp.some(factor=>factor.status==='verified'))throw new BackendError('already_enrolled',409);
   for(const factor of factors?.all||[])if(factor.factor_type==='totp'&&factor.status==='unverified'){const {error}=await client.auth.mfa.unenroll({factorId:factor.id});if(error)throw new BackendError('unavailable',503);}
   const {data,error}=await client.auth.mfa.enroll({factorType:'totp',friendlyName:'ARTMASTER'});if(error||!data)throw new BackendError('unavailable',503);
   const {data:challenge,error:challengeError}=await client.auth.mfa.challenge({factorId:data.id});if(challengeError||!challenge)throw new BackendError('unavailable',503);
   await getStorage().audit(actor,'admin.mfa.enroll','factor');
-  return {qrCode:`data:image/svg+xml;charset=utf-8,${encodeURIComponent(data.totp.qr_code)}`,cookie:await encryptSession({access:session.access,refresh:session.refresh,expires:Date.now()+300000,factor:data.id,challenge:challenge.id})};
+  return {qrCode:`data:image/svg+xml;charset=utf-8,${encodeURIComponent(data.totp.qr_code)}`,cookie:await encryptSession({...session,factor:data.id,challenge:challenge.id,purpose:'challenge'})};
 }
 export function sessionCookie(value:string,name=SESSION_COOKIE,maxAge=SESSION_SECONDS){return `${name}=${value}; Path=/; HttpOnly; SameSite=Strict; Max-Age=${maxAge}${process.env.NODE_ENV==='production'?'; Secure':''}`;}
