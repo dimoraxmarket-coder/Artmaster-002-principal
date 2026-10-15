@@ -6,6 +6,11 @@ import { loginAdmin, verifyAdminMfa, actorForSession, requireActor, logoutAdmin,
 import { BackendError } from '../src/lib/server/config';
 import { GET as publicImage } from '../src/app/api/media/[name]/route';
 import { GET as preview } from '../src/app/api/admin/media/[name]/route';
+import { GET as team } from '../src/app/api/admin/team/route';
+import { GET as detail } from '../src/app/api/admin/quotes/[id]/route';
+import { GET as inventory } from '../src/app/api/admin/media/route';
+import { DELETE as archive } from '../src/app/api/admin/media/[name]/route';
+import { POST as replace } from '../src/app/api/admin/media/replace/route';
 import { GET as quotes } from '../src/app/api/admin/quotes/route';
 import { GET as content, PUT as saveContent } from '../src/app/api/admin/content/route';
 import { GET as attachment } from '../src/app/api/admin/quotes/[id]/files/[fileId]/route';
@@ -82,6 +87,8 @@ beforeEach(() => {
     }
     if(url.pathname==='/rest/v1/rpc/consume_rate')return response(allowRate);
     if(url.pathname==='/rest/v1/audit_log')return response(undefined,201);
+    if(url.pathname==='/rest/v1/rpc/crm_list'){dataReads++;return response({quotes:[],total:0,page:body.p_query.page,pageSize:body.p_query.pageSize,totals:{total:0,new:0,in_progress:0,completed:0,archived:0}});}
+    if(url.pathname==='/rest/v1/media_assets'&&method==='POST')return response(undefined,201);
     if(url.pathname==='/rest/v1/quotes'){dataReads++;return response([]);}
     if(url.pathname==='/rest/v1/site_content'){dataReads++;const published=structuredClone(defaultContent);if(publishedImage)published.services[0].image=publishedImage;return response({published,draft:null,version:0});}
     if(url.pathname.startsWith('/storage/v1/object/')){
@@ -104,12 +111,12 @@ for(const selectedRole of ['viewer','editor','admin'] as const)test(`${selectedR
   for(const cookie of [undefined,result.cookie]){
     const req=request(cookie);
     const responses=await Promise.all([
-      quotes(req),content(req),preview(req,{params:Promise.resolve({name:`${factorId}.webp`})}),attachment(req,{params:Promise.resolve({id:userId,fileId:factorId})}),
+      team(req),detail(req,{params:Promise.resolve({id:userId})}),inventory(req),archive(request(cookie,false,'DELETE',{confirm:true}),{params:Promise.resolve({name:`${factorId}.webp`})}),replace(request(cookie,false,'POST',{})),quotes(req),content(req),preview(req,{params:Promise.resolve({name:`${factorId}.webp`})}),attachment(req,{params:Promise.resolve({id:userId,fileId:factorId})}),
       status(request(cookie,false,'PATCH',{status:'in_progress'}),{params:Promise.resolve({id:userId})}),
       media(request(cookie,false,'POST')),retry(request(cookie,false,'POST')),
       saveContent(request(cookie,false,'PUT',{content:defaultContent,version:0,action:'save-draft'})),
     ]);
-    assert.deepEqual(responses.map(response=>response.status),[401,401,401,401,401,401,401,401]);
+    assert.deepEqual(responses.map(response=>response.status),[401,401,401,401,401,401,401,401,401,401,401,401,401]);
   }
   assert.equal(dataReads,0,'no protected records read before MFA');
   const setup=await enroll(request(result.cookie,true,'POST'));
@@ -202,6 +209,7 @@ test('Supabase sessions expire on idle and absolute deadlines; activity never re
     if(kind==='revoked')sessions.delete(hash);
     assert.equal((await quotes(request(cookie))).status,401);
     assert.equal((await preview(request(cookie),{params:Promise.resolve({name:`${factorId}.webp`})})).status,401);
+    for(const response of await Promise.all([team(request(cookie)),detail(request(cookie),{params:Promise.resolve({id:userId})}),inventory(request(cookie)),replace(request(cookie,false,'POST',{})),archive(request(cookie,false,'DELETE',{confirm:true}),{params:Promise.resolve({name:`${factorId}.webp`})})]))assert.equal(response.status,401);
     sessions.clear();
   }
 });

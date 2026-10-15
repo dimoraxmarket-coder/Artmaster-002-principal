@@ -47,7 +47,7 @@ test('PostgreSQL migration enforces client RLS, restricted RPCs and atomic CMS c
       create role authenticated nologin;
       create role service_role nologin bypassrls;
       create schema auth;
-      create table auth.users (id uuid primary key);
+      create table auth.users (id uuid primary key,email text);
       create function auth.uid() returns uuid language sql stable as $$
         select nullif(current_setting('request.jwt.claim.sub', true), '')::uuid
       $$;
@@ -57,7 +57,7 @@ test('PostgreSQL migration enforces client RLS, restricted RPCs and atomic CMS c
       grant usage on schema auth to anon, authenticated, service_role;
       grant execute on function auth.uid() to anon, authenticated, service_role;
       create schema storage;
-      create table storage.objects (id uuid primary key, bucket_id text not null);
+      create table storage.objects (id uuid primary key, bucket_id text not null,name text,metadata jsonb,created_at timestamptz default now());
       alter table storage.objects enable row level security;
       grant usage on schema storage to anon,authenticated;
       grant select on storage.objects to anon,authenticated;
@@ -72,6 +72,7 @@ test('PostgreSQL migration enforces client RLS, restricted RPCs and atomic CMS c
     await db.exec(migration);
     await db.exec(await readFile(new URL('../supabase/migrations/202610150001_admin_mfa.sql', import.meta.url), 'utf8'));
     await db.exec(await readFile(new URL('../supabase/migrations/202610150002_admin_validation.sql', import.meta.url), 'utf8'));
+    await db.exec(await readFile(new URL('../supabase/migrations/202610150003_business_workflows.sql', import.meta.url), 'utf8'));
     for (const id of Object.values(ids)) await db.query('insert into auth.users(id) values($1)', [id]);
     for (const [id, role] of [[ids.viewer, 'viewer'], [ids.editor, 'editor'], [ids.admin, 'admin']]) {
       await db.query('insert into public.admin_roles(user_id,role) values($1,$2)', [id, role]);
@@ -305,6 +306,48 @@ test('PostgreSQL migration enforces client RLS, restricted RPCs and atomic CMS c
       await asRole(db, 'service_role', null, tx => tx.query('select public.mark_quote_notification($1,true,null)', [quote]));
       const sent = await db.query<{ notification: string; last_error: string | null }>('select notification,last_error from public.quotes where id=$1', [quote]);
       assert.deepEqual(sent.rows[0], { notification: 'sent', last_error: null });
+    });
+
+    await suite.test('CRM queries, atomic changes and new server-only tables enforce permissions',async()=>{
+      for(const table of ['quote_events','media_assets'])for(const role of ['anon','authenticated'] as const){
+        await assert.rejects(()=>asRole(db,role,ids.admin,tx=>tx.query(`select * from public.${table}`)),sqlError('42501'));
+      }
+      for(const sql of ["select public.crm_staff()","select public.crm_list('{}')","select public.crm_detail('10000000-0000-4000-8000-000000000001',100)","select public.crm_change('10000000-0000-4000-8000-000000000001','{}','00000000-0000-4000-8000-000000000004')","select public.archive_media('/private','00000000-0000-4000-8000-000000000004')","select public.media_inventory('[]','',1,12)"]){
+        await assert.rejects(()=>asRole(db,'authenticated',ids.admin,tx=>tx.query(sql)),sqlError('42501'));
+      }
+      const quote='10000000-0000-4000-8000-000000000001';
+      const change=(actor:string,value:object)=>asRole(db,'service_role',null,tx=>tx.query('select public.crm_change($1,$2,$3)',[quote,JSON.stringify(value),actor]));
+      await assert.rejects(()=>change(ids.viewer,{status:'new'}),sqlError('42501'));
+      await assert.rejects(()=>change(ids.editor,{status:'new',assignedTo:ids.viewer,expectedVersion:0}),sqlError('22023'));
+      assert.equal((await db.query('select * from public.quote_events')).rows.length,0);
+      await change(ids.editor,{status:'in_progress',assignedTo:ids.admin,note:'Synthetic note',expectedVersion:0});
+      await assert.rejects(()=>change(ids.admin,{status:'archived',note:'stale',expectedVersion:0}),sqlError('40001'));
+      assert.equal((await db.query('select * from public.quote_events')).rows.length,3);
+      const detail=await asRole(db,'service_role',null,tx=>tx.query<{value:{quote:{version:number;assignedTo:string;status:string};events:unknown[]}}>('select public.crm_detail($1,9007199254740991) value',[quote]));
+      assert.equal(detail.rows[0].value.quote.version,1);assert.equal(detail.rows[0].value.quote.assignedTo,ids.admin);assert.equal(detail.rows[0].value.quote.status,'in_progress');assert.equal(detail.rows[0].value.events.length,3);
+      // Rollback leaves status, assignment, history and version untouched.
+      await assert.rejects(()=>asRole(db,'service_role',null,async tx=>{await tx.query('select public.crm_change($1,$2,$3)',[quote,JSON.stringify({status:'archived',expectedVersion:1}),ids.admin]);await tx.query('select 1/0');}),sqlError('22012'));
+      assert.equal((await db.query('select * from public.quote_events')).rows.length,3);
+      await db.exec("insert into public.quotes(id,idempotency_key,payload_hash,data,notification) select ('50000000-0000-4000-8000-'||lpad(n::text,12,'0'))::uuid,('60000000-0000-4000-8000-'||lpad(n::text,12,'0'))::uuid,'synthetic',jsonb_build_object('name','СИНТЕТИЧЕСКИЙ %_','status','new'),'not_configured' from generate_series(1,205) n");
+      const query={q:'синтетический %_',status:'all',assignee:'all',page:26,pageSize:8};
+      const result=await asRole(db,'service_role',null,tx=>tx.query<{value:{total:number;quotes:unknown[];totals:{total:number}}}>('select public.crm_list($1) value',[JSON.stringify(query)]));
+      assert.equal(result.rows[0].value.total,205);assert.equal(result.rows[0].value.quotes.length,5);assert.equal(result.rows[0].value.totals.total,207);
+      await assert.rejects(()=>asRole(db,'service_role',null,tx=>tx.query('select public.crm_list($1)',[JSON.stringify({...query,pageSize:1000})])),sqlError('22023'));
+    });
+    await suite.test('media archiving and saving serialize against usage and preserve originals',async()=>{
+      const url='/api/media/70000000-0000-4000-8000-000000000001.webp';
+      await db.query('insert into public.media_assets(url,name,bytes,width,height) values($1,$2,10,1,1)',[url,'Synthetic image']);
+      await db.query('update public.site_content set draft=$1,published=$1 where id=1',[JSON.stringify({services:[{image:url}]})]);
+      const archive=(actor:string)=>asRole(db,'service_role',null,tx=>tx.query('select public.archive_media($1,$2)',[url,actor]));
+      await assert.rejects(()=>archive(ids.editor),sqlError('42501'));
+      await assert.rejects(()=>archive(ids.admin),sqlError('23514'));
+      assert.equal((await db.query<{archived_at:string|null}>('select archived_at from public.media_assets where url=$1',[url])).rows[0].archived_at,null);
+      await db.query('update public.site_content set draft=null,published=null where id=1');await archive(ids.admin);
+      assert.ok((await db.query<{archived_at:string|null}>('select archived_at from public.media_assets where url=$1',[url])).rows[0].archived_at);
+      const version=(await db.query<{version:number}>('select version from public.site_content')).rows[0].version;
+      await assert.rejects(()=>asRole(db,'service_role',null,tx=>tx.query('select public.save_site_content($1,false,$2,$3)',[JSON.stringify({services:[{image:url}]}),ids.editor,version])),sqlError('23514'));
+      assert.equal((await db.query<{version:number}>('select version from public.site_content')).rows[0].version,version);
+      const inventory=await asRole(db,'service_role',null,tx=>tx.query<{value:{total:number}}>("select public.media_inventory('[]','',1,12) value"));assert.equal(inventory.rows[0].value.total,0);
     });
   } finally {
     await db.close();

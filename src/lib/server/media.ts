@@ -5,8 +5,10 @@ import { join } from 'node:path';
 import { storageMode,dataDirectory,BackendError } from './config';
 import { supabaseService } from './supabase';
 import { getStorage } from './storage';
+import { registerMedia } from './media-inventory';
+import type { Actor } from './types';
 import { validateUploads } from './uploads';
-export async function storeMedia(file:File){
+export async function storeMedia(file:File,actor?:Actor){
   const uploads=await validateUploads([file]);
   if(uploads.length!==1||uploads[0].mime==='application/pdf')throw new BackendError('invalid_file',400);
   try{
@@ -21,6 +23,7 @@ export async function storeMedia(file:File){
       const client=supabaseService(),{error}=await client.storage.from('portfolio-private').upload(name,data,{contentType:'image/webp',upsert:false});
       if(error)throw new BackendError('unavailable',503);url=`/api/media/${name}`;
     }
+    await registerMedia({url,name:file.name,bytes:data.length,width:info.width,height:info.height,createdAt:new Date().toISOString()},actor);
     return {url,width:info.width,height:info.height};
   }catch(error){if(error instanceof BackendError)throw error;throw new BackendError('invalid_file',400);}
 }

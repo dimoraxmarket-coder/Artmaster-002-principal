@@ -29,6 +29,15 @@ export function localDatabase() {
   // Additive migration: unknown-age legacy sessions fail closed (timestamps 0).
   const sessionColumns=new Set((db.prepare('PRAGMA table_info(sessions)').all() as {name:string}[]).map(column=>column.name));
   for(const name of ['created_at','last_seen_at'])if(!sessionColumns.has(name))db.exec(`ALTER TABLE sessions ADD COLUMN ${name} INTEGER NOT NULL DEFAULT 0`);
+  const quoteColumns=new Set((db.prepare('PRAGMA table_info(quotes)').all() as {name:string}[]).map(column=>column.name));
+  if(!quoteColumns.has('version'))db.exec('ALTER TABLE quotes ADD COLUMN version INTEGER NOT NULL DEFAULT 0');
+  if(!quoteColumns.has('assigned_to'))db.exec('ALTER TABLE quotes ADD COLUMN assigned_to TEXT REFERENCES admins(id) ON DELETE SET NULL');
+  db.exec(`CREATE TABLE IF NOT EXISTS quote_events(id INTEGER PRIMARY KEY AUTOINCREMENT,quote_id TEXT NOT NULL REFERENCES quotes(id),actor TEXT NOT NULL,kind TEXT NOT NULL CHECK(kind IN ('status','assignment','note')),body TEXT NOT NULL,created_at TEXT NOT NULL);
+    CREATE INDEX IF NOT EXISTS quote_event_lookup ON quote_events(quote_id,id);
+    CREATE INDEX IF NOT EXISTS quote_assignee ON quotes(assigned_to);
+    CREATE TABLE IF NOT EXISTS media_assets(url TEXT PRIMARY KEY,name TEXT NOT NULL,bytes INTEGER NOT NULL,width INTEGER NOT NULL,height INTEGER NOT NULL,created_at TEXT NOT NULL,created_by TEXT,archived_at TEXT);
+  `);
+  db.function('unicode_lower',{deterministic:true},value=>String(value).toLocaleLowerCase());
   chmodSync(join(dir,'artmaster.sqlite'),0o600);
   databases.set(dir,db);
   return db;
@@ -77,11 +86,7 @@ export class LocalStorage implements Storage {
   }
   async listQuotes(){return localDatabase().prepare('SELECT data,notification FROM quotes ORDER BY rowid DESC LIMIT 200').all().map(row=>decodeQuote(row)!);}
   async getQuote(id:string){return decodeQuote(localDatabase().prepare('SELECT data,notification FROM quotes WHERE id=?').get(id));}
-  async updateQuote(id:string,status:QuoteStatus,actor:Actor){
-    const db=localDatabase();db.exec('BEGIN IMMEDIATE');
-    try {const quote=decodeQuote(db.prepare('SELECT data,notification FROM quotes WHERE id=?').get(id));if(!quote)throw new BackendError('not_found',404);quote.status=status;db.prepare('UPDATE quotes SET data=? WHERE id=?').run(JSON.stringify(quote),id);audit(db,actor,'quote.status',id);db.exec('COMMIT');}
-    catch(error){db.exec('ROLLBACK');throw error;}
-  }
+  async updateQuote(id:string,status:QuoteStatus,actor:Actor){await (await import('./crm')).changeQuote(id,{status},actor);}
   async readFile(file:StoredFile){if(!/^[a-f0-9-]{36}$/.test(file.path))throw new BackendError('not_found',404);return readFile(join(dataDirectory(),'uploads',file.path));}
   async content():Promise<ContentState>{
     const row=localDatabase().prepare('SELECT published,draft,version FROM content WHERE id=1').get() as {published:string|null;draft:string|null;version:number};
@@ -90,6 +95,8 @@ export class LocalStorage implements Storage {
   async saveContent(value:ContentState['draft'],publish:boolean,actor:Actor,expectedVersion:number){
     const clean=contentSchema.parse(value),db=localDatabase();db.exec('BEGIN IMMEDIATE');
     try {
+      const urls=[...clean.services,...clean.equipment,...clean.projects].map(item=>item.image);
+      for(const row of db.prepare('SELECT url FROM media_assets WHERE archived_at IS NOT NULL').all() as {url:string}[])if(urls.includes(row.url))throw new BackendError('asset_in_use',409);
       const result=publish?db.prepare('UPDATE content SET published=?,draft=?,version=version+1 WHERE id=1 AND version=?').run(JSON.stringify(clean),JSON.stringify(clean),expectedVersion):db.prepare('UPDATE content SET draft=?,version=version+1 WHERE id=1 AND version=?').run(JSON.stringify(clean),expectedVersion);
       if(!result.changes)throw new BackendError('version_conflict',409);
       audit(db,actor,publish?'content.publish':'content.draft','site');db.exec('COMMIT');return expectedVersion+1;
