@@ -328,6 +328,7 @@ test("media inventory persists uploads, adopts old originals and preserves draft
   assert.equal(assets.total, 2);
   assert.equal(assets.assets[0].uses.length, 0);
   assert.equal(assets.assets[0].managed, true);
+  assert.equal(assets.assets[0].replaceable, false);
   assert.ok(
     (
       await (
@@ -391,6 +392,7 @@ test("media inventory persists uploads, adopts old originals and preserves draft
   );
   assert.equal((await store.content()).published!.services[0].image, first);
   assert.equal((await store.content()).draft!.services[0].image, second);
+  const oldUsage=await (await inventory(request('/api/admin/media?q=first-synthetic',admin.cookie))).json();assert.equal(oldUsage.assets[0].replaceable,false,'an image referenced only by published content cannot be replaced in the current draft');
   assert.equal(
     (await publicImage(request(first), imageContext(first))).status,
     200,

@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { Quote, Actor } from "@/lib/server/types";
 import {
   Action,
@@ -13,42 +13,77 @@ import {
 } from "./components";
 import styles from "./admin.module.css";
 
+import { adminApi, jsonBody } from "./api";
+import type {
+  QuotePage,
+  QuoteDetail as Detail,
+  StaffMember,
+  QuoteChange,
+} from "@/lib/server/workflow-types";
 type StatusFilter = "all" | Quote["status"];
 export function ClientInbox({
-  quotes,
-  loading,
-  error,
-  onRefresh,
-  onStatus,
   actor,
-  onSelect,
   selected,
+  onSelect,
   onClose,
+  onChanged,
 }: {
-  quotes: Quote[];
-  loading: boolean;
-  error: string;
-  onRefresh: () => void;
-  onStatus: (id: string, status: Quote["status"]) => Promise<void>;
   actor: Actor;
-  onSelect: (quote: Quote) => void;
   selected: Quote | null;
+  onSelect: (quote: Quote) => void;
   onClose: () => void;
+  onChanged: () => void;
 }) {
   const [search, setSearch] = useState(""),
     [filter, setFilter] = useState<StatusFilter>("all"),
-    [page, setPage] = useState(0);
-  const filtered = quotes.filter(
-    (quote) =>
-      (filter === "all" || quote.status === filter) &&
-      `${quote.name} ${quote.email} ${quote.company || ""} ${quote.service} ${quote.message}`
-        .toLocaleLowerCase("ro")
-        .includes(search.toLocaleLowerCase("ro")),
+    [assignee, setAssignee] = useState("all"),
+    [page, setPage] = useState(1),
+    [data, setData] = useState<QuotePage | null>(null),
+    [loading, setLoading] = useState(true),
+    [error, setError] = useState(""),
+    [staff, setStaff] = useState<StaffMember[]>([]),
+    [staffError, setStaffError] = useState("");
+  const generation = useRef(0);
+  const load = useCallback(
+    async (isActive: () => boolean = () => true) => {
+      const id = ++generation.current;
+      setLoading(true);
+      setError("");
+      try {
+        const result = await adminApi<QuotePage>(
+          `/api/admin/quotes?${new URLSearchParams({ q: search, status: filter, assignee, page: String(page), pageSize: "8" })}`,
+        );
+        if (id === generation.current && isActive()) setData(result);
+      } catch (failure) {
+        if (id === generation.current && isActive())
+          setError((failure as Error).message);
+      } finally {
+        if (id === generation.current && isActive()) setLoading(false);
+      }
+    },
+    [search, filter, assignee, page],
   );
-  const currentPage = Math.min(
-    page,
-    Math.max(0, Math.ceil(filtered.length / 8) - 1),
-  );
+  useEffect(() => {
+    let active = true;
+    const timer = setTimeout(() => void load(() => active), 250);
+    return () => {
+      active = false;
+      clearTimeout(timer);
+    };
+  }, [load]);
+  useEffect(() => {
+    let active = true;
+    adminApi<{ staff: StaffMember[] }>("/api/admin/team")
+      .then((result) => {
+        if (active) setStaff(result.staff);
+      })
+      .catch((failure) => {
+        if (active) setStaffError(failure.message);
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
   return (
     <>
       <section className={styles.panel}>
@@ -57,7 +92,7 @@ export function ClientInbox({
             <h2>Un început pentru fiecare proiect.</h2>
             <p>Conversații reale. Detalii clare. Următorul pas la îndemână.</p>
           </div>
-          <Action icon="refresh" onClick={onRefresh} disabled={loading}>
+          <Action icon="refresh" onClick={() => void load()} disabled={loading}>
             Actualizează
           </Action>
         </div>
@@ -65,12 +100,13 @@ export function ClientInbox({
           <label className={styles.search}>
             <AdminIcon name="search" />
             <input
+              id="inbox-search"
               aria-label="Caută solicitări"
               placeholder="Caută un nume, e-mail sau proiect…"
               value={search}
               onChange={(event) => {
                 setSearch(event.target.value);
-                setPage(0);
+                setPage(1);
               }}
             />
           </label>
@@ -81,7 +117,7 @@ export function ClientInbox({
               value={filter}
               onChange={(event) => {
                 setFilter(event.target.value as StatusFilter);
-                setPage(0);
+                setPage(1);
               }}
             >
               <option value="all">Toate stările</option>
@@ -92,53 +128,86 @@ export function ClientInbox({
               ))}
             </select>
           </label>
+          <label className={styles.selectLabel}>
+            Responsabil
+            <select
+              aria-label="Filtrează după responsabil"
+              value={assignee}
+              onChange={(event) => {
+                setAssignee(event.target.value);
+                setPage(1);
+              }}
+            >
+              <option value="all">Toată echipa</option>
+              <option value="unassigned">Neatribuite</option>
+              <option value={actor.id}>Atribuite mie</option>
+              {staff
+                .filter(
+                  (member) =>
+                    member.id !== actor.id && member.role !== "viewer",
+                )
+                .map((member) => (
+                  <option value={member.id} key={member.id}>
+                    {member.email}
+                  </option>
+                ))}
+            </select>
+          </label>
         </div>
+        {staffError && (
+          <div className={styles.padded}>
+            <Notice error>
+              Directorul echipei nu este disponibil. {staffError}
+            </Notice>
+          </div>
+        )}
         {loading ? (
           <Skeleton />
         ) : error ? (
           <div className={styles.padded}>
             <Notice error>{error}</Notice>
-            <Action onClick={onRefresh}>Reîncearcă</Action>
+            <Action onClick={() => void load()}>Reîncearcă</Action>
           </div>
-        ) : filtered.length === 0 ? (
+        ) : !data?.quotes.length ? (
           <EmptyState
+            action={
+              page > 1 ? (
+                <Action onClick={() => setPage(1)}>Prima pagină</Action>
+              ) : undefined
+            }
             title={
-              search || filter !== "all"
+              search || filter !== "all" || assignee !== "all"
                 ? "Nicio solicitare găsită"
                 : "Următorul proiect începe aici."
             }
           >
-            {search || filter !== "all"
+            {search || filter !== "all" || assignee !== "all"
               ? "Încearcă alt nume sau schimbă filtrul."
               : "Solicitările trimise prin website vor apărea aici, împreună cu toate detaliile și fișierele lor."}
           </EmptyState>
         ) : (
           <>
-            <QuoteTable
-              quotes={filtered.slice(currentPage * 8, currentPage * 8 + 8)}
-              onSelect={onSelect}
-            />
+            <QuoteTable quotes={data.quotes} onSelect={onSelect} />
             <div className={styles.tableFooter}>
               <span>
-                {currentPage * 8 + 1}–
-                {Math.min((currentPage + 1) * 8, filtered.length)} din{" "}
-                {filtered.length} solicitări
+                {(page - 1) * 8 + 1}–{Math.min(page * 8, data.total)} din{" "}
+                {data.total} solicitări
               </span>
               <div>
                 <Action
                   variant="quiet"
-                  disabled={currentPage === 0}
-                  onClick={() => setPage(currentPage - 1)}
+                  disabled={page === 1}
+                  onClick={() => setPage(page - 1)}
                 >
                   Înapoi
                 </Action>
                 <span>
-                  {currentPage + 1} / {Math.ceil(filtered.length / 8)}
+                  {page} / {Math.max(1, Math.ceil(data.total / 8))}
                 </span>
                 <Action
                   variant="quiet"
-                  disabled={(currentPage + 1) * 8 >= filtered.length}
-                  onClick={() => setPage(currentPage + 1)}
+                  disabled={page * 8 >= data.total}
+                  onClick={() => setPage(page + 1)}
                 >
                   Înainte
                 </Action>
@@ -147,16 +216,20 @@ export function ClientInbox({
           </>
         )}
         <p className={styles.dataScope}>
-          Sunt disponibile cele mai recente 200 de solicitări. Căutarea,
-          filtrele și numărătorile se aplică acestui set.
+          Căutarea și filtrele includ toate solicitările. Datele clienților sunt
+          private.
         </p>
       </section>
       {selected && (
         <QuoteDetail
-          quote={quotes.find((item) => item.id === selected.id) || selected}
+          key={selected.id}
+          initial={selected}
           actor={actor}
           onClose={onClose}
-          onStatus={onStatus}
+          onChanged={() => {
+            void load();
+            onChanged();
+          }}
         />
       )}
     </>
@@ -189,6 +262,7 @@ export function QuoteTable({
             <tr key={quote.id}>
               <td>
                 <button
+                  id={`quote-client-${quote.id}`}
                   className={styles.clientCell}
                   onClick={() => onSelect(quote)}
                 >
@@ -220,6 +294,7 @@ export function QuoteTable({
               <td>
                 <button
                   className={styles.iconButton}
+                  id={`quote-open-${quote.id}`}
                   aria-label={`Deschide solicitarea de la ${quote.name}`}
                   onClick={() => onSelect(quote)}
                 >
@@ -234,28 +309,99 @@ export function QuoteTable({
   );
 }
 function QuoteDetail({
-  quote,
+  initial,
   actor,
   onClose,
-  onStatus,
+  onChanged,
 }: {
-  quote: Quote;
+  initial: Quote;
   actor: Actor;
   onClose: () => void;
-  onStatus: (id: string, status: Quote["status"]) => Promise<void>;
+  onChanged: () => void;
 }) {
   const ref = useRef<HTMLDialogElement>(null),
     [busy, setBusy] = useState(false),
-    [error, setError] = useState("");
+    [error, setError] = useState(""),
+    [detail, setDetail] = useState<Detail | null>(null),
+    [staff, setStaff] = useState<StaffMember[]>([]),
+    [note, setNote] = useState(""),
+    [success, setSuccess] = useState("");
+  const quote = detail?.quote || initial;
+  const reload = useCallback(async () => {
+    setError("");
+    try {
+      const [value, team] = await Promise.all([
+        adminApi<Detail>(`/api/admin/quotes/${initial.id}`),
+        adminApi<{ staff: StaffMember[] }>("/api/admin/team"),
+      ]);
+      setDetail(value);
+      setStaff(team.staff);
+    } catch (failure) {
+      setError((failure as Error).message);
+    }
+  }, [initial.id]);
+  useEffect(() => {
+    let active = true;
+    Promise.all([
+      adminApi<Detail>(`/api/admin/quotes/${initial.id}`),
+      adminApi<{ staff: StaffMember[] }>("/api/admin/team"),
+    ])
+      .then(([value, team]) => {
+        if (active) {
+          setDetail(value);
+          setStaff(team.staff);
+        }
+      })
+      .catch((failure) => {
+        if (active) setError(failure.message);
+      });
+    return () => {
+      active = false;
+    };
+  }, [initial.id]);
+  async function change(input: QuoteChange) {
+    if (!detail) return;
+    setBusy(true);
+    setError("");
+    setSuccess("");
+    try {
+      const value = await adminApi<Detail>(`/api/admin/quotes/${quote.id}`, {
+        method: "PATCH",
+        ...jsonBody({ ...input, expectedVersion: detail.quote.version }),
+      });
+      setDetail(value);
+      setSuccess("Modificările au fost salvate.");
+      if (input.note) setNote("");
+      onChanged();
+    } catch (failure) {
+      setError((failure as Error).message);
+    } finally {
+      setBusy(false);
+    }
+  }
   useEffect(() => {
     const dialog = ref.current,
       focused = document.activeElement as HTMLElement | null;
     dialog?.showModal();
     return () => {
       dialog?.close();
-      focused?.focus();
+      requestAnimationFrame(() => {
+        const target = focused?.id
+          ? document.getElementById(focused.id)
+          : focused;
+        if (target?.isConnected) target.focus({ preventScroll: true });
+        else
+          document
+            .getElementById("inbox-search")
+            ?.focus({ preventScroll: true });
+      });
     };
   }, []);
+  function close() {
+    if (note.trim() && !window.confirm("Închizi fără a salva nota internă?"))
+      return;
+    onClose();
+  }
   return (
     <dialog
       ref={ref}
@@ -263,14 +409,14 @@ function QuoteDetail({
       aria-labelledby="request-title"
       onCancel={(event) => {
         event.preventDefault();
-        onClose();
+        close();
       }}
     >
       <div className={styles.dialogHeader}>
         <span className={styles.eyebrow}>SOLICITARE DE OFERTĂ</span>
         <button
           className={styles.iconButton}
-          onClick={onClose}
+          onClick={close}
           aria-label="Închide solicitarea"
         >
           <AdminIcon name="close" />
@@ -302,6 +448,8 @@ function QuoteDetail({
             ["Cantitate", quote.quantity || "Nespecificată"],
             ["Dimensiuni", quote.dimensions || "Nespecificate"],
             ["Termen dorit", quote.deadline || "Nespecificat"],
+            ["Limbă", quote.locale.toUpperCase()],
+            ["Pagina de origine", quote.sourcePath || "Nespecificată"],
           ].map(([label, value]) => (
             <div key={label}>
               <dt>{label}</dt>
@@ -354,12 +502,22 @@ function QuoteDetail({
                 : "serviciu neconfigurat"}
           </span>
         </div>
-        {error && <Notice error>{error}</Notice>}
+        {!detail && !error && <Skeleton />}
+        {success && <Notice>{success}</Notice>}
+        {error && (
+          <div>
+            <Notice error>{error}</Notice>
+            <Action disabled={busy} onClick={() => void reload()}>
+              Încarcă versiunea actuală
+            </Action>
+          </div>
+        )}
+
         <label className={styles.field}>
           Starea solicitării
           <select
             value={quote.status}
-            disabled={actor.role === "viewer" || busy}
+            disabled={actor.role === "viewer" || busy || !detail}
             onChange={async (event) => {
               const next = event.target.value as Quote["status"];
               if (
@@ -369,15 +527,7 @@ function QuoteDetail({
                 )
               )
                 return;
-              setBusy(true);
-              setError("");
-              try {
-                await onStatus(quote.id, next);
-              } catch (failure) {
-                setError((failure as Error).message);
-              } finally {
-                setBusy(false);
-              }
+              await change({ status: next });
             }}
           >
             {Object.entries(statusLabels).map(([value, label]) => (
@@ -393,6 +543,110 @@ function QuoteDetail({
             rol de editor sau administrator.
           </p>
         )}
+        <label className={styles.field}>
+          Responsabilul solicitării
+          <select
+            aria-label="Atribuie solicitarea"
+            value={detail?.quote.assignedTo || ""}
+            disabled={actor.role === "viewer" || busy || !detail}
+            onChange={(event) =>
+              void change({ assignedTo: event.target.value || null })
+            }
+          >
+            <option value="">Neatribuită</option>
+            {staff
+              .filter((member) => member.role !== "viewer")
+              .map((member) => (
+                <option key={member.id} value={member.id}>
+                  {member.email}
+                </option>
+              ))}
+          </select>
+        </label>
+        <section className={styles.messageBody}>
+          <h3>Note interne</h3>
+          <p className={styles.muted}>
+            Vizibile doar echipei autorizate. Notele salvate se păstrează în
+            istoric.
+          </p>
+          <form
+            onSubmit={(event) => {
+              event.preventDefault();
+              if (note.trim()) void change({ note: note.trim() });
+            }}
+          >
+            <label className={styles.field}>
+              Notă internă
+              <textarea
+                aria-label="Notă internă"
+                value={note}
+                onChange={(event) => setNote(event.target.value)}
+                maxLength={4000}
+                rows={3}
+                disabled={actor.role === "viewer" || busy || !detail}
+              />
+            </label>
+            <Action
+              type="submit"
+              disabled={
+                actor.role === "viewer" || busy || !detail || !note.trim()
+              }
+            >
+              Salvează nota
+            </Action>
+          </form>
+        </section>
+        <section>
+          <h3>Istoricul solicitării</h3>
+          {detail?.events.length ? (
+            <ol className={styles.activityList}>
+              {detail.events.map((event) => (
+                <li key={event.id}>
+                  <strong>
+                    {staff.find((member) => member.id === event.actor)?.email ||
+                      "Membru al echipei"}
+                  </strong>
+                  <small>{formatDate(event.createdAt)}</small>
+                  <p>
+                    {event.kind === "note"
+                      ? event.body
+                      : event.kind === "status"
+                        ? `Stare: ${statusLabels[event.body as Quote["status"]] || event.body}`
+                        : `Responsabil: ${staff.find((member) => member.id === event.body)?.email || (event.body ? "Fost membru al echipei" : "Neatribuită")}`}
+                  </p>
+                </li>
+              ))}
+            </ol>
+          ) : (
+            <p className={styles.muted}>
+              Nu există încă modificări înregistrate.
+            </p>
+          )}
+          {detail?.hasMore && (
+            <Action
+              disabled={busy}
+              onClick={async () => {
+                setBusy(true);
+                try {
+                  const older = await adminApi<Detail>(
+                    `/api/admin/quotes/${quote.id}?before=${detail.events.at(-1)!.id}`,
+                  );
+                  setDetail({
+                    ...detail,
+                    events: [...detail.events, ...older.events],
+                    hasMore: older.hasMore,
+                  });
+                } catch (failure) {
+                  setError((failure as Error).message);
+                } finally {
+                  setBusy(false);
+                }
+              }}
+            >
+              Încarcă activitatea anterioară
+            </Action>
+          )}
+        </section>
         <p className={styles.reference}>Referință: {quote.id}</p>
       </div>
     </dialog>

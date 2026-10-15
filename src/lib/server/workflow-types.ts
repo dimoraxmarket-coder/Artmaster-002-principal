@@ -42,6 +42,7 @@ export type MediaAsset = {
   createdAt: string;
   archivedAt: string | null;
   managed: boolean;
+  replaceable: boolean;
   uses: {
     section: string;
     slug: string;

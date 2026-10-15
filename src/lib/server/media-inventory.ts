@@ -165,6 +165,9 @@ export async function inventory(
     assets: assets.map((asset) => ({
       ...asset,
       managed: !!asset.managed,
+      replaceable: contentImageUrls(
+        state.draft || state.published || defaultContent,
+      ).includes(asset.url),
       uses: refs.filter((ref) => ref.url === asset.url).map((ref) => ref.use),
     })),
     total,
