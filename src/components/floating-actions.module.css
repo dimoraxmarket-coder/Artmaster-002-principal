@@ -5,8 +5,8 @@
 .backTop { width: 46px; height: 46px; opacity: 0; visibility: hidden; transform: translateY(8px); }
 .backTop svg { transform: rotate(-90deg); }
 .backTop[data-visible] { opacity: 1; visibility: visible; transform: translateY(0); }
-.panel { position: absolute; right: 0; bottom: 72px; width: min(342px, calc(100vw - 40px)); max-height: calc(100dvh - var(--floating-bottom, 20px) - 110px); overflow: auto; padding: 24px; color: var(--ink); background: var(--white); border: 1px solid var(--line); border-radius: 18px; box-shadow: 0 16px 50px #08192326; opacity: 0; visibility: hidden; pointer-events: none; transform: translateY(10px); transition: opacity .18s, transform .18s, visibility 0s .18s; }
-.panel[data-open] { opacity: 1; visibility: visible; pointer-events: auto; transform: translateY(0); transition: opacity .18s, transform .18s, visibility 0s; }
+.panel { position: absolute; right: 0; bottom: 72px; width: min(342px, calc(100vw - 40px)); max-height: calc(100dvh - var(--floating-bottom, 20px) - 110px); overflow: auto; padding: 24px; color: var(--ink); background: var(--white); border: 1px solid var(--line); border-radius: 18px; box-shadow: 0 16px 50px #08192326; opacity: 0; visibility: hidden; pointer-events: none; transform: translateY(10px); transition: transform .18s, visibility 0s .18s; }
+.panel[data-open] { opacity: 1; visibility: visible; pointer-events: auto; transform: translateY(0); transition: transform .18s, visibility 0s; }
 .panelHeader { display: flex; align-items: start; justify-content: space-between; gap: 12px; }
 .panelHeader h2 { font-size: 1.45rem; letter-spacing: -.025em; margin: 0 0 5px; }
 .panelHeader span { font-size: .55rem; letter-spacing: .18em; font-weight: 600; color: var(--muted); }
