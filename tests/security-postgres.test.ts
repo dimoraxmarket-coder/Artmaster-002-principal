@@ -96,7 +96,7 @@ test("complete PostgreSQL security-center migration enforces session, role, audi
     );
     await suite.test('content history RPCs retain snapshots, deny clients and restore only into a new draft',async()=>{
       for(const role of ['anon','authenticated']) {
-        for(const sql of ["select * from public.content_versions", "select public.content_history_usage()", `select public.write_site_content('{}',false,'${ids.editor}',0,null)`])
+        for(const sql of ["select * from public.content_versions", "select public.content_history_usage()", `select public.save_site_content('{}',false,'${ids.editor}',0)`, `select public.write_site_content('{}',false,'${ids.editor}',0,null)`])
           await assert.rejects(()=>db.transaction(async tx=>{await tx.exec(`set local role ${role}`);await tx.query(sql);}),errorCode('42501'));
       }
       const first={services:[{image:'/media/hero-wide.webp',title:'Synthetic original'}]};

@@ -1,5 +1,7 @@
 -- Additive history. No data, content, objects or existing history are deleted.
 begin;
+-- Serialize baseline capture with existing content writers and media archival.
+select id from public.site_content where id=1 for update;
 create table public.content_versions(
  id bigint generated always as identity primary key,
  version integer not null, action text not null check(action in ('baseline-published','baseline-draft','draft','publish','restore')),
