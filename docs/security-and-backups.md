@@ -41,3 +41,5 @@ Testează o restaurare înainte de lansare și periodic ulterior. Limitele planu
 Rulează auditul dependențelor, actualizează versiunile prin modificări revizuibile și repetă testele afectate. Nu utiliza `npm audit fix --force` fără evaluarea incompatibilităților. Monitorizează erorile, cererile respinse și notificările eșuate fără să divulgi date personale în loguri. Nu există promisiune de securitate absolută; configurația gazdei și integrările externe trebuie testate în mediul real.
 
 Procedura verificată pentru copii cu manifest, restaurare într-un director nou și strategia MFA sunt descrise în [Phase 1 security foundation](security-foundation.md).
+
+Phase 2 adaugă expirare după 15 minute de inactivitate și maximum 8 ore, RLS legat de sesiunea activă și confidențialitatea imaginilor noi până la publicare. Vezi [regulile actuale și limitele verificării](admin-security-validation.md). Imaginile vechi din bucketul public rămân publice; nu sunt mutate sau șterse automat.
