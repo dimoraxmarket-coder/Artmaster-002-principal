@@ -20,15 +20,15 @@ Când Resend este configurat, aplicația trimite notificarea internă și confir
 
 Nu există cont demonstrativ. În dezvoltare creează un utilizator cu `npm run admin:create`, `ADMIN_EMAIL` și `ADMIN_ROLE` (`viewer`, `editor` sau `admin`). Introdu parola prin stdin conform scriptului; evită argumentele CLI, istoricul shell și fișierele versionate. Schema locală păstrează hashul parolei și sesiuni separate, cu permisiuni verificate pe server.
 
-În producție configurează conturile Supabase Auth și atribuie rolurile autorizate. Activează MFA; operațiunile sensibile necesită AAL2 în modul Supabase. Testează un cont din fiecare rol: `viewer` citește, `editor` poate salva drafturi și modifica starea solicitărilor, `admin` poate publica. O sesiune absentă, expirată sau un rol nepotrivit trebuie să fie respins, inclusiv la descărcarea atașamentelor.
+În producție configurează conturile Supabase Auth și atribuie rolurile autorizate. MFA este obligatorie pentru toate rolurile și toate datele administrative în modul Supabase; aplică și migrarea `202610150001_admin_mfa.sql`. Înainte de confirmarea AAL2 sunt permise numai înscrierea/verificarea MFA și ieșirea. Testează un cont din fiecare rol: `viewer` citește, `editor` poate salva drafturi și modifica starea solicitărilor, `admin` poate publica. O sesiune absentă, expirată sau un rol nepotrivit trebuie să fie respins, inclusiv la descărcarea atașamentelor.
 
 Draftul și versiunea publicată sunt separate. Verifică textele în toate limbile înainte de publicare; controlul versiunii respinge suprascrierile concurente. Păstrează evenimentele de audit fără parole, tokenuri și copii inutile ale informațiilor clienților.
 
 ## Backup local
 
-Datele se află în `ARTMASTER_DATA_DIR`, implicit `.data/artmaster.sqlite`, `.data/uploads` și `.data/media`. Directorul este privat și ignorat de Git. Baza SQLite folosește WAL: copierea numai a fișierului principal în timp ce aplicația scrie nu este un backup consistent. `npm run backup` folosește API-ul de backup SQLite și copiază directoarele `uploads` și `media` în `backups/<data-UTC>/`. Oprește modificările aplicației pe durata copiei dacă este necesară o stare comună exactă a bazei și a fișierelor.
+Datele se află în `ARTMASTER_DATA_DIR`, implicit `.data/artmaster.sqlite`, `.data/uploads` și `.data/media`. Directorul este privat și ignorat de Git. Baza SQLite folosește WAL: copierea numai a fișierului principal în timp ce aplicația scrie nu este un backup consistent. `ARTMASTER_WRITES_PAUSED=true npm run backup`, după oprirea tuturor proceselor care scriu, folosește API-ul de backup SQLite și copiază directoarele `uploads` și `media` în `backups/<data-UTC>/`. Oprește modificările aplicației pe durata copiei dacă este necesară o stare comună exactă a bazei și a fișierelor.
 
-Backupul conține date personale, hashuri de parole și înregistrări de sesiune; tratează-l ca informație privată. Mută copiile în afara checkoutului și în afara serverului public, cu acces restricționat și criptare. Nu publica ZIP-uri ce conțin solicitări sau atașamente. Pentru restaurare: oprește aplicația, păstrează o copie a datelor curente, restaurează baza și directoarele `uploads`/`media` ale aceleiași copii în directorul privat, verifică permisiunile și testează citirea unei solicitări cu atașament într-un mediu izolat.
+Backupul conține date personale, hashuri de parole și secretele locale de semnare; sesiunile active sunt excluse; tratează-l ca informație privată. Mută copiile în afara checkoutului și în afara serverului public, cu acces restricționat și criptare. Nu publica ZIP-uri ce conțin solicitări sau atașamente. Pentru restaurare folosește `npm run restore` cu `ARTMASTER_BACKUP_DIR` și un `ARTMASTER_RESTORE_DIR` nou și separat. Verifică copia într-un mediu izolat înainte de orice schimbare aprobată a directorului activ; nu suprascrie datele curente.
 
 ## Backup de producție
 
@@ -39,3 +39,5 @@ Testează o restaurare înainte de lansare și periodic ulterior. Limitele planu
 ## Întreținere
 
 Rulează auditul dependențelor, actualizează versiunile prin modificări revizuibile și repetă testele afectate. Nu utiliza `npm audit fix --force` fără evaluarea incompatibilităților. Monitorizează erorile, cererile respinse și notificările eșuate fără să divulgi date personale în loguri. Nu există promisiune de securitate absolută; configurația gazdei și integrările externe trebuie testate în mediul real.
+
+Procedura verificată pentru copii cu manifest, restaurare într-un director nou și strategia MFA sunt descrise în [Phase 1 security foundation](security-foundation.md).

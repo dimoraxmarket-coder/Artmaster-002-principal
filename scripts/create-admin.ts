@@ -29,6 +29,6 @@ async function main(){
     const {error:failure}=await client.from('admin_roles').insert({user_id:data.user.id,role});
     if(failure){await client.auth.admin.deleteUser(data.user.id);throw new Error('Rolul nu a putut fi atribuit. Aplică migrarea bazei de date.');}
   }
-  console.log('Cont creat. Parola nu este afișată. În producție configurează TOTP în Supabase Auth înainte de modificări.');
+  console.log('Cont creat. Parola nu este afișată. În modul Supabase configurează TOTP prin /admin; toate datele administrative necesită MFA.');
 }
 main().catch(()=>{console.error('Crearea contului nu a reușit. Verifică ADMIN_EMAIL, parola de 12–128 caractere, configurația și absența unui cont cu același e-mail.');process.exitCode=1;});

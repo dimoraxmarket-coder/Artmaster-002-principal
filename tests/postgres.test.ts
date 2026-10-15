@@ -17,11 +17,12 @@ type ClientRole = 'anon' | 'authenticated' | 'service_role';
 const sqlError = (code: string) => (error: unknown) =>
   typeof error === 'object' && error !== null && 'code' in error && error.code === code;
 
-async function asRole<T>(db: PGlite, role: ClientRole, user: string | null, run: (tx: Transaction) => Promise<T>): Promise<T> {
+async function asRole<T>(db: PGlite, role: ClientRole, user: string | null, run: (tx: Transaction) => Promise<T>, aal: string | null = 'aal2'): Promise<T> {
   return db.transaction(async tx => {
     // Role comes only from the closed test union, never from request input.
     await tx.exec(`set local role ${role}`);
     await tx.query("select set_config('request.jwt.claim.sub', $1, true)", [user ?? '']);
+    await tx.query("select set_config('request.jwt.claims', $1, true)", [JSON.stringify(aal ? {aal} : {})]);
     const identity = await tx.query<{ name: string; superuser: boolean; bypass: boolean }>(
       'select current_user as name, rolsuper as superuser, rolbypassrls as bypass from pg_roles where rolname=current_user',
     );
@@ -50,9 +51,17 @@ test('PostgreSQL migration enforces client RLS, restricted RPCs and atomic CMS c
       create function auth.uid() returns uuid language sql stable as $$
         select nullif(current_setting('request.jwt.claim.sub', true), '')::uuid
       $$;
+      create function auth.jwt() returns jsonb language sql stable as $$
+        select coalesce(nullif(current_setting('request.jwt.claims', true), ''), '{}')::jsonb
+      $$;
       grant usage on schema auth to anon, authenticated, service_role;
       grant execute on function auth.uid() to anon, authenticated, service_role;
       create schema storage;
+      create table storage.objects (id uuid primary key, bucket_id text not null);
+      alter table storage.objects enable row level security;
+      grant usage on schema storage to authenticated;
+      grant select on storage.objects to authenticated;
+      create policy test_team_read on storage.objects for select to authenticated using (true);
       create table storage.buckets (
         id text primary key, name text not null, public boolean not null default false,
         file_size_limit bigint, allowed_mime_types text[]
@@ -60,6 +69,7 @@ test('PostgreSQL migration enforces client RLS, restricted RPCs and atomic CMS c
     `);
     const migration = await readFile(new URL('../supabase/migrations/202610130001_artmaster.sql', import.meta.url), 'utf8');
     await db.exec(migration);
+    await db.exec(await readFile(new URL('../supabase/migrations/202610150001_admin_mfa.sql', import.meta.url), 'utf8'));
     for (const id of Object.values(ids)) await db.query('insert into auth.users(id) values($1)', [id]);
     for (const [id, role] of [[ids.viewer, 'viewer'], [ids.editor, 'editor'], [ids.admin, 'admin']]) {
       await db.query('insert into public.admin_roles(user_id,role) values($1,$2)', [id, role]);
@@ -95,6 +105,28 @@ test('PostgreSQL migration enforces client RLS, restricted RPCs and atomic CMS c
         const rows = await asRole(db, 'authenticated', ids.unassigned, tx => tx.query(`select * from public.${table}`));
         assert.equal(rows.rows.length, 0, table);
       }
+    });
+
+    await suite.test('AAL1, missing and invalid MFA claims cannot read any protected administrative rows', async () => {
+      // Seed an audit row so zero rows cannot be a false positive.
+      await db.query("insert into public.audit_log(actor_id,action,target) values($1,'fixture','synthetic')", [ids.admin]);
+      for (const user of [ids.viewer, ids.editor, ids.admin]) for (const aal of ['aal1', null, 'invalid']) {
+        for (const table of ['admin_roles', 'quotes', 'site_content', 'audit_log']) {
+          const rows = await asRole(db, 'authenticated', user, tx => tx.query(`select * from public.${table}`), aal);
+          assert.equal(rows.rows.length, 0, `${user} ${aal} ${table}`);
+        }
+      }
+      assert.equal((await asRole(db, 'authenticated', ids.admin, tx => tx.query('select * from public.audit_log'))).rows.length, 1);
+      await db.exec('delete from public.audit_log');
+    });
+
+    await suite.test('private object MFA restriction survives a permissive storage read policy; public portfolio stays available', async () => {
+      await db.exec("insert into storage.objects(id,bucket_id) values ('30000000-0000-4000-8000-000000000001','quote-files'),('30000000-0000-4000-8000-000000000002','portfolio')");
+      for (const aal of ['aal1', null]) {
+        const rows = await asRole(db, 'authenticated', ids.viewer, tx => tx.query<{bucket_id:string}>('select bucket_id from storage.objects'), aal);
+        assert.deepEqual(rows.rows, [{bucket_id:'portfolio'}]);
+      }
+      assert.equal((await asRole(db, 'authenticated', ids.viewer, tx => tx.query('select * from storage.objects'))).rows.length, 2);
     });
 
     await suite.test('viewer sees their own role and team-authorized enquiries, without mutation or escalation', async () => {

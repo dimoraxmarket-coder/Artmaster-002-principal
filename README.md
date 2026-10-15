@@ -40,6 +40,7 @@ Testele E2E pornesc un server de producție local pe portul 3100 când nu exist�
 - [Verificarea finală a actualizării](docs/upgrade-validation.md)
 - [Configurare, publicare și servicii externe](docs/deployment.md)
 - [Securitate, administrare și copii de siguranță](docs/security-and-backups.md)
+- [Phase 1: protejarea datelor, restaurare verificată și MFA obligatorie](docs/security-foundation.md)
 - [Migrarea Joomla și păstrarea traficului organic](docs/migration.md)
 - [Lista de verificare înainte de lansare](docs/production-readiness.md)
 - [Rezultatele verificărilor browserului](docs/validation.md)
