@@ -1,0 +1,247 @@
+import type { Localized, SiteContent } from './types';
+import { additionalServices } from './additional-services';
+
+const l = (ro: string, ru: string, en: string): Localized => ({ ro, ru, en });
+
+export const defaultContent: SiteContent = {
+  contact: {
+    companyName: 'ARTMASTER',
+    phone: '+37360010400',
+    email: 'office@artmaster.md',
+    address: l('Strada Tudor Vladimirescu 69, Durlești, MD-2003, Republica Moldova', 'ул. Тудор Владимиреску, 69, Дурлешты, MD-2003, Республика Молдова', '69 Tudor Vladimirescu Street, Durlești, MD-2003, Republic of Moldova'),
+    areas: l('Durlești, Republica Moldova', 'Дурлешты, Республика Молдова', 'Durlești, Republic of Moldova'),
+    whatsapp: '',
+  },
+  services: [
+    {
+      slug: 'print-uv',
+      title: l('Print UV', 'УФ-печать', 'UV printing'),
+      summary: l('Grafică imprimată cu tehnologie UV pentru proiecte de comunicare vizuală.', 'Печать графики по УФ-технологии для проектов визуальной коммуникации.', 'UV-printed graphics for visual communication projects.'),
+      description: l('Printul UV poate transforma un design într-un element vizual pentru prezentare, decor sau identitatea unei afaceri. La ARTMASTER lucrăm cu echipament UV Mimaki. Alegerea suportului, dimensiunile și finisajul se stabilesc după analiza proiectului; compatibilitatea unui material trebuie confirmată înainte de producție.', 'УФ-печать позволяет превратить дизайн в визуальный элемент для презентации, оформления или фирменного стиля. В ARTMASTER используется УФ-оборудование Mimaki. Основа, размеры и отделка определяются после изучения проекта; совместимость материала необходимо подтвердить до начала производства.', 'UV printing turns a design into a visual element for presentation, decoration or business identity. ARTMASTER uses Mimaki UV equipment. Substrate, dimensions and finishing are agreed after reviewing the project; material compatibility must be confirmed before production.'),
+      applications: {
+        ro: ['Elemente grafice pentru spații comerciale', 'Panouri de prezentare și semnalistică', 'Componente decorative personalizate'],
+        ru: ['Графические элементы для коммерческих пространств', 'Презентационные панели и навигация', 'Декоративные элементы по индивидуальному дизайну'],
+        en: ['Graphics for commercial spaces', 'Presentation panels and signage', 'Custom decorative components'],
+      },
+      quoteHints: {
+        ro: ['Dimensiuni și cantitate', 'Suportul dorit sau o fotografie a acestuia', 'Fișierul grafic și locul unde va fi utilizat'],
+        ru: ['Размеры и количество', 'Желаемая основа или её фотография', 'Графический файл и место использования'],
+        en: ['Dimensions and quantity', 'Preferred substrate or a photo of it', 'Artwork file and intended location'],
+      },
+      faqs: [
+        { question: l('Pe ce materiale se poate imprima?', 'На каких материалах можно печатать?', 'Which materials can be printed?'), answer: l('Compatibilitatea depinde de suport și de cerințele lucrării. Trimite denumirea materialului, grosimea și o fotografie; confirmăm soluția după evaluare.', 'Совместимость зависит от основы и требований проекта. Пришлите название материала, толщину и фотографию — подходящее решение подтверждается после оценки.', 'Compatibility depends on the substrate and project requirements. Send the material name, thickness and a photo so we can assess the solution.') },
+        { question: l('Ce dimensiune de fișier trebuie să pregătesc?', 'Какой размер файла нужно подготовить?', 'What artwork dimensions should I prepare?'), answer: l('Indică dimensiunea finală a lucrării și atașează fișierul existent. Rezoluția, marginile și formatul potrivit se verifică în funcție de utilizarea finală.', 'Укажите конечный размер изделия и приложите имеющийся файл. Разрешение, поля и подходящий формат проверяются с учётом назначения работы.', 'Specify the final dimensions and attach your existing artwork. Resolution, margins and file format are reviewed for the intended use.') },
+      ],
+      image: '/media/print-workshop.png',
+      relatedSlugs: ['imprimare-mari-dimensiuni', 'litere-volumetrice'],
+      equipmentSlugs: ['uv-mimaki'],
+    },
+    {
+      slug: 'imprimare-mari-dimensiuni',
+      title: l('Imprimare de mari dimensiuni', 'Широкоформатная печать', 'Large-format printing'),
+      summary: l('Imagini de impact, pregătite pentru suprafețe mari și citire de la distanță.', 'Выразительная графика для больших поверхностей и просмотра на расстоянии.', 'High-impact graphics designed for large surfaces and viewing at a distance.'),
+      description: l('Un proiect de mari dimensiuni începe cu o grafică lizibilă, o măsurare corectă și un suport adecvat locului de utilizare. ARTMASTER oferă imprimare de mari dimensiuni. Lățimea disponibilă, împărțirea în segmente, suportul și finisarea se confirmă pentru fiecare comandă.', 'Широкоформатный проект начинается с читаемой графики, точных замеров и основы, подходящей для места использования. ARTMASTER предлагает широкоформатную печать. Доступная ширина, деление на части, материал и отделка согласуются для каждого заказа.', 'A large-format project starts with readable graphics, accurate measurements and a substrate suited to its location. ARTMASTER provides large-format printing. Available width, panel division, substrate and finishing are confirmed for each order.'),
+      applications: {
+        ro: ['Grafică pentru vitrine și interioare', 'Elemente vizuale pentru prezentări și evenimente', 'Comunicare vizuală pe suprafețe extinse'],
+        ru: ['Графика для витрин и интерьеров', 'Визуальные материалы для презентаций и мероприятий', 'Визуальная коммуникация на больших поверхностях'],
+        en: ['Graphics for windows and interiors', 'Visuals for presentations and events', 'Visual communication across large surfaces'],
+      },
+      quoteHints: {
+        ro: ['Dimensiunile exacte și fotografia suprafeței', 'Utilizare în interior sau exterior', 'Grafica, cantitatea și cerințele de finisare'],
+        ru: ['Точные размеры и фотография поверхности', 'Использование внутри или снаружи', 'Макет, количество и требования к отделке'],
+        en: ['Exact dimensions and a photo of the surface', 'Indoor or outdoor use', 'Artwork, quantity and finishing requirements'],
+      },
+      faqs: [
+        { question: l('Se poate imprima lucrarea într-o singură bucată?', 'Можно ли напечатать работу одним полотном?', 'Can the graphic be printed in one piece?'), answer: l('Depinde de dimensiune și de suportul ales. După primirea măsurilor, verificăm dacă lucrarea poate fi realizată integral sau trebuie împărțită în segmente.', 'Это зависит от размеров и выбранной основы. После получения замеров проверяем, можно ли изготовить работу целиком или потребуется деление на части.', 'It depends on the dimensions and chosen substrate. Once we have the measurements, we check whether one piece or several panels are appropriate.') },
+        { question: l('Cum pregătesc o imagine pentru o suprafață mare?', 'Как подготовить изображение для большой поверхности?', 'How should I prepare an image for a large surface?'), answer: l('Trimite fișierul original și dimensiunile finale. Claritatea se evaluează și în raport cu distanța de vizualizare; o imagine mică nu devine automat mai detaliată prin mărire.', 'Пришлите исходный файл и конечные размеры. Чёткость оценивается с учётом расстояния просмотра; увеличение маленького изображения само по себе не добавляет деталей.', 'Send the original file and final dimensions. Sharpness is also assessed against viewing distance; enlarging a small image does not automatically add detail.') },
+      ],
+      image: '/media/print-workshop.png',
+      relatedSlugs: ['print-uv', 'litere-volumetrice'],
+      equipmentSlugs: ['uv-mimaki'],
+    },
+    {
+      slug: 'litere-volumetrice',
+      title: l('Litere volumetrice', 'Объёмные буквы', 'Dimensional lettering'),
+      summary: l('Identitate vizuală cu volum pentru nume, logo-uri și elemente de orientare.', 'Объёмное оформление названий, логотипов и навигационных элементов.', 'Three-dimensional identity for names, logos and wayfinding.'),
+      description: l('Literele volumetrice dau relief unui nume sau unui logo și trebuie proiectate pentru locul în care vor fi văzute. În atelier avem echipament pentru formarea bordurilor de litere și freză CNC. Forma, dimensiunile, suportul și soluția de fixare se stabilesc individual; iluminarea sau montajul se discută separat, dacă sunt necesare.', 'Объёмные буквы придают рельеф названию или логотипу и должны проектироваться с учётом места просмотра. В мастерской есть оборудование для формирования бортов букв и станок с ЧПУ. Форма, размеры, основа и способ крепления определяются индивидуально; подсветка и монтаж обсуждаются отдельно, если они нужны.', 'Dimensional lettering gives depth to a name or logo and should be designed for its viewing location. Our workshop has equipment for forming letter sides and CNC routing. Shape, dimensions, substrate and fixing method are agreed individually; lighting and installation are discussed separately when needed.'),
+      applications: {
+        ro: ['Numele afacerii în recepție sau pe fațadă', 'Logo-uri cu relief pentru spații comerciale', 'Litere decorative pentru identitatea unui spațiu'],
+        ru: ['Название компании в зоне приёма или на фасаде', 'Объёмные логотипы для коммерческих помещений', 'Декоративные буквы для оформления пространства'],
+        en: ['Business names at receptions or on façades', 'Raised logos for commercial spaces', 'Decorative lettering for a space’s identity'],
+      },
+      quoteHints: {
+        ro: ['Logo-ul sau textul în format vectorial, dacă există', 'Lățimea totală și înălțimea literelor', 'Fotografia locului și cerințele de fixare sau iluminare'],
+        ru: ['Логотип или текст в векторном формате, если он есть', 'Общая ширина и высота букв', 'Фотография места, требования к креплению и подсветке'],
+        en: ['Vector logo or text, if available', 'Overall width and letter height', 'Location photo and fixing or lighting requirements'],
+      },
+      faqs: [
+        { question: l('Puteți lucra după logo-ul meu?', 'Можно изготовить буквы по моему логотипу?', 'Can you work from my logo?'), answer: l('Da, logo-ul este punctul de pornire pentru evaluare. Fișierul vectorial ajută la definirea contururilor; dacă ai doar o imagine, trimite-o pentru verificare.', 'Да, логотип служит основой для оценки. Векторный файл помогает точно определить контуры; если есть только изображение, отправьте его на проверку.', 'Yes, your logo is the starting point for assessment. A vector file helps define the contours; if you only have an image, send it for review.') },
+        { question: l('Iluminarea și montajul sunt incluse?', 'Подсветка и монтаж входят в заказ?', 'Are lighting and installation included?'), answer: l('Aceste cerințe trebuie precizate în solicitare și confirmate în ofertă. Nu presupunem automat că o lucrare include iluminare, montaj sau lucrări electrice.', 'Эти требования нужно указать в запросе и подтвердить в предложении. Подсветка, монтаж и электротехнические работы не подразумеваются автоматически.', 'Include these requirements in your enquiry so they can be confirmed in the quote. Lighting, installation and electrical work are not automatically included.') },
+      ],
+      image: '/media/letters.png',
+      relatedSlugs: ['frezare-cnc', 'print-uv', 'gravura-laser'],
+      equipmentSlugs: ['formare-borduri-litere', 'freza-cnc'],
+    },
+    {
+      slug: 'imprimare-3d',
+      title: l('Imprimare 3D', '3D-печать', '3D printing'),
+      summary: l('De la model digital la obiect fizic, pentru prototipuri și idei de prezentare.', 'От цифровой модели к физическому объекту для прототипов и презентаций.', 'From a digital model to a physical object for prototypes and presentations.'),
+      description: l('Imprimarea 3D permite evaluarea unei forme, testarea unei idei sau realizarea unui obiect pentru prezentare. ARTMASTER dispune de patru imprimante 3D. Tehnologia, materialul, volumul de imprimare și precizia potrivită se confirmă după analiza modelului; o piesă destinată utilizării tehnice necesită cerințe explicite.', '3D-печать позволяет оценить форму, проверить идею или создать объект для презентации. В ARTMASTER есть четыре 3D-принтера. Технология, материал, рабочий объём и необходимая точность подтверждаются после анализа модели; для детали технического назначения нужны чёткие требования.', '3D printing helps evaluate a shape, explore an idea or create a presentation object. ARTMASTER has four 3D printers. Technology, material, build volume and appropriate precision are confirmed after reviewing the model; parts intended for technical use need explicit requirements.'),
+      applications: {
+        ro: ['Prototipuri pentru verificarea formei', 'Machete și obiecte pentru prezentare', 'Elemente personalizate pentru proiecte vizuale'],
+        ru: ['Прототипы для проверки формы', 'Макеты и презентационные объекты', 'Индивидуальные элементы для визуальных проектов'],
+        en: ['Prototypes for checking shape', 'Models and presentation objects', 'Custom elements for visual projects'],
+      },
+      quoteHints: {
+        ro: ['Modelul 3D disponibil sau schița ideii', 'Dimensiunile, numărul de piese și utilizarea', 'Cerințe privind rezistența, aspectul și toleranțele'],
+        ru: ['Имеющаяся 3D-модель или эскиз идеи', 'Размеры, количество деталей и назначение', 'Требования к прочности, внешнему виду и допускам'],
+        en: ['Available 3D model or a sketch of the idea', 'Dimensions, number of parts and intended use', 'Strength, appearance and tolerance requirements'],
+      },
+      faqs: [
+        { question: l('Am nevoie de un model 3D gata făcut?', 'Нужна ли готовая 3D-модель?', 'Do I need a finished 3D model?'), answer: l('Un model digital ajută la evaluarea directă a lucrării. Dacă nu există, trimite o schiță și dimensiunile; necesitatea modelării și disponibilitatea acestei etape se discută înainte de ofertare.', 'Цифровая модель помогает сразу оценить работу. Если её нет, пришлите эскиз и размеры; необходимость моделирования и возможность этого этапа обсуждаются до расчёта предложения.', 'A digital model allows direct assessment. If you do not have one, send a sketch and dimensions; modelling needs and availability are discussed before quoting.') },
+        { question: l('Piesa imprimată poate fi folosită ca piesă tehnică?', 'Можно использовать напечатанную деталь как техническую?', 'Can a printed object be used as a technical part?'), answer: l('Depinde de sarcini, temperatură, geometrie și material. Menționează condițiile reale de utilizare; nu putem considera automat un prototip ca piesă certificată sau potrivită pentru utilizări critice.', 'Это зависит от нагрузок, температуры, геометрии и материала. Укажите реальные условия эксплуатации; прототип нельзя автоматически считать сертифицированной деталью или пригодным для ответственных применений.', 'It depends on loads, temperature, geometry and material. Describe actual use conditions; a prototype cannot automatically be treated as a certified part or suitable for critical applications.') },
+      ],
+      image: '/media/3d.png',
+      relatedSlugs: ['frezare-cnc', 'gravura-laser'],
+      equipmentSlugs: ['imprimante-3d'],
+    },
+    {
+      slug: 'gravura-laser',
+      title: l('Gravură laser', 'Лазерная гравировка', 'Laser engraving'),
+      summary: l('Detalii, texte și contururi pentru personalizarea unui proiect.', 'Детали, надписи и контуры для индивидуального оформления проекта.', 'Details, text and outlines for a personalised project.'),
+      description: l('Gravura laser poate adăuga un mesaj, un logo sau un detaliu grafic pe un suport compatibil. ARTMASTER dispune de echipament laser. Rezultatul depinde de material, de suprafața disponibilă și de finețea desenului; confirmăm compatibilitatea și aspectul urmărit înainte de lucru.', 'Лазерная гравировка позволяет нанести надпись, логотип или графическую деталь на совместимую основу. В ARTMASTER есть лазерное оборудование. Результат зависит от материала, доступной поверхности и тонкости рисунка; совместимость и желаемый внешний вид подтверждаются перед работой.', 'Laser engraving can add a message, logo or graphic detail to a compatible substrate. ARTMASTER has laser equipment. Results depend on the material, available surface and artwork detail; compatibility and the intended appearance are confirmed before work begins.'),
+      applications: {
+        ro: ['Texte și logo-uri pentru obiecte personalizate', 'Plăcuțe și elemente de identificare', 'Detalii decorative pe suporturi compatibile'],
+        ru: ['Надписи и логотипы на индивидуальных изделиях', 'Таблички и элементы идентификации', 'Декоративные детали на совместимых основах'],
+        en: ['Text and logos on personalised objects', 'Nameplates and identification elements', 'Decorative details on compatible substrates'],
+      },
+      quoteHints: {
+        ro: ['Materialul și fotografia obiectului', 'Dimensiunea zonei de gravat și cantitatea', 'Textul sau fișierul grafic și rezultatul vizual dorit'],
+        ru: ['Материал и фотография предмета', 'Размер зоны гравировки и количество', 'Текст или графический файл и желаемый результат'],
+        en: ['Material and a photo of the object', 'Engraving area dimensions and quantity', 'Text or artwork and desired visual result'],
+      },
+      faqs: [
+        { question: l('Puteți grava un obiect pe care îl aduc eu?', 'Можно выгравировать предмет, который я принесу?', 'Can you engrave an object I supply?'), answer: l('Trimite mai întâi informațiile despre material și o fotografie. Geometria și compoziția obiectului influențează compatibilitatea; acceptarea se confirmă după evaluare.', 'Сначала пришлите сведения о материале и фотографию. Геометрия и состав предмета влияют на совместимость; возможность работы подтверждается после оценки.', 'First send material information and a photo. The object’s geometry and composition affect compatibility; acceptance is confirmed after assessment.') },
+        { question: l('Se poate grava orice text foarte mic?', 'Можно выгравировать любой очень мелкий текст?', 'Can any very small text be engraved?'), answer: l('Lizibilitatea depinde de dimensiune, font, material și contrast. Indică dimensiunea finală; verificăm detaliile și putem recomanda simplificarea desenului.', 'Читаемость зависит от размера, шрифта, материала и контраста. Укажите конечный размер — мы проверим детали и при необходимости предложим упростить рисунок.', 'Readability depends on size, typeface, material and contrast. Specify the final size so we can review the details and suggest simplifying the artwork if needed.') },
+      ],
+      image: '/media/laser.svg',
+      relatedSlugs: ['frezare-cnc', 'print-uv'],
+      equipmentSlugs: ['laser'],
+    },
+    {
+      slug: 'frezare-cnc',
+      title: l('Frezare CNC', 'Фрезеровка с ЧПУ', 'CNC routing'),
+      summary: l('Contururi și forme realizate pornind de la un desen digital.', 'Контуры и формы, изготовленные на основе цифрового чертежа.', 'Contours and shapes produced from a digital drawing.'),
+      description: l('Frezarea CNC este utilă pentru realizarea unor forme, contururi și componente ale proiectelor vizuale. ARTMASTER dispune de freză CNC. Materialul, grosimea, zona de lucru și operațiile posibile se confirmă după analiza desenului; detaliile de fixare și toleranțele trebuie comunicate de la început.', 'Фрезеровка с ЧПУ подходит для изготовления форм, контуров и компонентов визуальных проектов. В ARTMASTER есть фрезерный станок с ЧПУ. Материал, толщина, рабочая область и доступные операции подтверждаются после анализа чертежа; крепления и допуски нужно указать с самого начала.', 'CNC routing is useful for shapes, contours and components in visual projects. ARTMASTER has a CNC router. Material, thickness, working area and possible operations are confirmed after reviewing the drawing; fixing details and tolerances should be specified from the start.'),
+      applications: {
+        ro: ['Contururi pentru litere și logo-uri', 'Componente pentru elemente de prezentare', 'Forme decorative și piese după desen'],
+        ru: ['Контуры букв и логотипов', 'Компоненты презентационных элементов', 'Декоративные формы и детали по чертежу'],
+        en: ['Contours for letters and logos', 'Components for presentation elements', 'Decorative shapes and drawing-based parts'],
+      },
+      quoteHints: {
+        ro: ['Desenul vectorial sau tehnic disponibil', 'Materialul, grosimea, dimensiunile și cantitatea', 'Găuri, toleranțe și cerințe de finisare'],
+        ru: ['Имеющийся векторный или технический чертёж', 'Материал, толщина, размеры и количество', 'Отверстия, допуски и требования к отделке'],
+        en: ['Available vector or technical drawing', 'Material, thickness, dimensions and quantity', 'Holes, tolerances and finishing requirements'],
+      },
+      faqs: [
+        { question: l('Ce desen trebuie să trimit pentru frezare?', 'Какой чертёж нужен для фрезеровки?', 'What drawing should I send for routing?'), answer: l('Trimite desenul disponibil cu dimensiunile și grosimea piesei. Contururile vectoriale sau un desen tehnic clar ajută la evaluare; formatul final se confirmă în funcție de operație.', 'Пришлите имеющийся чертёж с размерами и толщиной детали. Векторные контуры или понятный технический чертёж помогают оценке; итоговый формат согласуется с учётом операции.', 'Send the available drawing with part dimensions and thickness. Vector outlines or a clear technical drawing help assessment; the final file format is agreed for the operation.') },
+        { question: l('Puteți păstra dimensiuni precise?', 'Можно соблюсти точные размеры?', 'Can specific dimensions be maintained?'), answer: l('Comunică toleranțele necesare și utilizarea piesei. Precizia realizabilă depinde de material, geometrie și operație și trebuie confirmată în ofertă.', 'Укажите необходимые допуски и назначение детали. Достижимая точность зависит от материала, геометрии и операции и должна быть подтверждена в предложении.', 'Provide the required tolerances and intended use. Achievable accuracy depends on material, geometry and operation and must be confirmed in the quote.') },
+      ],
+      image: '/media/cnc.svg',
+      relatedSlugs: ['litere-volumetrice', 'imprimare-3d', 'gravura-laser'],
+      equipmentSlugs: ['freza-cnc'],
+    },
+    ...additionalServices,
+  ],
+  equipment: [
+    {
+      slug: 'uv-mimaki', title: l('Echipament UV Mimaki', 'УФ-оборудование Mimaki', 'Mimaki UV equipment'),
+      summary: l('Tehnologie UV pentru proiecte de imprimare și comunicare vizuală.', 'УФ-технология для печати и визуальной коммуникации.', 'UV technology for printing and visual communication.'),
+      description: l('Prezența echipamentului UV Mimaki în atelier este confirmată. Modelul, dimensiunile de lucru și configurația exactă urmează să fie documentate. Pentru un proiect concret, confirmăm suportul și soluția de imprimare după evaluarea cerințelor.', 'Наличие УФ-оборудования Mimaki в мастерской подтверждено. Модель, рабочие размеры и точная конфигурация будут документированы отдельно. Для конкретного проекта основа и решение печати подтверждаются после оценки требований.', 'Mimaki UV equipment is confirmed in the workshop. The model, working dimensions and exact configuration remain to be documented. Substrate and printing approach are confirmed after assessing a specific project.'),
+      image: '/media/print-workshop.png', serviceSlugs: ['print-uv', 'imprimare-mari-dimensiuni'],
+      facts: [l('Producător: Mimaki', 'Производитель: Mimaki', 'Manufacturer: Mimaki'), l('Tehnologie: imprimare UV', 'Технология: УФ-печать', 'Technology: UV printing'), l('Model și format de lucru: de confirmat', 'Модель и рабочий формат: уточняются', 'Model and working format: to be confirmed')],
+    },
+    {
+      slug: 'imprimante-3d', title: l('4 imprimante 3D', '4 3D-принтера', '4 3D printers'),
+      summary: l('Patru echipamente pentru transformarea modelelor digitale în obiecte.', 'Четыре устройства для превращения цифровых моделей в объекты.', 'Four machines for turning digital models into objects.'),
+      description: l('ARTMASTER dispune de patru imprimante 3D. Modelele, tehnologiile și volumele utile vor fi adăugate după verificarea fișelor tehnice. Alegerea echipamentului pentru o comandă depinde de dimensiuni, geometrie și utilizarea dorită.', 'В ARTMASTER есть четыре 3D-принтера. Модели, технологии и полезные объёмы будут добавлены после проверки технических характеристик. Выбор оборудования для заказа зависит от размеров, геометрии и назначения.', 'ARTMASTER has four 3D printers. Models, technologies and usable build volumes will be added after technical specifications are checked. Equipment selection depends on dimensions, geometry and intended use.'),
+      image: '/media/3d.png', serviceSlugs: ['imprimare-3d'],
+      facts: [l('Număr confirmat: 4 imprimante', 'Подтверждённое количество: 4 принтера', 'Confirmed quantity: 4 printers'), l('Modele și volume de lucru: de confirmat', 'Модели и рабочие объёмы: уточняются', 'Models and build volumes: to be confirmed')],
+    },
+    {
+      slug: 'laser', title: l('Echipament laser', 'Лазерное оборудование', 'Laser equipment'),
+      summary: l('Echipament pentru detalii grafice și gravură.', 'Оборудование для графических деталей и гравировки.', 'Equipment for graphic details and engraving.'),
+      description: l('Atelierul include echipament laser. Tipul laserului, puterea și suprafața utilă nu sunt încă documentate public. Compatibilitatea suportului și dimensiunea zonei de gravare se verifică înainte de acceptarea lucrării.', 'В мастерской есть лазерное оборудование. Тип лазера, мощность и рабочая площадь пока не опубликованы. Совместимость основы и размеры зоны гравировки проверяются перед подтверждением работы.', 'The workshop includes laser equipment. Laser type, power and usable area are not yet publicly documented. Substrate compatibility and engraving area are checked before work is accepted.'),
+      image: '/media/laser.svg', serviceSlugs: ['gravura-laser'],
+      facts: [l('Echipament prezent în atelier', 'Оборудование есть в мастерской', 'Equipment present in the workshop'), l('Tip, putere și suprafață utilă: de confirmat', 'Тип, мощность и рабочая площадь: уточняются', 'Type, power and usable area: to be confirmed')],
+    },
+    {
+      slug: 'freza-cnc', title: l('Freză CNC', 'Фрезерный станок с ЧПУ', 'CNC router'),
+      summary: l('Prelucrare ghidată de desen digital pentru forme și contururi.', 'Обработка форм и контуров по цифровому чертежу.', 'Drawing-guided machining for shapes and contours.'),
+      description: l('Freza CNC face parte din echipamentele confirmate ale atelierului. Modelul și zona de lucru vor fi documentate separat. Parametrii de prelucrare și materialele potrivite se stabilesc în funcție de fiecare proiect.', 'Фрезерный станок с ЧПУ входит в подтверждённое оборудование мастерской. Модель и рабочая область будут документированы отдельно. Параметры обработки и подходящие материалы определяются для каждого проекта.', 'A CNC router is part of the workshop’s confirmed equipment. Its model and working area will be documented separately. Machining parameters and suitable materials are determined for each project.'),
+      image: '/media/cnc.svg', serviceSlugs: ['frezare-cnc', 'litere-volumetrice'],
+      facts: [l('Control numeric CNC', 'Числовое программное управление', 'Computer numerical control'), l('Model și zonă de lucru: de confirmat', 'Модель и рабочая область: уточняются', 'Model and working area: to be confirmed')],
+    },
+    {
+      slug: 'formare-borduri-litere', title: l('Echipament pentru borduri de litere', 'Оборудование для бортов букв', 'Letter-side forming equipment'),
+      summary: l('Formarea bordurilor pentru proiecte cu litere volumetrice.', 'Формирование бортов для проектов объёмных букв.', 'Forming sidewalls for dimensional lettering projects.'),
+      description: l('Atelierul are un aparat pentru formarea bordurilor de litere. Modelul și parametrii de prelucrare urmează să fie verificați. Utilizarea în proiect se confirmă după analiza conturului și a dimensiunilor literelor.', 'В мастерской есть устройство для формирования бортов букв. Модель и параметры обработки будут проверены отдельно. Применение в проекте подтверждается после анализа контура и размеров букв.', 'The workshop has a machine for forming letter sides. Its model and machining parameters remain to be checked. Use in a project is confirmed after reviewing letter contours and dimensions.'),
+      image: '/media/letters.png', serviceSlugs: ['litere-volumetrice'],
+      facts: [l('Utilizare: borduri pentru litere volumetrice', 'Назначение: борта объёмных букв', 'Purpose: sidewalls for dimensional letters'), l('Model și parametri: de confirmat', 'Модель и параметры: уточняются', 'Model and parameters: to be confirmed')],
+    },
+  ],
+  projects: [
+    {
+      slug: 'concept-grafica-spatiu-comercial', kind: 'concept', published: true,
+      title: l('Concept: grafică pentru un spațiu comercial', 'Концепт: графика коммерческого пространства', 'Concept: graphics for a commercial space'),
+      summary: l('O direcție vizuală pentru explorarea unui proiect de print.', 'Визуальное направление для разработки печатного проекта.', 'A visual direction for exploring a print project.'),
+      description: l('Aceasta este o vizualizare de concept, creată pentru a ilustra o posibilă direcție de design. Nu reprezintă o comandă realizată, un client sau o fotografie a atelierului ARTMASTER. Dimensiunile, suporturile și realizarea unui proiect similar ar necesita evaluare separată.', 'Это концептуальная визуализация, созданная для иллюстрации возможного направления дизайна. Она не представляет выполненный заказ, клиента или фотографию мастерской ARTMASTER. Размеры, материалы и изготовление похожего проекта требуют отдельной оценки.', 'This concept visual illustrates a possible design direction. It does not represent a completed commission, a client or a photograph of the ARTMASTER workshop. Dimensions, substrates and production of a similar project would require a separate assessment.'),
+      image: '/media/print-workshop.png', serviceSlugs: ['print-uv', 'imprimare-mari-dimensiuni'],
+    },
+    {
+      slug: 'concept-identitate-volumetrica', kind: 'concept', published: true,
+      title: l('Concept: identitate cu litere volumetrice', 'Концепт: айдентика с объёмными буквами', 'Concept: dimensional brand identity'),
+      summary: l('Studiu de prezentare a unui nume prin volum și contrast.', 'Исследование оформления названия через объём и контраст.', 'A study of presenting a name through depth and contrast.'),
+      description: l('Această imagine este un concept de prezentare, nu un proiect executat. Explorează felul în care literele volumetrice pot organiza identitatea unui spațiu. Iluminarea, materialele și montajul nu sunt specificații confirmate pentru o lucrare ARTMASTER.', 'Это концепт презентации, а не выполненный проект. Он показывает, как объёмные буквы могут сформировать идентичность пространства. Подсветка, материалы и монтаж не являются подтверждёнными характеристиками работы ARTMASTER.', 'This is a presentation concept, not a completed project. It explores how dimensional lettering can shape a space’s identity. Lighting, materials and installation are not confirmed specifications for an ARTMASTER commission.'),
+      image: '/media/letters.png', serviceSlugs: ['litere-volumetrice', 'frezare-cnc'],
+    },
+    {
+      slug: 'concept-obiect-imprimat-3d', kind: 'concept', published: true,
+      title: l('Concept: obiect de prezentare 3D', 'Концепт: презентационный 3D-объект', 'Concept: 3D presentation object'),
+      summary: l('O idee vizuală pentru trecerea de la formă digitală la obiect.', 'Визуальная идея перехода от цифровой формы к объекту.', 'A visual idea for moving from a digital shape to an object.'),
+      description: l('Vizualizarea este un exemplu de concept și nu documentează o piesă produsă pentru un client. Pentru un obiect real, modelul digital, dimensiunile, materialul și utilizarea se analizează înainte de stabilirea soluției de imprimare.', 'Визуализация является примером концепта и не документирует деталь, изготовленную для клиента. Для реального объекта цифровая модель, размеры, материал и назначение анализируются до выбора решения печати.', 'The visual is a concept example and does not document a part produced for a client. For a real object, the digital model, dimensions, material and intended use are assessed before deciding on a printing approach.'),
+      image: '/media/3d.png', serviceSlugs: ['imprimare-3d'],
+    },
+  ],
+  faqs: [
+    { question: l('Cum solicit o ofertă?', 'Как запросить предложение?', 'How do I request a quote?'), answer: l('Descrie proiectul, dimensiunile, cantitatea și utilizarea. Poți contacta ARTMASTER la office@artmaster.md sau la +373 600 10 400. Dacă folosești formularul, verifică mesajul de confirmare a trimiterii.', 'Опишите проект, размеры, количество и назначение. Связаться с ARTMASTER можно по адресу office@artmaster.md или по номеру +373 600 10 400. При использовании формы проверьте сообщение о подтверждении отправки.', 'Describe your project, dimensions, quantity and intended use. Contact ARTMASTER at office@artmaster.md or +373 600 10 400. If using the form, check its submission confirmation.') },
+    { question: l('Unde se află ARTMASTER?', 'Где находится ARTMASTER?', 'Where is ARTMASTER located?'), answer: l('Adresa este Strada Tudor Vladimirescu 69, Durlești, MD-2003, Republica Moldova. Contactează-ne înainte de vizită pentru a stabili detaliile întâlnirii.', 'Адрес: ул. Тудор Владимиреску, 69, Дурлешты, MD-2003, Республика Молдова. Свяжитесь с нами перед визитом, чтобы согласовать детали встречи.', 'The address is 69 Tudor Vladimirescu Street, Durlești, MD-2003, Republic of Moldova. Contact us before visiting to arrange meeting details.') },
+    { question: l('Cum se stabilește prețul?', 'Как определяется стоимость?', 'How is the price determined?'), answer: l('Oferta depinde de dimensiuni, cantitate, material, pregătirea fișierelor și operațiile necesare. Prețul este confirmat după evaluarea cerințelor, nu calculat dintr-o promisiune generală de pe site.', 'Стоимость зависит от размеров, количества, материала, подготовки файлов и необходимых операций. Цена подтверждается после оценки требований, а не на основе общего обещания на сайте.', 'The quote depends on dimensions, quantity, material, file preparation and required operations. Pricing is confirmed after requirements are reviewed, rather than inferred from a general website promise.') },
+    { question: l('În cât timp este gata o comandă?', 'Какой срок изготовления?', 'How long does an order take?'), answer: l('Termenul se confirmă în funcție de complexitate, disponibilitatea materialelor și planificarea producției. Menționează data de care ai nevoie; disponibilitatea trebuie verificată înainte de asumarea unui termen.', 'Срок подтверждается с учётом сложности, наличия материалов и производственного графика. Укажите нужную дату; возможность выполнения должна быть проверена до согласования срока.', 'Timing is confirmed according to complexity, material availability and production scheduling. Tell us your required date; availability must be checked before a deadline is agreed.') },
+    { question: l('Imaginile din portofoliu sunt lucrări reale?', 'Изображения в портфолио — реальные работы?', 'Are the portfolio images real projects?'), answer: l('În această versiune, imaginile publicate sunt marcate explicit drept concepte. Ele ilustrează direcții vizuale și nu sunt prezentate ca lucrări realizate pentru clienți. Proiectele reale vor fi adăugate după verificare.', 'В этой версии опубликованные изображения явно помечены как концепты. Они иллюстрируют визуальные направления и не выдаются за выполненные клиентские работы. Реальные проекты будут добавлены после проверки.', 'In this version, published images are explicitly labelled as concepts. They illustrate visual directions and are not presented as completed client work. Real projects will be added after verification.') },
+  ],
+  articles: [
+    {
+      slug: 'pregatirea-fisierelor-pentru-print', published: true,
+      title: l('Cum pregătești un proiect pentru print', 'Как подготовить проект к печати', 'How to prepare a print project'),
+      summary: l('Dimensiuni, fișiere și context: informațiile care fac o solicitare mai clară.', 'Размеры, файлы и контекст: что делает запрос понятнее.', 'Dimensions, files and context: the information that makes an enquiry clearer.'),
+      paragraphs: {
+        ro: ['Începe cu dimensiunea finală, exprimată în milimetri sau centimetri, și cu locul unde va fi folosită lucrarea. Un element privit de aproape și o grafică văzută de la distanță au cerințe diferite de lizibilitate. O fotografie a suprafeței și măsurile reale oferă un context mai bun decât o descriere generală.', 'Trimite fișierul original, dacă îl ai, nu doar o captură de ecran. Pentru logo-uri și texte, un fișier vectorial ajută la păstrarea contururilor când dimensiunea se schimbă. Pentru fotografii, rezoluția trebuie analizată la dimensiunea finală; mărirea fișierului nu creează detalii care nu existau.', 'Spune dacă există culori de marcă sau un aspect care trebuie păstrat. Culorile de pe ecran pot diferi de rezultatul imprimat, deoarece ecranul și suportul fizic redau culoarea diferit. Dacă fidelitatea culorii este esențială, discută o referință și modul de verificare înainte de producție.', 'Precizează cantitatea, utilizarea în interior sau exterior și finisajele dorite. Compatibilitatea suportului, marginile de siguranță și eventualele îmbinări trebuie stabilite pentru lucrarea concretă. Nu este nevoie să ghicești setările tehnice: atașează ce ai și descrie rezultatul urmărit.', 'Înainte de producție, verifică ortografia, datele de contact, dimensiunile și versiunea finală a machetei. O aprobare clară a fișierului reduce riscul de a produce o variantă depășită. Pentru o ofertă ARTMASTER, trimite aceste informații împreună cu fișierele disponibile.'],
+        ru: ['Начните с конечных размеров в миллиметрах или сантиметрах и места использования работы. Элемент, рассматриваемый вблизи, и графика, видимая издалека, требуют разной читаемости. Фотография поверхности и реальные замеры дают больше контекста, чем общее описание.', 'По возможности отправьте исходный файл, а не только снимок экрана. Для логотипов и текста векторный файл помогает сохранить контуры при изменении размера. Для фотографий разрешение нужно оценивать в конечном размере; увеличение файла не создаёт отсутствующих деталей.', 'Укажите фирменные цвета или особенности оформления, которые нужно сохранить. Цвета на экране могут отличаться от печати, поскольку экран и физическая основа передают цвет по-разному. Если точность цвета важна, обсудите образец и способ проверки до производства.', 'Уточните количество, использование внутри или снаружи и желаемую отделку. Совместимость основы, безопасные поля и возможные стыки определяются для конкретной работы. Не нужно угадывать технические настройки: приложите имеющиеся материалы и опишите желаемый результат.', 'Перед производством проверьте орфографию, контакты, размеры и финальную версию макета. Явное согласование файла снижает риск изготовления устаревшей версии. Для получения предложения ARTMASTER отправьте эту информацию вместе с доступными файлами.'],
+        en: ['Start with the final dimensions in millimetres or centimetres and where the graphic will be used. An element viewed up close and a graphic seen from a distance have different readability requirements. A photo of the surface and actual measurements provide more context than a general description.', 'Send the original file if you have it, rather than only a screenshot. For logos and text, a vector file helps preserve outlines as dimensions change. For photographs, resolution should be assessed at the final size; enlarging a file does not create missing detail.', 'Explain any brand colours or visual characteristics that need to be preserved. Screen colours may differ from printed results because screens and physical substrates reproduce colour differently. If colour accuracy is essential, discuss a reference and verification method before production.', 'Specify quantity, indoor or outdoor use and desired finishing. Substrate compatibility, safe margins and possible joins need to be established for the actual project. You do not need to guess technical settings: attach what you have and describe the result you want.', 'Before production, check spelling, contact details, dimensions and the final artwork version. Clear approval of the file reduces the risk of producing an outdated version. Send this information with your available files when requesting an ARTMASTER quote.'],
+      },
+      serviceSlugs: ['print-uv', 'imprimare-mari-dimensiuni'],
+    },
+    {
+      slug: 'de-la-idee-la-prototip-3d', published: true,
+      title: l('De la idee la prototip: ce trebuie clarificat', 'От идеи к прототипу: что нужно уточнить', 'From idea to prototype: what to clarify'),
+      summary: l('Un ghid de planificare pentru modele 3D, forme și componente personalizate.', 'Руководство по планированию 3D-моделей, форм и индивидуальных компонентов.', 'A planning guide for 3D models, shapes and custom components.'),
+      paragraphs: {
+        ro: ['Un prototip este util atunci când întrebarea pe care trebuie să o rezolve este clară. Vrei să verifici aspectul, dimensiunea, potrivirea cu altă piesă sau modul de prezentare? Scopul influențează alegerea materialului, precizia necesară și ce detalii merită realizate.', 'Documentează dimensiunile și zonele importante înainte de trimiterea modelului. Dacă piesa trebuie să intre într-un ansamblu, arată suprafețele de contact și menționează toleranțele. O schiță cotată poate explica o intenție pe care un fișier fără context nu o transmite.', 'Modelul digital trebuie evaluat pentru posibilitatea de producție. Pereții foarte subțiri, golurile, detaliile fragile și poziția piesei pot influența rezultatul imprimării. Ajustările se discută înainte de realizare; aspectul unei randări nu garantează același rezultat fizic.', 'Descrie mediul de utilizare: temperatură, sarcini, expunere și contact cu alte elemente. Pentru o piesă funcțională, aceste informații sunt mai importante decât simpla alegere a unei culori. Un obiect de prezentare și o componentă tehnică au cerințe diferite și nu trebuie considerate echivalente.', 'Trimite modelul sau schița, dimensiunile, cantitatea și scopul proiectului. ARTMASTER are patru imprimante 3D și freză CNC; soluția potrivită se evaluează pentru fiecare lucrare. Disponibilitatea materialelor, dimensiunile realizabile și termenul se confirmă în ofertă.'],
+        ru: ['Прототип полезен, когда понятно, на какой вопрос он должен ответить. Нужно проверить внешний вид, размер, сопряжение с другой деталью или способ презентации? Цель влияет на выбор материала, необходимую точность и детали, которые действительно стоит изготовить.', 'До отправки модели зафиксируйте размеры и важные зоны. Если деталь должна входить в сборку, покажите контактные поверхности и укажите допуски. Эскиз с размерами может объяснить замысел, который не передаёт файл без контекста.', 'Цифровую модель нужно оценить с точки зрения изготовления. Очень тонкие стенки, полости, хрупкие детали и положение изделия могут повлиять на результат печати. Изменения обсуждаются заранее; внешний вид рендера не гарантирует такой же физический результат.', 'Опишите условия использования: температуру, нагрузки, внешние воздействия и контакт с другими элементами. Для функциональной детали эта информация важнее простого выбора цвета. Презентационный объект и технический компонент имеют разные требования и не должны считаться равнозначными.', 'Пришлите модель или эскиз, размеры, количество и цель проекта. В ARTMASTER есть четыре 3D-принтера и фрезерный станок с ЧПУ; подходящее решение оценивается для каждой работы. Наличие материалов, возможные размеры и срок подтверждаются в предложении.'],
+        en: ['A prototype is useful when the question it needs to answer is clear. Do you want to check appearance, size, fit with another part or presentation? The purpose affects material choice, required accuracy and which details are worth producing.', 'Document dimensions and important areas before submitting the model. If a part needs to fit an assembly, identify contact surfaces and specify tolerances. A dimensioned sketch can explain an intention that a file without context cannot communicate.', 'The digital model needs a manufacturability assessment. Very thin walls, cavities, fragile details and part orientation can affect printing results. Adjustments are discussed before production; the appearance of a render does not guarantee an identical physical result.', 'Describe the use environment: temperature, loads, exposure and contact with other elements. For a functional part, this information matters more than simply choosing a colour. A presentation object and a technical component have different requirements and should not be treated as equivalent.', 'Send the model or sketch, dimensions, quantity and project purpose. ARTMASTER has four 3D printers and a CNC router; the appropriate solution is assessed for each job. Material availability, achievable dimensions and timing are confirmed in the quote.'],
+      },
+      serviceSlugs: ['imprimare-3d', 'frezare-cnc'],
+    },
+  ],
+};

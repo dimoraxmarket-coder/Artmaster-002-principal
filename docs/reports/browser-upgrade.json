@@ -1,0 +1,314 @@
+{
+  "date": "2026-10-14",
+  "uniqueFinalCases": 58,
+  "allFinalCasesPassed": true,
+  "fullRun": {
+    "passed": 57,
+    "failed": 1,
+    "skipped": 0,
+    "durationMs": 431527.887
+  },
+  "targetedFinalRun": {
+    "passed": 9,
+    "failed": 0,
+    "skipped": 0,
+    "durationMs": 31399.373
+  },
+  "bannerInsertionWithoutAnalytics": {
+    "passed": 1,
+    "failed": 0
+  },
+  "note": "The complete run passed 57 cases. One test incorrectly added a second consent banner when a real one already existed. The fixture was corrected to reuse it and assert repositioning after a size change. All 9 UX cases then passed in a sequential run; the banner insertion case also passed with analytics disabled.",
+  "cases": [
+    {
+      "file": "admin.e2e.ts",
+      "title": "browser contact editor distinguishes draft and publication; stale versions cannot overwrite",
+      "status": "passed"
+    },
+    {
+      "file": "admin.e2e.ts",
+      "title": "browser gallery uploads sanitized WebP and publishes complete multilingual project",
+      "status": "passed"
+    },
+    {
+      "file": "admin.e2e.ts",
+      "title": "roles guard writes and private file access; logout revokes even replayed session",
+      "status": "passed"
+    },
+    {
+      "file": "contact.e2e.ts",
+      "title": "ro: contact layout, actions and breadcrumb at all seven requested widths",
+      "status": "passed"
+    },
+    {
+      "file": "contact.e2e.ts",
+      "title": "ro: shared breadcrumbs follow real section and detail routes",
+      "status": "passed"
+    },
+    {
+      "file": "contact.e2e.ts",
+      "title": "ru: contact layout, actions and breadcrumb at all seven requested widths",
+      "status": "passed"
+    },
+    {
+      "file": "contact.e2e.ts",
+      "title": "ru: shared breadcrumbs follow real section and detail routes",
+      "status": "passed"
+    },
+    {
+      "file": "contact.e2e.ts",
+      "title": "en: contact layout, actions and breadcrumb at all seven requested widths",
+      "status": "passed"
+    },
+    {
+      "file": "contact.e2e.ts",
+      "title": "en: shared breadcrumbs follow real section and detail routes",
+      "status": "passed"
+    },
+    {
+      "file": "contact.e2e.ts",
+      "title": "contact form retains expanded values, validates and registers a real private upload locally",
+      "status": "passed"
+    },
+    {
+      "file": "contact.e2e.ts",
+      "title": "contact and its expandable form have no serious or critical WCAG A/AA findings in any language",
+      "status": "passed"
+    },
+    {
+      "file": "site.e2e.ts",
+      "title": "ro: pages at 320px have headings and no overflow",
+      "status": "passed"
+    },
+    {
+      "file": "site.e2e.ts",
+      "title": "ro: pages at 375px have headings and no overflow",
+      "status": "passed"
+    },
+    {
+      "file": "site.e2e.ts",
+      "title": "ro: pages at 768px have headings and no overflow",
+      "status": "passed"
+    },
+    {
+      "file": "site.e2e.ts",
+      "title": "ro: pages at 1024px have headings and no overflow",
+      "status": "passed"
+    },
+    {
+      "file": "site.e2e.ts",
+      "title": "ro: pages at 1440px have headings and no overflow",
+      "status": "passed"
+    },
+    {
+      "file": "site.e2e.ts",
+      "title": "ro: pages at 1920px have headings and no overflow",
+      "status": "passed"
+    },
+    {
+      "file": "site.e2e.ts",
+      "title": "ru: pages at 320px have headings and no overflow",
+      "status": "passed"
+    },
+    {
+      "file": "site.e2e.ts",
+      "title": "ru: pages at 375px have headings and no overflow",
+      "status": "passed"
+    },
+    {
+      "file": "site.e2e.ts",
+      "title": "ru: pages at 768px have headings and no overflow",
+      "status": "passed"
+    },
+    {
+      "file": "site.e2e.ts",
+      "title": "ru: pages at 1024px have headings and no overflow",
+      "status": "passed"
+    },
+    {
+      "file": "site.e2e.ts",
+      "title": "ru: pages at 1440px have headings and no overflow",
+      "status": "passed"
+    },
+    {
+      "file": "site.e2e.ts",
+      "title": "ru: pages at 1920px have headings and no overflow",
+      "status": "passed"
+    },
+    {
+      "file": "site.e2e.ts",
+      "title": "en: pages at 320px have headings and no overflow",
+      "status": "passed"
+    },
+    {
+      "file": "site.e2e.ts",
+      "title": "en: pages at 375px have headings and no overflow",
+      "status": "passed"
+    },
+    {
+      "file": "site.e2e.ts",
+      "title": "en: pages at 768px have headings and no overflow",
+      "status": "passed"
+    },
+    {
+      "file": "site.e2e.ts",
+      "title": "en: pages at 1024px have headings and no overflow",
+      "status": "passed"
+    },
+    {
+      "file": "site.e2e.ts",
+      "title": "en: pages at 1440px have headings and no overflow",
+      "status": "passed"
+    },
+    {
+      "file": "site.e2e.ts",
+      "title": "en: pages at 1920px have headings and no overflow",
+      "status": "passed"
+    },
+    {
+      "file": "site.e2e.ts",
+      "title": "root defaults to Romanian, and equivalent language pages stay selected",
+      "status": "passed"
+    },
+    {
+      "file": "site.e2e.ts",
+      "title": "mobile navigation and contact actions work",
+      "status": "passed"
+    },
+    {
+      "file": "site.e2e.ts",
+      "title": "page metadata, hreflang and structured data match public pages",
+      "status": "passed"
+    },
+    {
+      "file": "site.e2e.ts",
+      "title": "security headers, nonexistent pages and private endpoints fail safely",
+      "status": "passed"
+    },
+    {
+      "file": "site.e2e.ts",
+      "title": "quote validates fields, accepts a private PDF and returns a real receipt",
+      "status": "passed"
+    },
+    {
+      "file": "site.e2e.ts",
+      "title": "quote rejects disallowed and oversized attachments in the browser",
+      "status": "passed"
+    },
+    {
+      "file": "site.e2e.ts",
+      "title": "quote server rejects another origin, spoofed files and oversized uploads",
+      "status": "passed"
+    },
+    {
+      "file": "site.e2e.ts",
+      "title": "Romanian homepage and quote page have no serious WCAG A/AA violations",
+      "status": "passed"
+    },
+    {
+      "file": "site.e2e.ts",
+      "title": "reduced motion and page hydration preserve working controls",
+      "status": "passed"
+    },
+    {
+      "file": "upgrade.e2e.ts",
+      "title": "ro: official branding and example partner marquee remain responsive",
+      "status": "passed"
+    },
+    {
+      "file": "upgrade.e2e.ts",
+      "title": "ro: newly confirmed services have SEO, related links and working quote preselection",
+      "status": "passed"
+    },
+    {
+      "file": "upgrade.e2e.ts",
+      "title": "ru: official branding and example partner marquee remain responsive",
+      "status": "passed"
+    },
+    {
+      "file": "upgrade.e2e.ts",
+      "title": "ru: newly confirmed services have SEO, related links and working quote preselection",
+      "status": "passed"
+    },
+    {
+      "file": "upgrade.e2e.ts",
+      "title": "en: official branding and example partner marquee remain responsive",
+      "status": "passed"
+    },
+    {
+      "file": "upgrade.e2e.ts",
+      "title": "en: newly confirmed services have SEO, related links and working quote preselection",
+      "status": "passed"
+    },
+    {
+      "file": "upgrade.e2e.ts",
+      "title": "brand icons, manifest and sitemap expose valid assets and complete canonical routes",
+      "status": "passed"
+    },
+    {
+      "file": "upgrade.e2e.ts",
+      "title": "quote failure keeps entered data and never displays a successful registration",
+      "status": "passed"
+    },
+    {
+      "file": "upgrade.e2e.ts",
+      "title": "processing disables the quote action and accepts only one registration",
+      "status": "passed"
+    },
+    {
+      "file": "upgrade.e2e.ts",
+      "title": "new homepage section and custom upload controls meet serious/critical WCAG checks in all languages",
+      "status": "passed"
+    },
+    {
+      "file": "upgrade.e2e.ts",
+      "title": "token throttling gives a clear error without submitting or claiming success",
+      "status": "passed"
+    },
+    {
+      "file": "ux.e2e.ts",
+      "title": "ro: floating actions scroll correctly, manage focus and never overlap",
+      "status": "passed"
+    },
+    {
+      "file": "ux.e2e.ts",
+      "title": "ro: contact map requires a deliberate load and uses the published address",
+      "status": "passed"
+    },
+    {
+      "file": "ux.e2e.ts",
+      "title": "ru: floating actions scroll correctly, manage focus and never overlap",
+      "status": "passed"
+    },
+    {
+      "file": "ux.e2e.ts",
+      "title": "ru: contact map requires a deliberate load and uses the published address",
+      "status": "passed"
+    },
+    {
+      "file": "ux.e2e.ts",
+      "title": "en: floating actions scroll correctly, manage focus and never overlap",
+      "status": "passed"
+    },
+    {
+      "file": "ux.e2e.ts",
+      "title": "en: contact map requires a deliberate load and uses the published address",
+      "status": "passed"
+    },
+    {
+      "file": "ux.e2e.ts",
+      "title": "contact widget and location section fit all seven requested widths without blocking each other",
+      "status": "passed"
+    },
+    {
+      "file": "ux.e2e.ts",
+      "title": "floating actions move above a consent banner and close their panel safely",
+      "status": "passed"
+    },
+    {
+      "file": "ux.e2e.ts",
+      "title": "open quick-contact and contact location controls have no serious or critical WCAG violations",
+      "status": "passed"
+    }
+  ]
+}

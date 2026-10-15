@@ -1,0 +1,2 @@
+import Link from 'next/link';
+export default function NotFound(){return <main className="container section empty-state"><p className="eyebrow">ARTMASTER · 404</p><h1>Pagina nu a fost găsită</h1><p>Adresa solicitată nu există. Alege limba pentru a continua.</p><div className="not-found-links"><Link className="button" href="/ro">Acasă</Link><Link className="button button-secondary" href="/ru">Главная</Link><Link className="button button-secondary" href="/en">Home</Link></div></main>;}

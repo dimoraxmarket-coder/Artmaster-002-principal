@@ -1,0 +1,25 @@
+.shell { position: fixed; right: max(20px, env(safe-area-inset-right)); bottom: calc(var(--floating-bottom, 20px) + env(safe-area-inset-bottom)); z-index: 60; display: flex; flex-direction: column; align-items: end; gap: 12px; transition: bottom .18s; }
+.round { display: grid; place-items: center; width: 54px; height: 54px; flex: none; border: 1px solid #edbb00; border-radius: 50%; background: var(--yellow); color: var(--ink); box-shadow: 0 6px 22px #08192322; transition: opacity .18s, transform .18s, visibility .18s, background .18s; }
+.round:hover { background: var(--yellow-hover); transform: translateY(-3px); }
+.round svg { width: 23px; height: 23px; }
+.backTop { width: 46px; height: 46px; opacity: 0; visibility: hidden; transform: translateY(8px); }
+.backTop svg { transform: rotate(-90deg); }
+.backTop[data-visible] { opacity: 1; visibility: visible; transform: translateY(0); }
+.panel { position: absolute; right: 0; bottom: 72px; width: min(342px, calc(100vw - 40px)); max-height: calc(100dvh - var(--floating-bottom, 20px) - 110px); overflow: auto; padding: 24px; color: var(--ink); background: var(--white); border: 1px solid var(--line); border-radius: 18px; box-shadow: 0 16px 50px #08192326; opacity: 0; visibility: hidden; pointer-events: none; transform: translateY(10px); transition: opacity .18s, transform .18s, visibility 0s .18s; }
+.panel[data-open] { opacity: 1; visibility: visible; pointer-events: auto; transform: translateY(0); transition: opacity .18s, transform .18s, visibility 0s; }
+.panelHeader { display: flex; align-items: start; justify-content: space-between; gap: 12px; }
+.panelHeader h2 { font-size: 1.45rem; letter-spacing: -.025em; margin: 0 0 5px; }
+.panelHeader span { font-size: .55rem; letter-spacing: .18em; font-weight: 600; color: var(--muted); }
+.close { display: grid; place-items: center; flex: none; width: 38px; height: 38px; border: 0; border-radius: 50%; background: var(--soft); color: var(--ink); }
+.close svg { width: 19px; height: 19px; }
+.description { color: var(--muted); font-size: .84rem; margin: 20px 0; }
+.contactLink { display: flex; align-items: center; gap: 12px; min-height: 54px; padding-block: 10px; font-size: .9rem; overflow-wrap: anywhere; }
+.contactLink svg { flex: none; width: 19px; height: 19px; color: #806000; }
+.contactLink small { display: block; font-size: .7rem; color: var(--muted); }
+.contactLink:hover { color: #806000; }
+.channels { display: flex; gap: 18px; font-size: .82rem; margin-block: 14px; }
+.channels a { text-decoration: underline; text-underline-offset: 3px; }
+.panel :global(.button) { width: 100%; margin-top: 18px; min-height: 46px; font-size: .82rem; }
+:global(body:has(.mobile-navigation.is-open)) .shell { visibility: hidden; pointer-events: none; }
+@media (max-width: 767px) { .shell { right: max(16px, env(safe-area-inset-right)); } .panel { width: min(342px, calc(100vw - 32px)); padding: 21px; } }
+@media (prefers-reduced-motion: reduce) { .shell, .round, .panel { transition: none; } .round:hover { transform: none; } }
