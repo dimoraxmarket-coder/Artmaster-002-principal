@@ -1,7 +1,7 @@
 'use client';
 
-import Link from 'next/link';
-import Image from 'next/image';
+import { PublicLink as Link } from './public-runtime';
+import { PublicImage as Image } from './public-runtime';
 import { useId, useMemo, useState } from 'react';
 import type { Locale, Project, Service } from '@/lib/content/types';
 import { t } from '@/lib/i18n';

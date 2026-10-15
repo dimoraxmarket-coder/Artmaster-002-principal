@@ -1,6 +1,7 @@
-import Link from 'next/link';
-import Image from 'next/image';
+import { PublicLink as Link } from './public-runtime';
+import { PublicImage as Image } from './public-runtime';
 import type { Locale, SiteContent } from '@/lib/content/types';
+import { websiteCopy } from '@/lib/content/page-copy';
 import { t } from '@/lib/i18n';
 import { isConceptImage } from '@/lib/media';
 import { Icon, type IconName } from './icons';
@@ -11,6 +12,7 @@ import { isIndexable } from '@/lib/site';
 
 export function Home({ locale, content }: { locale: Locale; content: SiteContent }) {
   const ui = t(locale);
+  const hero=websiteCopy(content).hero;
   const projects = content.projects.filter(project => project.published).slice(0, 4);
   const partnerPreview = (process.env.PARTNERS_PREVIEW ?? 'true') === 'true' && !isIndexable;
   const partnerEntries = partners.length ? partners : partnerPreview ? examplePartners : [];
@@ -24,10 +26,10 @@ export function Home({ locale, content }: { locale: Locale; content: SiteContent
         <img className="hero-background" src="/media/hero-wide.webp" alt="" width={1672} height={941} loading="eager" fetchPriority="high" decoding="async" />
       </picture>
       <div className="container"><div className="hero-content">
-        <p className="eyebrow">{ui.hero.eyebrow}</p>
-        <h1 id="hero-title">{ui.hero.title}<span>{ui.hero.accent}</span></h1>
-        <p className="hero-description">{ui.hero.description}</p>
-        <div className="hero-actions"><Link href={`/${locale}/solicita-oferta`} className="button">{ui.nav.quote}<Icon name="arrow" /></Link><Link href={`/${locale}/servicii`} className="button-secondary button-ghost">{ui.hero.primary}</Link></div>
+        <p className="eyebrow">{hero.eyebrow[locale]}</p>
+        <h1 id="hero-title">{hero.title[locale]}<span>{hero.accent[locale]}</span></h1>
+        <p className="hero-description">{hero.description[locale]}</p>
+        <div className="hero-actions"><Link href={`/${locale}/solicita-oferta`} className="button">{hero.quoteLabel[locale]}<Icon name="arrow" /></Link><Link href={`/${locale}/servicii`} className="button-secondary button-ghost">{hero.servicesLabel[locale]}</Link></div>
         <p className="hero-location"><Icon name="pin" />{ui.home.locationLabel}</p>
       </div></div>
       <span className="concept-caption">{ui.common.concept}</span>

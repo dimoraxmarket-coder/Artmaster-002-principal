@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { PublicLink as Link } from './public-runtime';
 import type { Locale, SiteContent } from '@/lib/content/types';
 import { t } from '@/lib/i18n';
 import { Icon, Logo } from './icons';

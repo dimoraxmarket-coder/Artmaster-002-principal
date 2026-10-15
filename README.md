@@ -32,6 +32,10 @@ npm run test:e2e
 
 Testele E2E pornesc un server de producție local pe portul 3100 când nu există unul, cu date în `.data/e2e` și e-mail dezactivat. Construiește aplicația înainte. Mediul cloud are Chromium în `/usr/bin/chromium`. Pentru un server existent, setează `PLAYWRIGHT_BASE_URL` și folosește un mediu separat de producție; pentru un Chromium instalat separat, setează `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH`. Pe altă mașină poți instala browserul prin `npx playwright install chromium`. Rezultatele testelor se raportează numai după rulare, nu rezultă din existența acestor comenzi.
 
+## Windows: proiect complet pentru testare locală
+
+Vezi [README-WINDOWS.md](README-WINDOWS.md). Într-o copie curată, `START.bat` instalează dependențele când este nevoie, pregătește SQLite separat și pornește numai pe `127.0.0.1`. `CREATE-ADMIN.bat` folosește fluxul sigur existent, fără parolă implicită.
+
 ## Documentație
 
 - [Actualizarea brandingului, serviciilor, formularelor și SEO](docs/professional-upgrade.md)
@@ -45,6 +49,9 @@ Testele E2E pornesc un server de producție local pe portul 3100 când nu exist�
 - [Phase 3: cabinetul administrativ și capturi de ecran](docs/premium-admin.md)
 - [Phase 4: CRM persistent și Media Studio — funcții, migrare și limitări](docs/business-workflows.md)
 - [Phase 5: Security Center, sesiuni, audit și administrarea accesului](docs/security-center.md)
+- [Phase 6: Content Studio, istoric, restaurare și previzualizare protejată](docs/content-studio.md)
+- [Proiect complet: formulare → CRM și distribuție Windows izolată](docs/complete-integration.md)
+- [Pregătirea integrării și lansării după Phase 6](docs/release-readiness-phase6.md)
 - [Configurarea și verificarea Supabase staging](docs/supabase-staging-validation.md)
 - [Recuperarea MFA cu verificare și aprobare separată](docs/mfa-recovery.md)
 - [Migrarea Joomla și păstrarea traficului organic](docs/migration.md)

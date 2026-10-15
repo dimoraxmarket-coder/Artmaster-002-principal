@@ -7,6 +7,8 @@ import { dataDirectory, BackendError } from './config';
 import { contentSchema, type QuoteStatus } from './schema';
 import type { Actor, ContentState, IncomingFile, Quote, Storage, StoredFile } from './types';
 
+import { initializeContentHistory, appendContentVersion } from './content-history-local';
+
 const databases=new Map<string,DatabaseSync>();
 export function localDatabase() {
   const dir=dataDirectory();
@@ -52,6 +54,7 @@ export function localDatabase() {
     CREATE INDEX IF NOT EXISTS quote_assignee ON quotes(assigned_to);
     CREATE TABLE IF NOT EXISTS media_assets(url TEXT PRIMARY KEY,name TEXT NOT NULL,bytes INTEGER NOT NULL,width INTEGER NOT NULL,height INTEGER NOT NULL,created_at TEXT NOT NULL,created_by TEXT,archived_at TEXT);
   `);
+  initializeContentHistory(db);
   db.function('unicode_lower',{deterministic:true},value=>String(value).toLocaleLowerCase());
   chmodSync(join(dir,'artmaster.sqlite'),0o600);
   databases.set(dir,db);
@@ -107,14 +110,15 @@ export class LocalStorage implements Storage {
     const row=localDatabase().prepare('SELECT published,draft,version FROM content WHERE id=1').get() as {published:string|null;draft:string|null;version:number};
     return {published:row.published?contentSchema.parse(JSON.parse(row.published)):null,draft:row.draft?contentSchema.parse(JSON.parse(row.draft)):null,version:row.version};
   }
-  async saveContent(value:ContentState['draft'],publish:boolean,actor:Actor,expectedVersion:number){
+  async saveContent(value:ContentState['draft'],publish:boolean,actor:Actor,expectedVersion:number,sourceId?:number){
     const clean=contentSchema.parse(value),db=localDatabase();db.exec('BEGIN IMMEDIATE');
     try {
       const urls=[...clean.services,...clean.equipment,...clean.projects].map(item=>item.image);
       for(const row of db.prepare('SELECT url FROM media_assets WHERE archived_at IS NOT NULL').all() as {url:string}[])if(urls.includes(row.url))throw new BackendError('asset_in_use',409);
       const result=publish?db.prepare('UPDATE content SET published=?,draft=?,version=version+1 WHERE id=1 AND version=?').run(JSON.stringify(clean),JSON.stringify(clean),expectedVersion):db.prepare('UPDATE content SET draft=?,version=version+1 WHERE id=1 AND version=?').run(JSON.stringify(clean),expectedVersion);
       if(!result.changes)throw new BackendError('version_conflict',409);
-      audit(db,actor,publish?'content.publish':'content.draft','site');db.exec('COMMIT');return expectedVersion+1;
+      appendContentVersion(db,JSON.stringify(clean),expectedVersion+1,publish,actor.id,sourceId);
+      audit(db,actor,sourceId?'content.restore':publish?'content.publish':'content.draft','site');db.exec('COMMIT');return expectedVersion+1;
     }catch(error){db.exec('ROLLBACK');throw error;}
   }
   async markNotification(id:string,sent:boolean,error?:string){

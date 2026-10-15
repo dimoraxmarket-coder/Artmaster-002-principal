@@ -1,4 +1,5 @@
 'use client';
+import { usePublicPreview } from './public-runtime';
 
 import { useEffect, useId, useRef, useState, type FormEvent } from 'react';
 import type { Contact, Locale, Service } from '@/lib/content/types';
@@ -91,7 +92,7 @@ function delay(milliseconds: number, signal: AbortSignal): Promise<void> {
   });
 }
 
-export function QuoteForm({ locale, services, contact, compact = false, initialService = '' }: { locale: Locale; services: Service[]; contact: Pick<Contact, 'phone' | 'email'>; compact?: boolean; initialService?: string }) {
+function LiveQuoteForm({ locale, services, contact, compact = false, initialService = '' }: { locale: Locale; services: Service[]; contact: Pick<Contact, 'phone' | 'email'>; compact?: boolean; initialService?: string }) {
   const t = copy[locale];
   const id = useId();
   const formRef = useRef<HTMLFormElement>(null);
@@ -366,4 +367,9 @@ export function QuoteForm({ locale, services, contact, compact = false, initialS
       )}
     </form>
   );
+}
+
+export function QuoteForm(props: Parameters<typeof LiveQuoteForm>[0]) {
+ const preview=usePublicPreview();
+ return preview?<div className="empty-state" role="note">Previzualizare protejată · formularul de ofertă este dezactivat. / Preview · enquiries are disabled.</div>:<LiveQuoteForm {...props}/>;
 }

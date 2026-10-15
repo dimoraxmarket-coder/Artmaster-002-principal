@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 import { Home } from '@/components/home';
 import { getContent } from '@/lib/content/repository';
 import { isLocale } from '@/lib/content/types';
-import { t } from '@/lib/i18n';
+import { websiteCopy } from '@/lib/content/page-copy';
 import { pageMetadata } from '@/lib/seo';
 
 const titles = {
@@ -14,7 +14,8 @@ const titles = {
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
-  return pageMetadata(locale, '', titles[locale], t(locale).hero.description);
+  const copy=websiteCopy(await getContent());
+  return pageMetadata(locale, '', titles[locale], copy.hero.description[locale]);
 }
 
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {

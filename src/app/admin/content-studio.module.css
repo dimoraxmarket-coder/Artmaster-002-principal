@@ -1,0 +1,141 @@
+.history {
+  margin: 20px 0 28px;
+  border: 1px solid #454a53;
+  border-radius: 14px;
+  background: #1c2026;
+  overflow: hidden;
+  color: #f2f3f6;
+}
+.history > summary {
+  padding: 18px 22px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.history > summary span {
+  display: block;
+  font-size: 0.76rem;
+  color: #bfc5ce;
+  font-weight: 400;
+  margin: 6px 0 0 20px;
+}
+.historyBody {
+  padding: 0 22px 22px;
+}
+.muted {
+  font-size: 0.82rem;
+  color: #bec4ce;
+  line-height: 1.6;
+}
+.version {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 16px 0;
+  border-bottom: 1px solid #3c424b;
+}
+.version p {
+  color: #bfc5ce;
+  font-size: 0.76rem;
+  margin: 6px 0 0;
+}
+.actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: 18px;
+  font-size: 0.78rem;
+}
+.comparison {
+  margin-top: 24px;
+  padding: 20px;
+  border: 1px solid #6c6338;
+  background: #202228;
+  border-radius: 10px;
+}
+.comparison h4 {
+  margin-top: 0;
+}
+.change {
+  padding: 14px 0;
+  border-bottom: 1px solid #42474f;
+  overflow-wrap: anywhere;
+  font-size: 0.8rem;
+}
+.change code {
+  color: #f7d869;
+  background: #111318;
+  padding: 3px 6px;
+  border-radius: 4px;
+}
+.change > div {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+.change p {
+  white-space: pre-wrap;
+  margin-bottom: 0;
+  color: #d5d9df;
+}
+.change strong {
+  color: #fff;
+}
+.picker {
+  border: 1px solid #454a53;
+  border-radius: 12px;
+  padding: 18px;
+  margin-top: 12px;
+}
+.assets {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+}
+.asset {
+  background: #20242b;
+  border: 1px solid #555b66;
+  border-radius: 9px;
+  padding: 8px;
+  cursor: pointer;
+  text-align: left;
+  color: #f4f4f5;
+}
+.asset img {
+  width: 100%;
+  height: 110px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+.asset span {
+  display: block;
+  font-size: 0.76rem;
+  overflow-wrap: anywhere;
+  margin: 8px 0;
+}
+.history button:focus-visible,
+.asset:focus-visible,
+.history summary:focus-visible {
+  outline: 3px solid #f7cf47;
+  outline-offset: 3px;
+}
+@media (max-width: 600px) {
+  .historyBody {
+    padding: 0 14px 16px;
+  }
+  .history > summary {
+    padding: 16px 14px;
+  }
+  .version {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .change > div {
+    grid-template-columns: 1fr;
+  }
+  .comparison {
+    padding: 14px;
+  }
+}

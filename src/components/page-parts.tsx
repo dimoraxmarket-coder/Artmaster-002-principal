@@ -1,5 +1,5 @@
-import Link from 'next/link';
-import Image from 'next/image';
+import { PublicLink as Link } from './public-runtime';
+import { PublicImage as Image } from './public-runtime';
 import type { Locale, Faq, Service, Equipment } from '@/lib/content/types';
 import { localizedPath } from '@/lib/site';
 import { JsonLd, breadcrumbData } from '@/lib/seo';

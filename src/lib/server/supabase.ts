@@ -39,9 +39,9 @@ export class SupabaseStorage implements Storage {
   async updateQuote(id:string,status:QuoteStatus,actor:Actor){await (await import('./crm')).changeQuote(id,{status},actor);}
   async readFile(file:StoredFile){if(!/^[a-f0-9-]{36}$/.test(file.path))throw new BackendError('not_found',404);const {data,error}=await supabaseService().storage.from('quote-files').download(file.path);check(error);if(!data)throw new BackendError('not_found',404);return Buffer.from(await data.arrayBuffer());}
   async content():Promise<ContentState>{const {data,error}=await supabaseService().from('site_content').select('published,draft,version').eq('id',1).single();check(error);return {published:data?.published?contentSchema.parse(data.published):null,draft:data?.draft?contentSchema.parse(data.draft):null,version:data?.version||0};}
-  async saveContent(value:ContentState['draft'],publish:boolean,actor:Actor,expectedVersion:number){
-    const clean=contentSchema.parse(value),{data,error}=await supabaseService().rpc('save_site_content',{p_content:clean,p_publish:publish,p_actor:actor.id,p_expected_version:expectedVersion});
-    if(error?.code==='40001')throw new BackendError('version_conflict',409);if(error?.code==='23514')throw new BackendError('asset_in_use',409);check(error);return Number(data);
+  async saveContent(value:ContentState['draft'],publish:boolean,actor:Actor,expectedVersion:number,sourceId?:number){
+    const clean=contentSchema.parse(value),{data,error}=await supabaseService().rpc('write_site_content',{p_content:clean,p_publish:publish,p_actor:actor.id,p_expected_version:expectedVersion,p_source_id:sourceId||null});
+    if(error?.code==='P0450')throw new BackendError('history_limit',409);if(error?.code==='40001')throw new BackendError('version_conflict',409);if(error?.code==='23514')throw new BackendError('asset_in_use',409);check(error);return Number(data);
   }
   async markNotification(id:string,sent:boolean,error?:string){const {error:failure}=await supabaseService().rpc('mark_quote_notification',{p_id:id,p_sent:sent,p_error:error||null});check(failure);}
   async pendingNotifications(){const {data,error}=await supabaseService().from('quotes').select('data,notification').neq('notification','sent').lt('attempts',10).lte('next_attempt',new Date().toISOString()).limit(20);check(error);return(data||[]).map(row=>quote(row)!);}
