@@ -45,3 +45,11 @@ This is a review checklist, **not deployment authorization**. No production depl
 - [ ] Assign operators, verify reviewed migration order and backups, and define abort criteria. Database rollback must preserve additive history/data; avoid destructive down-migrations. An older binary may reject the new optional `copy` field because its schema is strict, and may not preserve new-history recording. Rehearse a forward-compatible rollback/roll-forward release; never delete content fields or immutable history to make an old binary run.
 - [ ] Prepare a protected post-release smoke test, logs/alerts, session revocation/recovery contacts, public data consistency checks and a rollback drill. Record any remaining risks and who accepted them.
 - [ ] Treat DNS, deployment and changes to external/production services as separate authorized actions. This phase authorizes none of them.
+
+## Complete local/Windows distribution gate
+
+- [ ] Review PR #7's final integration/packaged-copy results: each of the three real public forms in RO/RU/EN must reach CRM, including attachments, duplicates, persistence failures/retry, role checks and status/assignment/notes.
+- [ ] Verify `PACKAGE-INFO.json` against the reviewed PR #7 source commit and the archive's SHA-256. Confirm no runtime `.env`, customer DB/files, session material, backups, dependencies/builds or unused legacy source archive are distributed.
+- [ ] Extract into a new folder, install frozen dependencies, initialize empty isolated SQLite and create a local administrator with the existing hidden-password workflow. Confirm loopback-only listening and persistence without overwriting unrelated configuration/data.
+- [ ] Run the owner's **native Windows** smoke test (Node >=24/npm, START/CREATE-ADMIN batch entry points, console shutdown, native dependencies, public/admin routes, form→CRM, CMS draft/preview/publication). Linux extraction and portable Node checks do not certify native Windows.
+- [ ] Keep local SQLite password testing separate from required real Supabase AAL2 staging. Downloading or testing this package does not authorize any deployment, DNS change, production migration or merge.
