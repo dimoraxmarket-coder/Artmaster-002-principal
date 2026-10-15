@@ -94,6 +94,44 @@ test("complete PostgreSQL security-center migration enforces session, role, audi
     await db.query(
       "insert into public.quotes(id,idempotency_key,payload_hash,data,notification) values('b0000000-0000-4000-8000-000000000001','b0000000-0000-4000-8000-000000000002','synthetic','{\"name\":\"Synthetic private request\"}','not_configured')",
     );
+    await suite.test('content history RPCs retain snapshots, deny clients and restore only into a new draft',async()=>{
+      for(const role of ['anon','authenticated']) {
+        for(const sql of ["select * from public.content_versions", "select public.content_history_usage()", `select public.write_site_content('{}',false,'${ids.editor}',0,null)`])
+          await assert.rejects(()=>db.transaction(async tx=>{await tx.exec(`set local role ${role}`);await tx.query(sql);}),errorCode('42501'));
+      }
+      const first={services:[{image:'/media/hero-wide.webp',title:'Synthetic original'}]};
+      const second={services:[{image:'/media/hero-wide.webp',title:'Synthetic draft'}]};
+      const write=(content:object,publish:boolean,actor:string,version:number,source:number|null=null)=>service(db,tx=>tx.query('select public.write_site_content($1,$2,$3,$4,$5)',[JSON.stringify(content),publish,actor,version,source]));
+      await assert.rejects(()=>write(first,false,ids.viewer,0),errorCode('42501'));
+      await assert.rejects(()=>write(first,true,ids.editor,0),errorCode('42501'));
+      await write(first,true,ids.admin,0);
+      await service(db,tx=>tx.query('select public.save_site_content($1,false,$2,1)',[JSON.stringify(second),ids.editor]));
+      const snapshots=(await db.query<{id:number;content:object}>('select id,content from public.content_versions order by id')).rows;
+      assert.equal(snapshots.length,2);assert.deepEqual(snapshots[0].content,first);
+      await assert.rejects(()=>write(first,false,ids.editor,1,Number(snapshots[0].id)),errorCode('40001'));
+      await assert.rejects(()=>write(second,false,ids.editor,2,Number(snapshots[0].id)),errorCode('22023'));
+      await assert.rejects(()=>write(first,true,ids.admin,2,Number(snapshots[0].id)),errorCode('22023'));
+      await write(first,false,ids.editor,2,Number(snapshots[0].id));
+      assert.deepEqual((await db.query<{published:object;draft:object;version:number}>('select published,draft,version from public.site_content')).rows[0],{published:first,draft:first,version:3});
+      assert.deepEqual((await db.query('select action,source_id from public.content_versions order by id desc limit 1')).rows[0],{action:'restore',source_id:snapshots[0].id});
+      for(const sql of ["update public.content_versions set content='{}'",'delete from public.content_versions','truncate public.content_versions'])
+        await assert.rejects(()=>service(db,tx=>tx.exec(sql)),errorCode('42501'));
+      await assert.rejects(()=>db.exec('delete from public.content_versions'),errorCode('42501'));
+      const url='/api/media/11111111-1111-4111-8111-111111111111.webp',privateContent={services:[{image:url}]};
+      await write(privateContent,false,ids.editor,3);
+      const privateId=Number((await db.query<{id:number}>('select id from public.content_versions order by id desc limit 1')).rows[0].id);
+      await assert.rejects(()=>write(privateContent,false,ids.editor,4,privateId),errorCode('23514'));
+      await db.query("insert into public.media_assets(url,name,bytes,width,height,created_by) values($1,'synthetic',10,1,1,$2)",[url,ids.editor]);
+      await db.query("insert into storage.objects(id,bucket_id,name) values('11111111-1111-4111-8111-111111111111','portfolio-private','11111111-1111-4111-8111-111111111111.webp')");
+      await write(privateContent,false,ids.editor,4,privateId);
+      await db.query('update public.media_assets set archived_at=now() where url=$1',[url]);
+      await assert.rejects(()=>write(privateContent,false,ids.editor,5,privateId),errorCode('23514'));
+      assert.equal((await db.query<{n:number}>('select count(*)::int n from public.content_versions')).rows[0].n,5);
+      await db.query("insert into public.content_versions(version,action,bytes,content) values(5,'baseline-draft',536870912,'{}')");
+      await assert.rejects(()=>write(first,false,ids.editor,5),errorCode('P0450'));
+      assert.equal((await db.query<{version:number}>('select version from public.site_content')).rows[0].version,5);
+      assert.ok(Number((await service(db,tx=>tx.query<{bytes:number}>('select public.content_history_usage() bytes'))).rows[0].bytes)>=536870912);
+    });
     await suite.test(
       "all new RPCs deny direct clients and helper denies the service role",
       async () => {

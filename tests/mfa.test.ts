@@ -17,6 +17,9 @@ import { GET as inventory } from '../src/app/api/admin/media/route';
 import { DELETE as archive } from '../src/app/api/admin/media/[name]/route';
 import { POST as replace } from '../src/app/api/admin/media/replace/route';
 import { GET as quotes } from '../src/app/api/admin/quotes/route';
+import { GET as history } from '../src/app/api/admin/content/history/route';
+import { GET as historySnapshot,POST as restoreSnapshot } from '../src/app/api/admin/content/history/[id]/route';
+import { savedDraftPreview } from '../src/lib/server/content-preview';
 import { GET as content, PUT as saveContent } from '../src/app/api/admin/content/route';
 import { GET as attachment } from '../src/app/api/admin/quotes/[id]/files/[fileId]/route';
 import { PATCH as status } from '../src/app/api/admin/quotes/[id]/route';
@@ -135,12 +138,13 @@ for(const selectedRole of ['viewer','editor','admin'] as const)test(`${selectedR
   for(const cookie of [undefined,result.cookie]){
     const req=request(cookie);
     const responses=await Promise.all([
-      securitySessions(req),securityAccounts(req),securityAudit(req),securityMfa(req),securityRevoke(request(cookie,false,'DELETE',{allOthers:true,confirm:true})),securityChange(request(cookie,false,'PATCH',{role:'admin',enabled:true,expectedVersion:0,confirm:true}),{params:Promise.resolve({id:userId})}),team(req),detail(req,{params:Promise.resolve({id:userId})}),inventory(req),archive(request(cookie,false,'DELETE',{confirm:true}),{params:Promise.resolve({name:`${factorId}.webp`})}),replace(request(cookie,false,'POST',{})),quotes(req),content(req),preview(req,{params:Promise.resolve({name:`${factorId}.webp`})}),attachment(req,{params:Promise.resolve({id:userId,fileId:factorId})}),
+      securitySessions(req),securityAccounts(req),securityAudit(req),securityMfa(req),securityRevoke(request(cookie,false,'DELETE',{allOthers:true,confirm:true})),securityChange(request(cookie,false,'PATCH',{role:'admin',enabled:true,expectedVersion:0,confirm:true}),{params:Promise.resolve({id:userId})}),team(req),detail(req,{params:Promise.resolve({id:userId})}),inventory(req),archive(request(cookie,false,'DELETE',{confirm:true}),{params:Promise.resolve({name:`${factorId}.webp`})}),replace(request(cookie,false,'POST',{})),quotes(req),content(req),history(req),historySnapshot(req,{params:Promise.resolve({id:'1'})}),restoreSnapshot(request(cookie,false,'POST',{version:0,confirm:true}),{params:Promise.resolve({id:'1'})}),preview(req,{params:Promise.resolve({name:`${factorId}.webp`})}),attachment(req,{params:Promise.resolve({id:userId,fileId:factorId})}),
       status(request(cookie,false,'PATCH',{status:'in_progress'}),{params:Promise.resolve({id:userId})}),
       media(request(cookie,false,'POST')),retry(request(cookie,false,'POST')),
       saveContent(request(cookie,false,'PUT',{content:defaultContent,version:0,action:'save-draft'})),
     ]);
-    assert.deepEqual(responses.map(response=>response.status),[401,401,401,401,401,401,401,401,401,401,401,401,401,401,401,401,401,401,401]);
+    await assert.rejects(()=>savedDraftPreview(req),(error:unknown)=>error instanceof BackendError&&error.code==='unauthorized');
+    assert.deepEqual(responses.map(response=>response.status),Array(22).fill(401));
   }
   assert.equal(dataReads,0,'no protected records read before MFA');
   const setup=await enroll(request(result.cookie,true,'POST'));

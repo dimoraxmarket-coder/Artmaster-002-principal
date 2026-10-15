@@ -51,6 +51,8 @@ test('backup and restore preserve synthetic data and files, revoke copied sessio
     assert.deepEqual(JSON.parse((db.prepare('SELECT data FROM quotes').get() as { data: string }).data), quote);
     assert.equal((db.prepare('SELECT COUNT(*) AS n FROM quote_events').get() as {n:number}).n,2);
     assert.equal((db.prepare('SELECT assigned_to FROM quotes').get() as {assigned_to:string}).assigned_to,actor.id);
+    assert.deepEqual(JSON.parse((db.prepare('SELECT content FROM content_versions WHERE version=1').get() as {content:string}).content),published);
+    assert.throws(()=>db.prepare("UPDATE content_versions SET action='draft'").run());
     assert.equal((db.prepare('SELECT COUNT(*) AS n FROM media_assets').get() as {n:number}).n,1);
     assert.equal((db.prepare('SELECT COUNT(*) AS n FROM sessions').get() as { n: number }).n, 0);
     assert.equal((db.prepare('SELECT COUNT(*) AS n FROM admins').get() as { n: number }).n, 2);

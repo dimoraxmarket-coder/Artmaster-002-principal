@@ -13,6 +13,7 @@ const localizedList = z.object({ro:z.array(text(1000)).max(30),ru:z.array(text(1
 const faq = z.object({question:localized,answer:localized}).strict();
 const base = {slug,title:localized,summary:localized};
 export const contentSchema: z.ZodType<SiteContent> = z.object({
+  copy:z.object({hero:z.object({eyebrow:localized,title:localized,accent:localized,description:localized,quoteLabel:localized,servicesLabel:localized}).strict(),about:z.object({title:localized,summary:localized,heading:localized,body:localized,approach:localized,equipmentHeading:localized}).strict()}).strict().optional(),
   services:z.array(z.object({...base,description:localized,applications:localizedList,quoteHints:localizedList,faqs:z.array(faq).max(20),image,relatedSlugs:refs,equipmentSlugs:refs}).strict()).min(1).max(40),
   equipment:z.array(z.object({...base,description:localized,image,serviceSlugs:refs,facts:z.array(localized).max(30)}).strict()).max(60),
   projects:z.array(z.object({...base,description:localized,image,serviceSlugs:refs,kind:z.enum(['concept','real']),published:z.boolean()}).strict()).max(250),

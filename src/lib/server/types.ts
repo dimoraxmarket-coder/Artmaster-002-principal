@@ -16,7 +16,7 @@ export interface Storage {
   updateQuote(id:string,status:QuoteStatus,actor:Actor):Promise<void>;
   readFile(file:StoredFile):Promise<Buffer>;
   content():Promise<ContentState>;
-  saveContent(value:SiteContent,publish:boolean,actor:Actor,expectedVersion:number):Promise<number>;
+  saveContent(value:SiteContent,publish:boolean,actor:Actor,expectedVersion:number,sourceId?:number):Promise<number>;
   markNotification(id:string,sent:boolean,error?:string):Promise<void>;
   pendingNotifications():Promise<Quote[]>;
   audit(actor:Actor,action:string,target:string):Promise<void>;
