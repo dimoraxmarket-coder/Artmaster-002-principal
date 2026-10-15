@@ -197,3 +197,9 @@ tests/windows-package.test.ts
 - Descărcare raw: https://github.com/dimoraxmarket-coder/Artmaster-002-principal/raw/refs/heads/package/artmaster-complete-windows-c63ad4100bc0/distribution/ARTMASTER-COMPLETE-WINDOWS.zip
 - În GitHub, autentifică-te cu contul care are acces la repository și apasă Download raw file pentru ZIP; nu folosi Code → Download ZIP pentru branch dacă dorești exact pachetul verificat.
 - Sursa aplicației rămâne commitul `c63ad4100bc014e440b056daf4b2a40e76e330c7` din PR #7. Commitul de distribuție adaugă numai arhiva, SHA-256, acest raport și instrucțiunile de descărcare.
+
+### Verificarea descărcării de pe GitHub
+
+Arhiva a fost descărcată efectiv prin HTTPS de la URL-ul raw public al branch-ului de distribuție, după push. Dimensiunea este 24.863.700 octeți; SHA-256 este identică cu arhiva testată, CRC-ul trece și PACKAGE-INFO.json indică exact commitul c63ad4100bc014e440b056daf4b2a40e76e330c7. Clonarea separată a branch-ului de distribuție a reușit.
+
+URL testat: https://raw.githubusercontent.com/dimoraxmarket-coder/Artmaster-002-principal/package/artmaster-complete-windows-c63ad4100bc0/distribution/ARTMASTER-COMPLETE-WINDOWS.zip
