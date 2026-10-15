@@ -26,3 +26,9 @@ Removing a role is a targeted, separately approved access change. Production exe
 Use a synthetic account and record only pass/fail/case references. Demonstrate quarantine and revocation before factor reset; password-only login has no data access; new enrollment grants AAL2 with the original role; old application and provider tokens remain unable to read protected rows; incomplete, expired or cancelled recovery remains locked. Also rehearse the failure case where both provider owners lose access: use the provider's documented organization-recovery process, not an application backdoor.
 
 Offline tests cover role removal, revoked/expired full and pending sessions, AAL2, session-bound RLS and re-enrollment restrictions. They cannot validate a person's identity, provider-owner MFA, actual factor reset or operational dual control. These remain required real staging checks.
+
+## Phase 5 controls
+
+A freshly authenticated administrator can now suspend a **different** managed account through Team Management. This preserves its role and customer records, increments its security version, revokes full/pending ARTMASTER sessions and writes a security audit event in one transaction. The last enabled administrator and self changes are protected. The application's current-session listing and factor status do not replace provider-owner verification or revoke every provider-wide refresh session.
+
+Recovery still requires the independent dual-approval procedure above. Use the reviewed suspension control for quarantine when applicable; provider factor removal, provider-wide revocation and supervised re-enrollment remain authorized owner operations. Enabling an account afterward never restores its old application cookies. Do not remove the last secured administrator, alter audit evidence or bypass the enrollment/AAL2 gate. See [the Phase 5 staging matrix](security-center.md) before any hosted rehearsal.

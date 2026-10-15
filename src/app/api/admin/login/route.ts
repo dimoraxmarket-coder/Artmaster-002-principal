@@ -5,11 +5,13 @@ import { createHash } from 'node:crypto';
 import { BackendError } from '@/lib/server/config';
 export const runtime='nodejs';
 export async function POST(request:Request){
+  let mfaAttempt=false;
   try{
     requireSameOrigin(request);
     if(!await getStorage().consumeRate(`login:${requestBucket(request)}`,10,900000))throw new BackendError('rate_limited',429);
     const input=await boundedJSON(request,2048);
     if(typeof input==='object'&&input&&'code' in input){
+      mfaAttempt=true;
       const code=(input as {code:unknown}).code;
       if(typeof code!=='string')throw new BackendError('invalid_input',400);
       const value=await verifyAdminMfa(cookieValue(request,PREAUTH_COOKIE)||'',code);
@@ -23,5 +25,10 @@ export async function POST(request:Request){
     const response=Response.json({ok:!result.mfaRequired,mfaRequired:result.mfaRequired,enrollmentRequired:'enrollmentRequired' in result&&result.enrollmentRequired},{headers:{'Cache-Control':'no-store'}});
     response.headers.append('Set-Cookie',sessionCookie(result.cookie,result.mfaRequired?PREAUTH_COOKIE:undefined,result.mfaRequired?300:undefined));
     response.headers.append('Set-Cookie',sessionCookie('',result.mfaRequired?undefined:PREAUTH_COOKIE,0));return response;
-  }catch(error){return errorResponse(error);}
+  }catch(error){
+    if(error instanceof BackendError&&['unauthorized','mfa_required'].includes(error.code)){
+      try{await getStorage().audit({id:'00000000-0000-0000-0000-000000000000',email:'',role:'viewer',aal:'aal1'},mfaAttempt?'admin.mfa.failed':'admin.login.failed','session');}catch{return errorResponse(new BackendError('unavailable',503));}
+    }
+    return errorResponse(error);
+  }
 }

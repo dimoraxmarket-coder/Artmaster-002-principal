@@ -44,6 +44,7 @@ Testele E2E pornesc un server de producție local pe portul 3100 când nu exist�
 - [Phase 2: sesiuni, imagini private și validarea securității](docs/admin-security-validation.md)
 - [Phase 3: cabinetul administrativ și capturi de ecran](docs/premium-admin.md)
 - [Phase 4: CRM persistent și Media Studio — funcții, migrare și limitări](docs/business-workflows.md)
+- [Phase 5: Security Center, sesiuni, audit și administrarea accesului](docs/security-center.md)
 - [Configurarea și verificarea Supabase staging](docs/supabase-staging-validation.md)
 - [Recuperarea MFA cu verificare și aprobare separată](docs/mfa-recovery.md)
 - [Migrarea Joomla și păstrarea traficului organic](docs/migration.md)
