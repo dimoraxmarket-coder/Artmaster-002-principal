@@ -46,12 +46,18 @@ test("Windows launcher enforces compatible Node and isolates production credenti
     ARTMASTER_ALLOW_LOCAL_PRODUCTION: "true",
     RESEND_API_KEY: "synthetic-secret",
     ADMIN_PASSWORD: "synthetic-secret",
+    GOOGLE_PRIVATE_KEY:"synthetic-secret",
+    ARTMASTER_GOOGLE_REPORTING_ENABLED:"true",
+    PAGESPEED_API_KEY:"synthetic-secret",
   });
   assert.equal(env.SUPABASE_SERVICE_ROLE_KEY, "");
   assert.equal(env.SUPABASE_URL, "");
   assert.equal(env.ARTMASTER_SESSION_SECRET, "");
   assert.equal(env.RESEND_API_KEY, "");
   assert.equal(env.ADMIN_PASSWORD, "");
+  assert.equal(env.GOOGLE_PRIVATE_KEY, "");
+  assert.equal(env.ARTMASTER_GOOGLE_REPORTING_ENABLED, "false");
+  assert.equal(env.PAGESPEED_API_KEY, "");
   assert.equal(env.ARTMASTER_ALLOW_LOCAL_PRODUCTION, "false");
   assert.equal(env.ARTMASTER_STORAGE, "local");
   assert.equal(env.NODE_ENV, "development");
@@ -149,6 +155,7 @@ test("Windows distribution allowlist retains complete application sources and ex
     "scripts/create-admin.ts",
     "package-lock.json",
     "supabase/migrations/202610150005_content_studio.sql",
+    "supabase/migrations/202610160001_seo_hero_equipment.sql",
   ])
     assert.equal(distributable(path), true, path);
   for (const path of [
