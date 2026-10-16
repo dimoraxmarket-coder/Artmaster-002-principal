@@ -9,7 +9,11 @@ import { getStorage } from "./storage";
 import { registerMedia } from "./media-inventory";
 import type { Actor } from "./types";
 import { validateUploads } from "./uploads";
-export async function storeMedia(file: File, actor?: Actor) {
+export async function storeMedia(
+  file: File,
+  actor?: Actor,
+  purpose: "photo" | "artwork" = "photo",
+) {
   const uploads = await validateUploads([file]);
   if (uploads.length !== 1 || uploads[0].mime === "application/pdf")
     throw new BackendError("invalid_file", 400);
@@ -26,7 +30,9 @@ export async function storeMedia(file: File, actor?: Actor) {
         fit: "inside",
         withoutEnlargement: true,
       })
-      .webp({ lossless: true, effort: 4 });
+      .webp(
+        purpose === "artwork" ? { lossless: true, effort: 4 } : { quality: 85 },
+      );
     const { data, info } = await pipeline.toBuffer({ resolveWithObject: true });
     if (!info.width || !info.height || data.length > 5 * 1024 * 1024)
       throw new BackendError("invalid_file", 400);

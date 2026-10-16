@@ -33,6 +33,7 @@ import {
   restoreContent,
   contentHistory,
 } from "../src/lib/server/content-history";
+import { POST as uploadMedia } from "../src/app/api/admin/media/route";
 import { PUT } from "../src/app/api/admin/content/route";
 import type { Actor } from "../src/lib/server/types";
 const directory = mkdtempSync(join(tmpdir(), "artmaster-visuals-"));
@@ -183,6 +184,7 @@ test("media upload losslessly preserves sharp pixels, alpha, full panorama and s
       type: "image/png",
     }),
     members.admin.actor,
+    "artwork",
   );
   image = result.url;
   assert.equal(result.width, 1944);
@@ -238,6 +240,33 @@ test("media upload losslessly preserves sharp pixels, alpha, full panorama and s
   content.partners = [{ ...screenshotPartnerCandidates()[0], image: second }];
 });
 test("visual content API retains role authorization, explicit publication and stale-write protection", async () => {
+  const pixels = await sharp({
+    create: { width: 10, height: 10, channels: 4, background: "#f1c838" },
+  })
+    .png()
+    .toBuffer();
+  const mediaRequest = (purposes: string[]) => {
+    const body = new FormData();
+    body.set(
+      "file",
+      new File([new Uint8Array(pixels)], "Synthetic artwork.png", {
+        type: "image/png",
+      }),
+    );
+    for (const p of purposes) body.append("purpose", p);
+    return new Request("http://localhost:3000/api/admin/media", {
+      method: "POST",
+      headers: {
+        Origin: "http://localhost:3000",
+        Cookie: `artmaster_admin=${members.admin.cookie}`,
+      },
+      body,
+    });
+  };
+  for (const purposes of [["untrusted"], ["artwork", "photo"]])
+    assert.equal((await uploadMedia(mediaRequest(purposes))).status, 400);
+  for (const purposes of [[], ["photo"], ["artwork"]])
+    assert.equal((await uploadMedia(mediaRequest(purposes))).status, 201);
   assert.equal((await PUT(request())).status, 401);
   assert.equal((await PUT(request("viewer"))).status, 403);
   assert.equal((await PUT(request("editor", "publish"))).status, 403);

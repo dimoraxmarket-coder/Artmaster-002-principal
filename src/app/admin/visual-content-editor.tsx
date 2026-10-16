@@ -60,6 +60,7 @@ export function VisualContentEditor({
     try {
       const body = new FormData();
       body.set("file", file);
+      body.set("purpose", "artwork");
       const response = await fetch("/api/admin/media", {
           method: "POST",
           body,

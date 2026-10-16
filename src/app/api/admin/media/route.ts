@@ -29,14 +29,18 @@ export async function POST(request: Request) {
       headers: { "Content-Type": request.headers.get("content-type")! },
     }).formData();
     if (
-      [...form.keys()].some((key) => key !== "file") ||
+      [...form.keys()].some((key) => key !== "file" && key !== "purpose") ||
+      form.getAll("purpose").length > 1 ||
       form.getAll("file").length !== 1
     )
       throw new BackendError("invalid_input", 400);
     const file = form.get("file");
     if (!file || typeof file === "string")
       throw new BackendError("invalid_file", 400);
-    const result = await storeMedia(file, actor);
+    const purpose = form.get("purpose") ?? "photo";
+    if (purpose !== "photo" && purpose !== "artwork")
+      throw new BackendError("invalid_input", 400);
+    const result = await storeMedia(file, actor, purpose);
     await getStorage().audit(actor, "media.upload", result.url);
     return Response.json(result, {
       status: 201,
