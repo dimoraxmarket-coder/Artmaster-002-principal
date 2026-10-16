@@ -1,3 +1,5 @@
+import { HomepageBannerView } from './homepage-banner';
+import { publishablePartner } from '@/lib/content/visual-assets';
 import { PublicLink as Link } from './public-runtime';
 import { PublicImage as Image } from './public-runtime';
 import type { Locale, SiteContent } from '@/lib/content/types';
@@ -10,15 +12,16 @@ import { PartnersMarquee } from './partners-marquee';
 import { partners, examplePartners } from '@/lib/partners';
 import { isIndexable } from '@/lib/site';
 
-export function Home({ locale, content }: { locale: Locale; content: SiteContent }) {
+export function Home({ locale, content, preview = false }: { locale: Locale; content: SiteContent; preview?: boolean }) {
   const ui = t(locale);
   const hero=websiteCopy(content).hero;
   const projects = content.projects.filter(project => project.published).slice(0, 4);
   const partnerPreview = (process.env.PARTNERS_PREVIEW ?? 'true') === 'true' && !isIndexable;
-  const partnerEntries = partners.length ? partners : partnerPreview ? examplePartners : [];
+  const managed = content.partners?.filter(p => preview ? !['hidden','archived'].includes(p.status) : publishablePartner(p));
+  const partnerEntries = managed ? managed.map(p => ({ name:p.name, logo:preview||p.rights!=='unverified'?p.image:undefined, website:p.identity==='confirmed'?p.website:undefined, alt:p.alt, pending:!publishablePartner(p) })) : partners.length ? partners : partnerPreview ? examplePartners : [];
   const advantageIcons: IconName[] = ['layers', 'precision', 'chat'];
   return <>
-    <section className="home-hero" aria-labelledby="hero-title">
+    {content.banner?.enabled ? <HomepageBannerView banner={content.banner} locale={locale} title={`${hero.title[locale]} ${hero.accent[locale]}`} /> : <section className="home-hero" aria-labelledby="hero-title">
       <picture className="hero-picture">
         <source media="(max-width:480px)" type="image/avif" srcSet="/media/hero-narrow.avif" />
         <source media="(max-width:480px)" type="image/webp" srcSet="/media/hero-narrow.webp" />
@@ -33,7 +36,7 @@ export function Home({ locale, content }: { locale: Locale; content: SiteContent
         <p className="hero-location"><Icon name="pin" />{ui.home.locationLabel}</p>
       </div></div>
       <span className="concept-caption">{ui.common.concept}</span>
-    </section>
+    </section>}
 
     <section className="section home-services" aria-labelledby="services-title">
       <div className="container">
@@ -60,7 +63,7 @@ export function Home({ locale, content }: { locale: Locale; content: SiteContent
       </div>
     </section>
 
-    <PartnersMarquee locale={locale} partners={partnerEntries} exampleMode={!partners.length} />
+    <PartnersMarquee locale={locale} partners={partnerEntries} reviewMode={preview && Boolean(managed)} exampleMode={managed ? preview : !partners.length} />
 
     <section className="section" aria-labelledby="advantages-title"><div className="container">
       <div className="section-heading"><div><p className="eyebrow">ARTMASTER</p><h2 id="advantages-title">{ui.home.advantagesTitle}</h2></div></div>

@@ -2,12 +2,13 @@
 import Image from "next/image";
 import { useEffect, useId, useState } from "react";
 import type { MediaPage } from "@/lib/server/workflow-types";
+import type { MediaAsset } from "@/lib/server/workflow-types";
 import styles from "./content-studio.module.css";
 export function MediaSelector({
   onSelect,
   disabled,
 }: {
-  onSelect: (url: string) => void;
+  onSelect: (url: string, asset?: MediaAsset) => void;
   disabled: boolean;
 }) {
   const [open, setOpen] = useState(false),
@@ -94,7 +95,7 @@ export function MediaSelector({
                     className={styles.asset}
                     disabled={disabled}
                     onClick={() => {
-                      onSelect(asset.url);
+                      onSelect(asset.url, asset);
                       setOpen(false);
                     }}
                   >

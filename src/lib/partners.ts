@@ -2,7 +2,8 @@ import type { Localized } from './content/types';
 
 export type Partner = {
   name: string;
-  logo: string;
+  logo?: string;
+  pending?: boolean;
   website?: string;
   alt: Localized;
 };

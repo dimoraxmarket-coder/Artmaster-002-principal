@@ -59,3 +59,5 @@ Vezi [README-WINDOWS.md](README-WINDOWS.md). Într-o copie curată, `START.bat` 
 - [Rezultatele verificărilor browserului](docs/validation.md)
 
 Fotografiile de concept trebuie înlocuite cu fotografii ARTMASTER aprobate înainte de lansare. Nu sunt dovezi de lucrări executate. Datele tehnice, textele în trei limbi și paginile juridice necesită verificarea companiei.
+
+Gestionarea bannerului și a partenerilor în Content Studio: [fluxuri, surse și limite](docs/banner-partners.md). Bannerul original și logo-urile autentice rămân de importat/verificat; pachetul nu le substituie cu imagini generate.
