@@ -85,6 +85,7 @@ export async function packageWindows(destination) {
     "scripts/windows-local.mjs",
     "config/windows.env.example",
     "supabase/migrations/202610150005_content_studio.sql",
+    "supabase/migrations/202610160001_seo_hero_equipment.sql",
   ])
     if (!selected.includes(required))
       throw new Error(`Lipseste un fisier obligatoriu: ${required}`);
