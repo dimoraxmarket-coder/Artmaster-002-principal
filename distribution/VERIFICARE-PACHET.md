@@ -202,3 +202,7 @@ tests/security-postgres.test.ts
 tests/seo-center.test.ts
 tests/windows-package.test.ts
 ```
+
+## Descărcarea publică reverificată
+
+După push, ZIP-ul a fost descărcat efectiv prin HTTPS de la adresa publică GitHub raw. Dimensiune: 30,128,430 octeți. SHA-256: `b0122c8654e3343ff21517f1ea2b7de16f3601d48ef14bc0e74baa17a7a0b7de` — identică cu arhiva extrasă și testată. CRC-ul trece; PACKAGE-INFO.json confirmă commitul `81333005501423e6dfd18923de208981087b8816`. Acesta este fișierul direct indicat în PR #8 și în raport.
