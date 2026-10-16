@@ -573,6 +573,20 @@ test("complete PostgreSQL security-center migration enforces session, role, audi
         assert.equal(JSON.stringify(value).includes("secret-"), false);
       },
     );
+    await suite.test('SEO aggregates are service-only and new hero image/video references protect archival', async()=>{
+      await assert.rejects(()=>db.transaction(async tx=>{await tx.exec('set local role authenticated');await tx.query("select public.seo_conversion_days('2026-01-01','2026-01-02')");}),errorCode('42501'));
+      await assert.rejects(()=>service(db,tx=>tx.query("select public.seo_conversion_days(null,'2026-01-02')")),errorCode('22023'));
+      const totals=await service(db,tx=>tx.query<{value:unknown[]}>("select public.seo_conversion_days(current_date,current_date) as value"));
+      assert.ok(Array.isArray(totals.rows[0].value));
+      const video='/api/media/a0000000-0000-4000-8000-000000000099.mp4';
+      await db.query("update public.admin_roles set enabled=true,role='admin' where user_id=$1",[ids.admin]);
+      await db.query("update public.site_content set draft=jsonb_set(coalesce(draft,'{}'::jsonb),'{heroMedia}', $1::jsonb) where id=1",[JSON.stringify({desktop:{image:'/media/hero-wide.webp',video}})]);
+      await db.query("insert into public.media_assets(url,name,bytes,width,height) values($1,'Synthetic hero',32,0,0)",[video]);
+      await assert.rejects(()=>service(db,tx=>tx.query('select public.archive_media($1,$2)',[video,ids.admin])),errorCode('23514'));
+      await db.query("update public.site_content set draft=draft-'heroMedia' where id=1");
+      await service(db,tx=>tx.query('select public.archive_media($1,$2)',[video,ids.admin]));
+      const row=(await db.query<{archived_at:string}>('select archived_at from public.media_assets where url=$1',[video])).rows[0];assert.ok(row.archived_at);
+    });
   } finally {
     await db.close();
   }

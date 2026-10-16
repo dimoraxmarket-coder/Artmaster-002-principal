@@ -53,3 +53,10 @@ This is a review checklist, **not deployment authorization**. No production depl
 - [ ] Extract into a new folder, install frozen dependencies, initialize empty isolated SQLite and create a local administrator with the existing hidden-password workflow. Confirm loopback-only listening and persistence without overwriting unrelated configuration/data.
 - [ ] Run the owner's **native Windows** smoke test (Node >=24/npm, START/CREATE-ADMIN batch entry points, console shutdown, native dependencies, public/admin routes, form→CRM, CMS draft/preview/publication). Linux extraction and portable Node checks do not certify native Windows.
 - [ ] Keep local SQLite password testing separate from required real Supabase AAL2 staging. Downloading or testing this package does not authorize any deployment, DNS change, production migration or merge.
+
+## SEO, hero and catalog extension
+
+- [ ] Review `202610160001_seo_hero_equipment.sql` after all previous migrations; verify private video MIME/ranges, image/video usage, archival and restoration against real Supabase staging.
+- [ ] Verify real readonly Google permissions, metrics/timezones, consent and API quotas before enabling optional connectors; no live Google validation has occurred.
+- [ ] Review exact workshop model/variant labels, photo matching/rights notes, translations and specifications before publishing catalog entries. Official manufacturer research is blocked by egress in the current environment; no downloaded photo license is certified.
+- [ ] Smoke-test the updated Windows ZIP natively, including Sharp crop, supported video playback, Google isolation and existing CRM workflows. See [extension details](seo-analytics-hero-equipment.md).

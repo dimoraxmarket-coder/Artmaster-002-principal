@@ -12,15 +12,19 @@ const refs = z.array(slug).max(30);
 const localizedList = z.object({ro:z.array(text(1000)).max(30),ru:z.array(text(1000)).max(30),en:z.array(text(1000)).max(30)}).strict();
 const faq = z.object({question:localized,answer:localized}).strict();
 const base = {slug,title:localized,summary:localized};
+const sourceUrl=z.union([z.literal(''),z.url().max(1000).refine(value=>{const u=new URL(value);return u.protocol==='https:'&&!u.username&&!u.password;})]);
+const heroAsset=z.object({image,video:z.string().regex(/^\/api\/media\/[a-f0-9-]{36}\.(mp4|webm)$/).optional()}).strict();
 export const contentSchema: z.ZodType<SiteContent> = z.object({
+  heroMedia:z.object({desktop:heroAsset,mobile:heroAsset.optional()}).strict().optional(),
   copy:z.object({hero:z.object({eyebrow:localized,title:localized,accent:localized,description:localized,quoteLabel:localized,servicesLabel:localized}).strict(),about:z.object({title:localized,summary:localized,heading:localized,body:localized,approach:localized,equipmentHeading:localized}).strict()}).strict().optional(),
   services:z.array(z.object({...base,description:localized,applications:localizedList,quoteHints:localizedList,faqs:z.array(faq).max(20),image,relatedSlugs:refs,equipmentSlugs:refs}).strict()).min(1).max(40),
-  equipment:z.array(z.object({...base,description:localized,image,serviceSlugs:refs,facts:z.array(localized).max(30)}).strict()).max(60),
+  equipment:z.array(z.object({...base,description:localized,image,serviceSlugs:refs,facts:z.array(localized).max(30),catalog:z.object({model:text(150),manufacturer:z.string().trim().max(150),category:localized,verification:z.enum(['unverified','manufacturer_documented','owner_confirmed']),sourceUrl,imageRights:z.enum(['pending','owner','licensed','concept']),licenseNote:z.string().trim().max(2000),order:z.number().int().min(0).max(10000),published:z.boolean(),specs:z.array(z.object({label:localized,value:localized}).strict()).max(40)}).strict().optional()}).strict()).max(60),
   projects:z.array(z.object({...base,description:localized,image,serviceSlugs:refs,kind:z.enum(['concept','real']),published:z.boolean()}).strict()).max(250),
   articles:z.array(z.object({...base,paragraphs:localizedList,serviceSlugs:refs,published:z.boolean()}).strict()).max(100),
   faqs:z.array(faq).max(40),
   contact:z.object({phone:z.string().regex(/^\+?[0-9 ()-]{7,25}$/),email:z.email().max(254),address:localized,whatsapp:z.string().regex(/^\+?[0-9]{7,16}$/).or(z.literal('')),areas:localized,companyName:text(120)}).strict(),
 }).strict().superRefine((content,ctx)=>{
+  content.equipment.forEach((e,i)=>{if(e.catalog?.published&&(e.catalog.verification!=='owner_confirmed'||!['owner','licensed'].includes(e.catalog.imageRights)||!e.catalog.licenseNote.trim()||(e.catalog.imageRights==='licensed'&&!e.catalog.sourceUrl)))ctx.addIssue({code:'custom',path:['equipment',i,'catalog'],message:'Confirm the workshop model and image rights before publication'});});
   for(const key of ['services','equipment','projects','articles'] as const) {
     const seen=new Set<string>();
     content[key].forEach((entry,i)=>{if(seen.has(entry.slug))ctx.addIssue({code:'custom',path:[key,i,'slug'],message:'Duplicate slug'});seen.add(entry.slug);});

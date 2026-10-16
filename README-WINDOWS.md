@@ -70,3 +70,11 @@ Dezvoltatorii pot rula `npm run lint`, `npm run typecheck` și `npm test`. Verif
 Mediul de validare disponibil este Linux, fără Windows/cmd.exe. Logica Node portabilă, instalarea din arhiva extrasă, build-ul și fluxurile reale sunt verificate acolo; **dublu-clicul batch, consola/parola și modulele native pe Windows nu sunt declarate testate nativ**. Consultă rezultatele finale din PR #7. `PACKAGE-INFO.json` identifică sursa arhivei. Arhiva poate fi refăcută de un dezvoltator dintr-un checkout Git curat prin `npm run package:windows -- <director-in-afara-proiectului>`.
 
 Înainte de orice lansare reală sunt obligatorii integrarea revizuită a PR-urilor, staging Supabase cu TOTP/RLS/storage reale, backup și restaurare verificate, verificarea hostingului Node și aprobarea proprietarului. Vezi [checklist-ul de release](docs/release-readiness-phase6.md). Acest pachet nu modifică artmaster.md/Host.md, DNS sau producția.
+
+## SEO, banner și echipamente
+
+Cabinetul include **SEO & Analytics** și **Echipamente**, păstrând cele opt module existente. Auditul SEO verifică paginile publicate locale; indexarea dezactivată în această copie este intenționată. Metricile Google rămân „Neconectat”; cererile CRM reprezintă datele locale salvate. Lansatorul dezactivează toate credențialele Google moștenite.
+
+În Conținut → Acasă și Despre noi poți încărca/decupa separat bannerul desktop și mobil sau adăuga un MP4/WebM privat (maximum 20 MB), cu imagine poster. Confirmă drepturile fișierului, salvează ciorna și verifică previzualizarea. Publicarea rămâne o acțiune separată. Videoul nu este transcodificat; verifică redarea.
+
+În Echipamente, adaugă numai fișele candidate relevante, confirmă modelul exact, completează RO/RU/EN, fotografia proprie/autorizată, specificațiile și nota drepturilor. Candidații nu sunt publicați automat. Sursele/licențele producătorilor nu au fost verificate online deoarece accesul de rețea a fost refuzat. Instrucțiuni Google, formula scorului și limite: [docs/seo-analytics-hero-equipment.md](docs/seo-analytics-hero-equipment.md).

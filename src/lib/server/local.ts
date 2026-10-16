@@ -1,3 +1,4 @@
+import { contentAssets } from '../content/assets';
 import { DatabaseSync } from 'node:sqlite';
 import { randomBytes, createHash, randomUUID } from 'node:crypto';
 import { mkdirSync, chmodSync } from 'node:fs';
@@ -22,6 +23,7 @@ export function localDatabase() {
     CREATE TABLE IF NOT EXISTS rate_events(bucket TEXT NOT NULL,time INTEGER NOT NULL);
     CREATE INDEX IF NOT EXISTS rate_bucket ON rate_events(bucket,time);
     CREATE TABLE IF NOT EXISTS quotes(id TEXT PRIMARY KEY,idempotency_key TEXT NOT NULL UNIQUE,payload_hash TEXT NOT NULL,data TEXT NOT NULL,notification TEXT NOT NULL,attempts INTEGER NOT NULL DEFAULT 0,next_attempt INTEGER NOT NULL DEFAULT 0,last_error TEXT);
+    CREATE INDEX IF NOT EXISTS quotes_created_date ON quotes(json_extract(data,'$.createdAt'));
     CREATE TABLE IF NOT EXISTS content(id INTEGER PRIMARY KEY CHECK(id=1),published TEXT,draft TEXT,version INTEGER NOT NULL DEFAULT 0);
     INSERT OR IGNORE INTO content(id) VALUES(1);
     CREATE TABLE IF NOT EXISTS admins(id TEXT PRIMARY KEY,email TEXT NOT NULL UNIQUE,password_hash TEXT NOT NULL,role TEXT NOT NULL CHECK(role IN ('viewer','editor','admin')));
@@ -113,7 +115,7 @@ export class LocalStorage implements Storage {
   async saveContent(value:ContentState['draft'],publish:boolean,actor:Actor,expectedVersion:number,sourceId?:number){
     const clean=contentSchema.parse(value),db=localDatabase();db.exec('BEGIN IMMEDIATE');
     try {
-      const urls=[...clean.services,...clean.equipment,...clean.projects].map(item=>item.image);
+      const urls=contentAssets(clean);
       for(const row of db.prepare('SELECT url FROM media_assets WHERE archived_at IS NOT NULL').all() as {url:string}[])if(urls.includes(row.url))throw new BackendError('asset_in_use',409);
       const result=publish?db.prepare('UPDATE content SET published=?,draft=?,version=version+1 WHERE id=1 AND version=?').run(JSON.stringify(clean),JSON.stringify(clean),expectedVersion):db.prepare('UPDATE content SET draft=?,version=version+1 WHERE id=1 AND version=?').run(JSON.stringify(clean),expectedVersion);
       if(!result.changes)throw new BackendError('version_conflict',409);

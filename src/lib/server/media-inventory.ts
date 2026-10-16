@@ -10,6 +10,7 @@ import { supabaseService } from "./supabase";
 import { rpcError } from "./crm";
 import type { Actor, ContentState } from "./types";
 import type { MediaAsset, MediaPage } from "./workflow-types";
+import { contentAssets, isVideo } from "../content/assets";
 import type { SiteContent } from "../content/types";
 export const mediaQuerySchema = z
   .object({
@@ -26,6 +27,8 @@ export function mediaReferences(state: ContentState) {
     ["draft", state.draft],
   ] as const) {
     if (!content) continue;
+    for (const [slug, asset] of Object.entries(content.heroMedia || {}))
+      for (const url of [asset?.image, asset?.video]) if(url) refs.push({url,name:`Hero ${slug}`,use:{section:"hero",slug,title:`Hero ${slug}`,state:key}});
     for (const section of ["services", "equipment", "projects"] as const)
       for (const item of content[section])
         refs.push({
@@ -37,9 +40,7 @@ export function mediaReferences(state: ContentState) {
   return refs;
 }
 export function contentImageUrls(content: SiteContent) {
-  return [...content.services, ...content.equipment, ...content.projects].map(
-    (item) => item.image,
-  );
+  return contentAssets(content);
 }
 export async function registerMedia(
   value: {
@@ -165,7 +166,7 @@ export async function inventory(
     assets: assets.map((asset) => ({
       ...asset,
       managed: !!asset.managed,
-      replaceable: contentImageUrls(
+      replaceable: !isVideo(asset.url) && contentImageUrls(
         state.draft || state.published || defaultContent,
       ).includes(asset.url),
       uses: refs.filter((ref) => ref.url === asset.url).map((ref) => ref.use),
@@ -250,6 +251,7 @@ export async function replaceDraftMedia(
         item.image = replacementUrl;
         changed++;
       }
+  for (const asset of [draft.heroMedia?.desktop,draft.heroMedia?.mobile]) if(asset?.image===url){asset.image=replacementUrl;changed++;}
   if (!changed) throw new BackendError("not_found", 404);
   const version = await getStorage().saveContent(
     draft,

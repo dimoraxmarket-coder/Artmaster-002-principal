@@ -1,6 +1,7 @@
 import { PublicLink as Link } from './public-runtime';
 import { PublicImage as Image } from './public-runtime';
 import type { Locale, SiteContent } from '@/lib/content/types';
+import { HeroMedia } from './hero-media';
 import { websiteCopy } from '@/lib/content/page-copy';
 import { t } from '@/lib/i18n';
 import { isConceptImage } from '@/lib/media';
@@ -19,12 +20,12 @@ export function Home({ locale, content }: { locale: Locale; content: SiteContent
   const advantageIcons: IconName[] = ['layers', 'precision', 'chat'];
   return <>
     <section className="home-hero" aria-labelledby="hero-title">
-      <picture className="hero-picture">
+      {content.heroMedia?<HeroMedia media={content.heroMedia} locale={locale}/>:<picture className="hero-picture">
         <source media="(max-width:480px)" type="image/avif" srcSet="/media/hero-narrow.avif" />
         <source media="(max-width:480px)" type="image/webp" srcSet="/media/hero-narrow.webp" />
         <source type="image/avif" srcSet="/media/hero-wide.avif" />
         <img className="hero-background" src="/media/hero-wide.webp" alt="" width={1672} height={941} loading="eager" fetchPriority="high" decoding="async" />
-      </picture>
+      </picture>}
       <div className="container"><div className="hero-content">
         <p className="eyebrow">{hero.eyebrow[locale]}</p>
         <h1 id="hero-title">{hero.title[locale]}<span>{hero.accent[locale]}</span></h1>
@@ -32,7 +33,7 @@ export function Home({ locale, content }: { locale: Locale; content: SiteContent
         <div className="hero-actions"><Link href={`/${locale}/solicita-oferta`} className="button">{hero.quoteLabel[locale]}<Icon name="arrow" /></Link><Link href={`/${locale}/servicii`} className="button-secondary button-ghost">{hero.servicesLabel[locale]}</Link></div>
         <p className="hero-location"><Icon name="pin" />{ui.home.locationLabel}</p>
       </div></div>
-      <span className="concept-caption">{ui.common.concept}</span>
+      {!content.heroMedia&&<span className="concept-caption">{ui.common.concept}</span>}
     </section>
 
     <section className="section home-services" aria-labelledby="services-title">

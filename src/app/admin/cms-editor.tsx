@@ -1,6 +1,10 @@
 'use client';
 
 import Image from 'next/image';
+import { HeroEditor } from './hero-editor';
+import { EquipmentFields } from './equipment-editor';
+import { equipmentCandidates, candidateEquipment, emptyCatalog } from '@/lib/content/equipment-candidates';
+import growth from './growth.module.css';
 import { websiteCopy } from '@/lib/content/page-copy';
 import { ContentHistory } from './content-history';
 import { MediaSelector } from './media-selector';
@@ -161,7 +165,7 @@ function findIncomplete(value: SiteContent): string | null {
   return null;
 }
 
-export function CmsEditor({ actor, workspaceSection, onDirtyChange }: { actor: Actor; workspaceSection?: 'projects'|'contact'|'services'; onDirtyChange?: (dirty:boolean)=>void }) {
+export function CmsEditor({ actor, workspaceSection, onDirtyChange }: { actor: Actor; workspaceSection?: 'projects'|'contact'|'services'|'equipment'; onDirtyChange?: (dirty:boolean)=>void }) {
   const [content, setContent] = useState<SiteContent | null>(null);
   const [version, setVersion] = useState(0);
   const [contentSection, setSection] = useState<Section>(workspaceSection?'services':'contact');
@@ -250,7 +254,7 @@ export function CmsEditor({ actor, workspaceSection, onDirtyChange }: { actor: A
     const base = { slug: nextSlug(key, key === 'services' ? 'serviciu-nou' : key === 'equipment' ? 'echipament-nou' : key === 'projects' ? 'proiect-nou' : 'articol-nou'), title: emptyLocalized(), summary: emptyLocalized() };
     mutate(next => {
       if (key === 'services') next.services.push({ ...base, description: emptyLocalized(), image: '', applications: { ro: [], ru: [], en: [] }, quoteHints: { ro: [], ru: [], en: [] }, faqs: [], relatedSlugs: [], equipmentSlugs: [] });
-      if (key === 'equipment') next.equipment.push({ ...base, description: emptyLocalized(), image: '', serviceSlugs: [], facts: [] });
+      if (key === 'equipment') next.equipment.push({ ...base, description: emptyLocalized(), image: '/images/equipment-placeholder.svg', serviceSlugs: [], facts: [], catalog: emptyCatalog('Model de confirmat',next.equipment.length) });
       if (key === 'projects') next.projects.push({ ...base, description: emptyLocalized(), image: '', serviceSlugs: [], kind: 'real', published: false });
       if (key === 'articles') next.articles.push({ ...base, paragraphs: { ro: [], ru: [], en: [] }, serviceSlugs: [], published: false });
     });
@@ -338,7 +342,7 @@ export function CmsEditor({ actor, workspaceSection, onDirtyChange }: { actor: A
   const article = section === 'articles' ? content.articles[index] : null;
 
   return <section className="admin-cms"  aria-busy={busy}>
-    <h2>{workspaceSection==='projects'?'Portofoliu Studio':workspaceSection==='contact'?'Informațiile companiei':'Conținut Studio'}</h2>
+    <h2>{workspaceSection==='equipment'?'Equipment Studio':workspaceSection==='projects'?'Portofoliu Studio':workspaceSection==='contact'?'Informațiile companiei':'Conținut Studio'}</h2>
     <p>Versiunea {version} · {dirty ? 'Modificări nesalvate' : hasDraft ? 'Ciornă încărcată' : 'Versiune publicată'}.</p>
     <p className="field-hint" style={{ marginBottom: 20 }}>Editează fiecare limbă separat. Ciorna și publicarea sunt operații distincte. {readOnly ? 'Contul tău poate consulta conținutul.' : actor.role === 'editor' ? 'Poți salva ciorne; administratorul le publică.' : 'Poți salva ciorne și publica modificări.'}</p>
     {error && <div role="alert" className="form-status form-status-error">{error}</div>}
@@ -361,6 +365,7 @@ export function CmsEditor({ actor, workspaceSection, onDirtyChange }: { actor: A
       {(['ro', 'ru', 'en'] as const).map(key => <button type="button" key={key} className={`button${locale === key ? ' button-primary' : ''}`} aria-pressed={locale === key} disabled={busy} onClick={() => setLocale(key)}>{key.toUpperCase()} · {localeLabels[key]}</button>)}
     </div>
     <h3>{sectionLabels[section]} — {localeLabels[locale]}</h3>
+    {section==='equipment'&&<section className={growth.panel}><h4>Candidați ARTMASTER · verificare obligatorie</h4><p>Proprietarul confirmă lista aparatelor și declară drepturi de utilizare a fotografiilor. Identificarea independentă a variantelor rămâne necesară. Sursele producătorilor nu au putut fi consultate din acest mediu (acces de rețea refuzat). Nu s-a importat nicio fotografie. Adăugarea creează numai o fișă nepublicată; confirmă eticheta, modelul și drepturile imaginii.</p><div className={growth.sources}>{equipmentCandidates.map(candidate=><article className={growth.candidate} key={candidate.slug}><strong>{candidate.model}</strong><p>{candidate.note}</p>{candidate.sourceUrl&&<a href={candidate.sourceUrl} target="_blank" rel="noopener noreferrer">Sursă de consultat ↗</a>}<button type="button" className="button" disabled={readOnly||busy||content.equipment.some(e=>e.slug===candidate.slug)} onClick={()=>{const at=content.equipment.length;mutate(next=>{next.equipment.push(candidateEquipment(candidate,at));});setSelected(previous=>({...previous,equipment:at}));}}>Adaugă candidat în ciornă · {candidate.model}</button></article>)}</div></section>}
     {entityKey && <div className="field">
       <label htmlFor="cms-entity">Alege elementul de editat</label>
       <select id="cms-entity" value={content[entityKey].length ? index : ''} disabled={busy || !content[entityKey].length} onChange={event => setSelected(previous => ({ ...previous, [entityKey]: Number(event.target.value) }))}>
@@ -370,6 +375,7 @@ export function CmsEditor({ actor, workspaceSection, onDirtyChange }: { actor: A
     <fieldset disabled={readOnly || busy} style={{ border: 0, padding: 0, margin: 0, minWidth: 0 }}>
       <legend className="sr-only">Editare {sectionLabels[section]}</legend>
       {section === 'copy' && <>
+        <HeroEditor value={content.heroMedia} onBusy={setBusy} onChange={value=>mutate(next=>{if(value)next.heroMedia=value;else delete next.heroMedia;})}/>
         <p className="field-hint">Texte structurate pentru paginile publice. Aspectul și destinațiile butoanelor sunt păstrate.</p>
         {(['hero','about'] as const).map(group=><section key={group}><h4>{group==='hero'?'Acasă · Hero':'Despre noi'}</h4>{Object.entries(websiteCopy(content)[group]).map(([key,value])=><LocalizedField key={key} label={({eyebrow:'Etichetă',title:'Titlu',accent:'Accentul titlului',description:'Descriere',quoteLabel:'Buton · Ofertă',servicesLabel:'Buton · Servicii',summary:'Rezumat pagină',heading:'Titlu companie',body:'Descrierea companiei',approach:'Cum lucrăm',equipmentHeading:'Titlu echipamente'} as Record<string,string>)[key]||key} value={value} locale={locale} multiline={['description','summary','body','approach'].includes(key)} onChange={localized=>mutate(next=>{next.copy=websiteCopy(next);(next.copy[group] as Record<string,Localized>)[key]=localized;})}/>)}</section>)}
       </>}
@@ -393,6 +399,7 @@ export function CmsEditor({ actor, workspaceSection, onDirtyChange }: { actor: A
         <details style={{ marginBlock: 24 }}><summary>Întrebări frecvente pentru acest serviciu ({service.faqs.length})</summary><div style={{ marginTop: 18 }}><FaqFields items={service.faqs} locale={locale} readOnly={readOnly} onChange={value => mutate(next => { next.services[index].faqs = value; })} /></div></details>
       </>}
       {equipment && <>
+        <EquipmentFields equipment={equipment} locale={locale} onChange={value=>mutate(next=>{next.equipment[index].catalog=value;})}/>
         {imageFields('equipment', index, equipment.image)}
         <ReferenceFields label="Servicii realizate cu acest echipament" options={content.services} selected={equipment.serviceSlugs} onChange={value => mutate(next => { next.equipment[index].serviceSlugs = value; })} />
         <h4>Detalii tehnice confirmate</h4>

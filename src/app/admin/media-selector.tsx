@@ -87,7 +87,7 @@ export function MediaSelector({
           {data && (
             <>
               <div className={styles.assets}>
-                {data.assets.map((asset) => (
+                {data.assets.filter(asset=>! /\.(mp4|webm)$/.test(asset.url)).map((asset) => (
                   <button
                     key={asset.url}
                     type="button"

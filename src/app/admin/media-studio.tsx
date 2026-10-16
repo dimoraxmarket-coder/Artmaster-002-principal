@@ -182,7 +182,7 @@ export function MediaLibrary({ actor }: { actor: Actor }) {
             {data.assets.map((asset) => (
               <article className={styles.asset} key={asset.url}>
                 <div className={styles.assetImage}>
-                  <Image
+                  {/\.(mp4|webm)$/.test(asset.url)?<video muted src={asset.url.replace("/api/media/","/api/admin/media/")} controls preload="metadata" aria-label={asset.name}/>:<Image
                     src={
                       asset.url.startsWith("/api/media/")
                         ? asset.url.replace("/api/media/", "/api/admin/media/")
@@ -192,7 +192,7 @@ export function MediaLibrary({ actor }: { actor: Actor }) {
                     width={400}
                     height={260}
                     unoptimized
-                  />
+                  />}
                   <span className={styles.assetBadge}>
                     {asset.uses.some((use) => use.state === "published")
                       ? "În versiunea publicată"
