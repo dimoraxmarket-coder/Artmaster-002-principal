@@ -1,4 +1,6 @@
 'use client';
+import { VisualContentEditor } from './visual-content-editor';
+import { contentAssets } from '@/lib/content/visual-assets';
 
 import Image from 'next/image';
 import { websiteCopy } from '@/lib/content/page-copy';
@@ -8,11 +10,11 @@ import { useEffect, useId, useState } from 'react';
 import type { Article, Equipment, Faq, Locale, Localized, Project, Service, SiteContent } from '@/lib/content/types';
 import type { Actor } from '@/lib/server/types';
 
-type Section = 'copy' | 'contact' | 'services' | 'equipment' | 'projects' | 'articles' | 'faqs';
-type EntitySection = Exclude<Section, 'copy' | 'contact' | 'faqs'>;
+type Section = 'banner' | 'partners' | 'copy' | 'contact' | 'services' | 'equipment' | 'projects' | 'articles' | 'faqs';
+type EntitySection = Exclude<Section, 'copy' | 'contact' | 'faqs' | 'banner' | 'partners'>;
 type ContentResponse = { published: SiteContent; draft: SiteContent | null; version: number };
 const sectionLabels: Record<Section, string> = {
-  copy: 'Acasă și Despre noi', contact: 'Date de contact', services: 'Servicii', equipment: 'Echipamente',
+  banner: 'Banner Acasă', partners: 'Parteneri', copy: 'Acasă și Despre noi', contact: 'Date de contact', services: 'Servicii', equipment: 'Echipamente',
   projects: 'Galerie și proiecte', articles: 'Articole', faqs: 'Întrebări frecvente',
 };
 const localeLabels: Record<Locale, string> = { ro: 'Română', ru: 'Rusă', en: 'Engleză' };
@@ -27,7 +29,7 @@ function safeImage(value: string) {
   catch { return false; }
 }
 
-function imageURLs(content: SiteContent) { return [...content.services, ...content.equipment, ...content.projects].map(item => item.image); }
+function imageURLs(content: SiteContent) { return contentAssets(content).map(item => item.image); }
 
 class ApiError extends Error {
   constructor(message: string, readonly status: number, readonly code: string) { super(message); }
@@ -151,6 +153,13 @@ function findIncomplete(value: SiteContent): string | null {
       if ('image' in item && !safeImage(item.image)) return `${label} „${item.title.ro || item.slug}”: încarcă o imagine validă sau folosește o adresă de imagine din biblioteca site-ului.`;
     }
   }
+  for(const p of value.partners||[]){
+    if(!p.name.trim())return 'Completează numele fiecărui partener.';
+    for(const locale of allLocales)if(!p.alt[locale].trim())return `Completează descrierea logo-ului ${p.name} în toate limbile.`;
+    if(p.status==='published'&&(p.identity!=='confirmed'||!p.relationshipConfirmed))return `Confirmă identitatea și relația pentru ${p.name}.`;
+    if(p.status==='published'&&p.image&&(p.rights==='unverified'||!p.provenance.trim()||p.rights==='official-permission'&&!p.sourceUrl))return `Confirmă dreptul de utilizare și proveniența logo-ului ${p.name}.`;
+  }
+  if(value.banner)for(const asset of [value.banner.desktop,value.banner.mobile])if(asset)for(const locale of allLocales)if(!asset.alt[locale].trim())return 'Completează descrierea bannerului în toate limbile.';
   if(value.copy) for(const group of Object.values(value.copy)) for(const item of Object.values(group)){const error=check(item,'Acasă / Despre noi');if(error)return error;}
   const allFaqs = [...value.faqs, ...value.services.flatMap(service => service.faqs)];
   for (const faq of allFaqs) for (const field of ['question', 'answer'] as const) { const error = check(faq[field], 'Întrebare frecventă'); if (error) return error; }
@@ -328,7 +337,7 @@ export function CmsEditor({ actor, workspaceSection, onDirtyChange }: { actor: A
   if (loading) return <section className="admin-cms" aria-busy="true"><h2>Conținutul site-ului</h2><p role="status">Se încarcă editorul…</p></section>;
   if (!content) return <section className="admin-cms"><h2>Conținutul site-ului</h2><p className="form-status form-status-error" role="alert">{error || 'Conținutul nu este disponibil.'}</p><button type="button" className="button" disabled={busy} onClick={() => void reload()}>Reîncearcă încărcarea</button></section>;
 
-  const entityKey: EntitySection | null = section !== 'copy' && section !== 'contact' && section !== 'faqs' ? section : null;
+  const entityKey: EntitySection | null = section !== 'banner' && section !== 'partners' && section !== 'copy' && section !== 'contact' && section !== 'faqs' ? section : null;
   const index = entityKey ? Math.min(selected[entityKey], Math.max(0, content[entityKey].length - 1)) : 0;
   const entity = entityKey ? content[entityKey][index] : null;
   const blockedDelete = entityKey && entity ? deletionReason(entityKey, index) : null;
@@ -355,7 +364,7 @@ export function CmsEditor({ actor, workspaceSection, onDirtyChange }: { actor: A
     <ContentHistory onRestoring={setBusy} content={content} version={version} disabled={busy||dirty||conflict} canRestore={!readOnly} onRestored={(restored,nextVersion)=>{setContent(restored);setVersion(nextVersion);setVerifiedImages(imageURLs(restored));setHasDraft(true);setDirty(false);setConflict(false);setMessage('Versiunea a fost restaurată într-o ciornă nouă. Revizuiește previzualizarea înainte de publicare.');}}/>
     {actor.role === 'admin' && actor.aal !== 'aal2' && <p className="banner">Publicarea și salvarea protejată necesită autentificare cu doi factori. Dacă serverul solicită acest pas, activează-l în cont și autentifică-te din nou.</p>}
     <nav aria-label="Categorii de conținut" style={{ display: 'flex', gap: 9, flexWrap: 'wrap', marginBottom: 24 }}>
-      {(workspaceSection?workspaceSection==='services'?['copy','services','equipment','articles','faqs'] as Section[]:[]:Object.keys(sectionLabels) as Section[]).map(key => <button type="button" key={key} className={`button${section === key ? ' button-primary' : ''}`} aria-pressed={section === key} disabled={busy} onClick={() => setSection(key)}>{sectionLabels[key]}</button>)}
+      {(workspaceSection?workspaceSection==='services'?['copy','banner','partners','services','equipment','articles','faqs'] as Section[]:[]:Object.keys(sectionLabels) as Section[]).map(key => <button type="button" key={key} className={`button${section === key ? ' button-primary' : ''}`} aria-pressed={section === key} disabled={busy} onClick={() => setSection(key)}>{sectionLabels[key]}</button>)}
     </nav>
     <div role="group" aria-label="Limba conținutului editat" style={{ display: 'flex', gap: 9, flexWrap: 'wrap', marginBottom: 25 }}>
       {(['ro', 'ru', 'en'] as const).map(key => <button type="button" key={key} className={`button${locale === key ? ' button-primary' : ''}`} aria-pressed={locale === key} disabled={busy} onClick={() => setLocale(key)}>{key.toUpperCase()} · {localeLabels[key]}</button>)}
@@ -369,6 +378,7 @@ export function CmsEditor({ actor, workspaceSection, onDirtyChange }: { actor: A
     </div>}
     <fieldset disabled={readOnly || busy} style={{ border: 0, padding: 0, margin: 0, minWidth: 0 }}>
       <legend className="sr-only">Editare {sectionLabels[section]}</legend>
+      {(section==='banner'||section==='partners')&&<VisualContentEditor key={`${section}-${version}`} content={content} locale={locale} section={section} disabled={readOnly||busy} mutate={mutate} onBusy={setBusy}/>}
       {section === 'copy' && <>
         <p className="field-hint">Texte structurate pentru paginile publice. Aspectul și destinațiile butoanelor sunt păstrate.</p>
         {(['hero','about'] as const).map(group=><section key={group}><h4>{group==='hero'?'Acasă · Hero':'Despre noi'}</h4>{Object.entries(websiteCopy(content)[group]).map(([key,value])=><LocalizedField key={key} label={({eyebrow:'Etichetă',title:'Titlu',accent:'Accentul titlului',description:'Descriere',quoteLabel:'Buton · Ofertă',servicesLabel:'Buton · Servicii',summary:'Rezumat pagină',heading:'Titlu companie',body:'Descrierea companiei',approach:'Cum lucrăm',equipmentHeading:'Titlu echipamente'} as Record<string,string>)[key]||key} value={value} locale={locale} multiline={['description','summary','body','approach'].includes(key)} onChange={localized=>mutate(next=>{next.copy=websiteCopy(next);(next.copy[group] as Record<string,Localized>)[key]=localized;})}/>)}</section>)}

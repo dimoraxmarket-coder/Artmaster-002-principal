@@ -1,3 +1,4 @@
+import { contentAssets } from '../content/visual-assets';
 import { DatabaseSync } from 'node:sqlite';
 import { randomBytes, createHash, randomUUID } from 'node:crypto';
 import { mkdirSync, chmodSync } from 'node:fs';
@@ -113,7 +114,7 @@ export class LocalStorage implements Storage {
   async saveContent(value:ContentState['draft'],publish:boolean,actor:Actor,expectedVersion:number,sourceId?:number){
     const clean=contentSchema.parse(value),db=localDatabase();db.exec('BEGIN IMMEDIATE');
     try {
-      const urls=[...clean.services,...clean.equipment,...clean.projects].map(item=>item.image);
+      const urls=contentAssets(clean).map(item=>item.image);
       for(const row of db.prepare('SELECT url FROM media_assets WHERE archived_at IS NOT NULL').all() as {url:string}[])if(urls.includes(row.url))throw new BackendError('asset_in_use',409);
       const result=publish?db.prepare('UPDATE content SET published=?,draft=?,version=version+1 WHERE id=1 AND version=?').run(JSON.stringify(clean),JSON.stringify(clean),expectedVersion):db.prepare('UPDATE content SET draft=?,version=version+1 WHERE id=1 AND version=?').run(JSON.stringify(clean),expectedVersion);
       if(!result.changes)throw new BackendError('version_conflict',409);

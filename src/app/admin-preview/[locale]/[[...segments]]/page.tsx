@@ -94,7 +94,7 @@ export default async function PreviewPage({
             initialService={query.serviciu || ""}
           />
         ) : (
-          <Home locale={locale} content={content} />
+          <Home preview locale={locale} content={content} />
         )}
       </main>
       <Footer locale={locale} content={content} />

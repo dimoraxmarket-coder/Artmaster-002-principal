@@ -1,3 +1,4 @@
+import { contentAssets } from "../content/visual-assets";
 import { readdir, lstat } from "node:fs/promises";
 import { join } from "node:path";
 import sharp from "sharp";
@@ -26,20 +27,22 @@ export function mediaReferences(state: ContentState) {
     ["draft", state.draft],
   ] as const) {
     if (!content) continue;
-    for (const section of ["services", "equipment", "projects"] as const)
-      for (const item of content[section])
-        refs.push({
-          url: item.image,
-          name: item.title.ro,
-          use: { section, slug: item.slug, title: item.title.ro, state: key },
-        });
+    for (const item of contentAssets(content))
+      refs.push({
+        url: item.image,
+        name: item.title,
+        use: {
+          section: item.section,
+          slug: item.slug,
+          title: item.title,
+          state: key,
+        },
+      });
   }
   return refs;
 }
 export function contentImageUrls(content: SiteContent) {
-  return [...content.services, ...content.equipment, ...content.projects].map(
-    (item) => item.image,
-  );
+  return contentAssets(content).map((item) => item.image);
 }
 export async function registerMedia(
   value: {
@@ -250,6 +253,40 @@ export async function replaceDraftMedia(
         item.image = replacementUrl;
         changed++;
       }
+  if (draft.banner)
+    for (const size of ["desktop", "mobile"] as const) {
+      const asset = draft.banner[size];
+      if (asset?.image === url) {
+        // A different aspect ratio must reserve the new intrinsic space, too.
+        let dimensions: { width: number; height: number };
+        if (storageMode() === "local")
+          dimensions = localDatabase()
+            .prepare("SELECT width,height FROM media_assets WHERE url=?")
+            .get(replacementUrl) as typeof dimensions;
+        else {
+          const result = await supabaseService()
+            .from("media_assets")
+            .select("width,height")
+            .eq("url", replacementUrl)
+            .single();
+          rpcError(result.error);
+          dimensions = result.data!;
+        }
+        asset.image = replacementUrl;
+        asset.width = dimensions.width;
+        asset.height = dimensions.height;
+        changed++;
+      }
+    }
+  for (const item of draft.partners || [])
+    if (item.image === url) {
+      item.image = replacementUrl;
+      item.rights = "unverified";
+      item.provenance = "";
+      item.sourceUrl = undefined;
+      if (item.status === "published") item.status = "draft";
+      changed++;
+    }
   if (!changed) throw new BackendError("not_found", 404);
   const version = await getStorage().saveContent(
     draft,
