@@ -69,3 +69,7 @@
 .file-upload:has(input[aria-invalid=true]){border-color:#b44332}
 .file-upload-names{color:var(--muted);font-size:.73rem;overflow-wrap:anywhere;min-width:0}
 @media(max-width:767px){.file-upload{align-items:start;flex-direction:column;gap:8px}}
+
+.hero-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none}.hero-motion-control{position:absolute;right:20px;bottom:20px;z-index:3;background:#101214;color:#fff;border:1px solid #aaa;border-radius:8px;padding:10px 14px;font:inherit;font-size:.75rem}.equipment-specs{display:grid;grid-template-columns:minmax(100px,1fr) 2fr;gap:10px 24px}.equipment-specs dt{font-weight:700}.equipment-specs dd{margin:0}.equipment-category{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+
+.equipment-catalog .card-media{aspect-ratio:4/3;background:#171d24}.equipment-specs{display:block}.equipment-specs>div{display:grid;grid-template-columns:minmax(90px,1fr) 2fr;gap:12px 20px;margin:12px 0}

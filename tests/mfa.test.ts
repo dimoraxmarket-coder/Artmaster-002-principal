@@ -1,3 +1,7 @@
+import { GET as seoOverview } from '../src/app/api/admin/seo/route';
+import { POST as seoAudit } from '../src/app/api/admin/seo/audit/route';
+import { POST as seoSpeed } from '../src/app/api/admin/seo/pagespeed/route';
+import { POST as heroUpload } from '../src/app/api/admin/hero/route';
 import { test, beforeEach, afterEach } from 'node:test';
 import assert from 'node:assert/strict';
 import sharp from 'sharp';
@@ -138,13 +142,13 @@ for(const selectedRole of ['viewer','editor','admin'] as const)test(`${selectedR
   for(const cookie of [undefined,result.cookie]){
     const req=request(cookie);
     const responses=await Promise.all([
-      securitySessions(req),securityAccounts(req),securityAudit(req),securityMfa(req),securityRevoke(request(cookie,false,'DELETE',{allOthers:true,confirm:true})),securityChange(request(cookie,false,'PATCH',{role:'admin',enabled:true,expectedVersion:0,confirm:true}),{params:Promise.resolve({id:userId})}),team(req),detail(req,{params:Promise.resolve({id:userId})}),inventory(req),archive(request(cookie,false,'DELETE',{confirm:true}),{params:Promise.resolve({name:`${factorId}.webp`})}),replace(request(cookie,false,'POST',{})),quotes(req),content(req),history(req),historySnapshot(req,{params:Promise.resolve({id:'1'})}),restoreSnapshot(request(cookie,false,'POST',{version:0,confirm:true}),{params:Promise.resolve({id:'1'})}),preview(req,{params:Promise.resolve({name:`${factorId}.webp`})}),attachment(req,{params:Promise.resolve({id:userId,fileId:factorId})}),
+      seoOverview(req),seoAudit(request(cookie,false,'POST',{path:'/ro'})),seoSpeed(request(cookie,false,'POST',{path:'/ro'})),heroUpload(request(cookie,false,'POST')),securitySessions(req),securityAccounts(req),securityAudit(req),securityMfa(req),securityRevoke(request(cookie,false,'DELETE',{allOthers:true,confirm:true})),securityChange(request(cookie,false,'PATCH',{role:'admin',enabled:true,expectedVersion:0,confirm:true}),{params:Promise.resolve({id:userId})}),team(req),detail(req,{params:Promise.resolve({id:userId})}),inventory(req),archive(request(cookie,false,'DELETE',{confirm:true}),{params:Promise.resolve({name:`${factorId}.webp`})}),replace(request(cookie,false,'POST',{})),quotes(req),content(req),history(req),historySnapshot(req,{params:Promise.resolve({id:'1'})}),restoreSnapshot(request(cookie,false,'POST',{version:0,confirm:true}),{params:Promise.resolve({id:'1'})}),preview(req,{params:Promise.resolve({name:`${factorId}.webp`})}),attachment(req,{params:Promise.resolve({id:userId,fileId:factorId})}),
       status(request(cookie,false,'PATCH',{status:'in_progress'}),{params:Promise.resolve({id:userId})}),
       media(request(cookie,false,'POST')),retry(request(cookie,false,'POST')),
       saveContent(request(cookie,false,'PUT',{content:defaultContent,version:0,action:'save-draft'})),
     ]);
     await assert.rejects(()=>savedDraftPreview(req),(error:unknown)=>error instanceof BackendError&&error.code==='unauthorized');
-    assert.deepEqual(responses.map(response=>response.status),Array(22).fill(401));
+    assert.deepEqual(responses.map(response=>response.status),Array(26).fill(401));
   }
   assert.equal(dataReads,0,'no protected records read before MFA');
   const setup=await enroll(request(result.cookie,true,'POST'));

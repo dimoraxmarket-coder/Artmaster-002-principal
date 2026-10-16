@@ -14,6 +14,20 @@ export type Service = {
   relatedSlugs: string[];
   equipmentSlugs: string[];
 };
+export type EquipmentCatalog = {
+  model: string;
+  manufacturer: string;
+  category: Localized;
+  verification: "unverified" | "manufacturer_documented" | "owner_confirmed";
+  sourceUrl: string;
+  imageRights: "pending" | "owner" | "licensed" | "concept";
+  licenseNote: string;
+  order: number;
+  published: boolean;
+  specs: { label: Localized; value: Localized }[];
+};
+export type HeroAsset = { image: string; video?: string };
+export type HeroMedia = { desktop: HeroAsset; mobile?: HeroAsset };
 export type Equipment = {
   slug: string;
   title: Localized;
@@ -22,6 +36,7 @@ export type Equipment = {
   image: string;
   serviceSlugs: string[];
   facts: Localized[];
+  catalog?: EquipmentCatalog;
 };
 export type Project = {
   slug: string;
@@ -96,6 +111,7 @@ export type SiteContent = {
   faqs: Faq[];
   contact: Contact;
   copy?: WebsiteCopy;
+  heroMedia?: HeroMedia;
   banner?: HomepageBanner;
   partners?: ManagedPartner[];
 };

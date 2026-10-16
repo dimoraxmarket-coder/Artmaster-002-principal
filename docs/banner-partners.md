@@ -1,5 +1,7 @@
 # Homepage banner and managed partners
 
+> Integrare ulterioară: branch-ul `feature/artmaster-complete-integration` reunește acest PR cu PR #8. Vezi [versiunea completă](../VERSIUNEA-COMPLETA.md). Mențiunile de mai jos privind ramurile separate descriu livrarea istorică a PR #9.
+
 Base: verified PR #7, `feature/artmaster-content-studio`, commit `c63ad4100bc014e440b056daf4b2a40e76e330c7`. Feature branch: `feature/artmaster-banner-partners`. PR #8 is separate and is not imported into this branch. No parent PR, live website, DNS or production data is changed.
 
 ## Delivery status — assets still pending

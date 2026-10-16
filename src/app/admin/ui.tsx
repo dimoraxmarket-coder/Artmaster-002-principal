@@ -32,11 +32,14 @@ import styles from "./admin.module.css";
 const CmsEditor = lazy(() =>
   import("./cms-editor").then((module) => ({ default: module.CmsEditor })),
 );
+const SeoCenter = lazy(() => import("./seo-center").then(module=>({default:module.SeoCenter})));
 const navigation = [
   { id: "overview", label: "Prezentare", icon: "overview" },
   { id: "inbox", label: "Mesaje clienți", icon: "inbox" },
   { id: "portfolio", label: "Portofoliu", icon: "portfolio" },
   { id: "media", label: "Bibliotecă media", icon: "media" },
+  { id: "equipment", label: "Echipamente", icon: "settings" },
+  { id: "seo", label: "SEO & Analytics", icon: "search" },
   { id: "content", label: "Conținut", icon: "content" },
   { id: "settings", label: "Setări website", icon: "settings" },
   { id: "team", label: "Echipă", icon: "team" },
@@ -349,11 +352,11 @@ function Workspace({
     sidebar = useRef<HTMLElement>(null),
     requestId = useRef(0);
   const studio =
-    view === "portfolio" || view === "content" || view === "settings";
+    view === "portfolio" || view === "content" || view === "settings" || view === "equipment";
   const navigate = useCallback((next: View) => {
     setView(next);
     setMenuOpen(false);
-    if (["portfolio", "content", "settings"].includes(next))
+    if (["portfolio", "content", "settings", "equipment"].includes(next))
       setStudioOpened(true);
     if (next === "media") setMediaOpened(true);
   }, []);
@@ -509,11 +512,11 @@ function Workspace({
         </div>
         <p className={styles.navLabel}>SPAȚIUL TĂU DE LUCRU</p>
         <nav aria-label="Navigare administrare">
-          {navigation.map((item, index) => (
+          {navigation.map((item) => (
             <a
               href={`#${item.id}`}
               key={item.id}
-              className={`${styles.navItem} ${view === item.id ? styles.navActive : ""} ${index === 6 ? styles.navDivider : ""}`}
+              className={`${styles.navItem} ${view === item.id ? styles.navActive : ""} ${item.id === "team" ? styles.navDivider : ""}`}
               aria-current={view === item.id ? "page" : undefined}
               onClick={(event) => {
                 event.preventDefault();
@@ -679,7 +682,7 @@ function Workspace({
                   actor={actor}
                   onDirtyChange={setStudioDirty}
                   workspaceSection={
-                    view === "portfolio"
+                    view === "equipment" ? "equipment" : view === "portfolio"
                       ? "projects"
                       : view === "settings"
                         ? "contact"
@@ -694,6 +697,7 @@ function Workspace({
               <MediaLibrary actor={actor} />
             </div>
           )}
+          {view === "seo" && <Suspense fallback={<Skeleton/>}><SeoCenter canManage={actor.role!=="viewer"}/></Suspense>}
           {view === "security" && (
             <SecurityCenter
               actor={actor}

@@ -1,5 +1,7 @@
 # ARTMASTER
 
+Versiunea integrată pentru Windows cu PR #2–#9: [pornire și lista completă a funcțiilor](VERSIUNEA-COMPLETA.md). SEO, echipamentele, bannerul și partenerii sunt acum în același proiect.
+
 Website multilingv pentru reclamă vizuală, producție publicitară și prelucrarea materialelor. Româna este limba principală (`/ro`); rusa și engleza au pagini separate (`/ru`, `/en`). Ruta `/` redirecționează către `/ro`.
 
 Date confirmate: [artmaster.md](https://artmaster.md), **+373 600 10 400**, **office@artmaster.md**, Durlești, MD-2003, str. Tudor Vladimirescu 69, Republica Moldova.

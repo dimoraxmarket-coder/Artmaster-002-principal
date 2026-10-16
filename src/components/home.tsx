@@ -1,3 +1,4 @@
+import { HeroMedia } from './hero-media';
 import { HomepageBannerView } from './homepage-banner';
 import { publishablePartner } from '@/lib/content/visual-assets';
 import { PublicLink as Link } from './public-runtime';
@@ -22,12 +23,12 @@ export function Home({ locale, content, preview = false }: { locale: Locale; con
   const advantageIcons: IconName[] = ['layers', 'precision', 'chat'];
   return <>
     {content.banner?.enabled ? <HomepageBannerView banner={content.banner} locale={locale} title={`${hero.title[locale]} ${hero.accent[locale]}`} /> : <section className="home-hero" aria-labelledby="hero-title">
-      <picture className="hero-picture">
+      {content.heroMedia?<HeroMedia media={content.heroMedia} locale={locale}/>:<picture className="hero-picture">
         <source media="(max-width:480px)" type="image/avif" srcSet="/media/hero-narrow.avif" />
         <source media="(max-width:480px)" type="image/webp" srcSet="/media/hero-narrow.webp" />
         <source type="image/avif" srcSet="/media/hero-wide.avif" />
         <img className="hero-background" src="/media/hero-wide.webp" alt="" width={1672} height={941} loading="eager" fetchPriority="high" decoding="async" />
-      </picture>
+      </picture>}
       <div className="container"><div className="hero-content">
         <p className="eyebrow">{hero.eyebrow[locale]}</p>
         <h1 id="hero-title">{hero.title[locale]}<span>{hero.accent[locale]}</span></h1>
@@ -35,7 +36,7 @@ export function Home({ locale, content, preview = false }: { locale: Locale; con
         <div className="hero-actions"><Link href={`/${locale}/solicita-oferta`} className="button">{hero.quoteLabel[locale]}<Icon name="arrow" /></Link><Link href={`/${locale}/servicii`} className="button-secondary button-ghost">{hero.servicesLabel[locale]}</Link></div>
         <p className="hero-location"><Icon name="pin" />{ui.home.locationLabel}</p>
       </div></div>
-      <span className="concept-caption">{ui.common.concept}</span>
+      {!content.heroMedia&&<span className="concept-caption">{ui.common.concept}</span>}
     </section>}
 
     <section className="section home-services" aria-labelledby="services-title">
