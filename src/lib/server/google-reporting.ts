@@ -1,3 +1,4 @@
+import { isIP } from "node:net";
 import { JWT } from "google-auth-library";
 import { createHash } from "node:crypto";
 import type { DateRange } from "./seo-center";
@@ -230,14 +231,29 @@ export async function requestGoogleReports(
   ]);
   return data;
 }
+export function isPublicPageSpeedOrigin(value: string) {
+  try {
+    const url = new URL(value),
+      host = url.hostname.replace(/^\[|\]$/g, "").replace(/\.$/, "");
+    return (
+      url.protocol === "https:" &&
+      !url.username &&
+      !url.password &&
+      url.pathname === "/" &&
+      !url.search &&
+      !url.hash &&
+      host.includes(".") &&
+      !isIP(host) &&
+      !/(^|\.)(localhost|local|internal|invalid|test|example)$/.test(host)
+    );
+  } catch {
+    return false;
+  }
+}
 export async function pageSpeed(path: string) {
   const config = googleConfiguration(),
     origin = publicOrigin();
-  if (
-    !config.pagespeed ||
-    !origin.startsWith("https:") ||
-    ["localhost", "127.0.0.1", "[::1]"].includes(new URL(origin).hostname)
-  )
+  if (!config.pagespeed || !isPublicPageSpeedOrigin(origin))
     throw new BackendError("not_configured", 409);
   const url = new URL(
     "https://pagespeedonline.googleapis.com/pagespeedonline/v5/runPagespeed",

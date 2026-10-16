@@ -1,3 +1,4 @@
+import { isPublicPageSpeedOrigin } from "../src/lib/server/google-reporting";
 import { test, before, after } from "node:test";
 import assert from "node:assert/strict";
 import { mkdtempSync } from "node:fs";
@@ -294,4 +295,27 @@ test("Google read-only adapters use fixed APIs, real aggregate user totals and s
       /^https:\/\/(analyticsdata|searchconsole)\.googleapis\.com\//.test(s),
     ),
   );
+});
+
+test("PageSpeed rejects IP literals and reserved/local destinations without sending them to Google", () => {
+  for (const origin of [
+    "http://artmaster.md",
+    "https://localhost",
+    "https://localhost.",
+    "https://printer.local.",
+    "https://2130706433",
+    "https://127.0.0.1",
+    "https://127.1",
+    "https://10.0.0.1",
+    "https://192.168.1.2",
+    "https://[::1]",
+    "https://[fc00::1]",
+    "https://printer.local",
+    "https://staging.internal",
+    "https://example.invalid",
+    "https://user:secret@artmaster.md",
+    "https://artmaster.md/private",
+  ])
+    assert.equal(isPublicPageSpeedOrigin(origin), false, origin);
+  assert.equal(isPublicPageSpeedOrigin("https://staging.artmaster.md"), true);
 });

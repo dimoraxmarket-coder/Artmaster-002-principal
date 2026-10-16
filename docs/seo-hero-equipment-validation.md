@@ -8,9 +8,10 @@ On Linux, Node 24.19.0, npm 11.9.0, Chromium:
 
 - ESLint: passed, zero warnings.
 - TypeScript: passed.
-- Backend/security/unit/PostgreSQL/backup suite: **112 passed, zero failed/skipped**.
+- Backend/security/unit/PostgreSQL/backup suite: **113 passed, zero failed/skipped**.
 - Production build: passed with the existing explicit loopback-only production smoke-test flag.
 - Focused new browser suite: **12 passed, zero failed/skipped**, 23.1 seconds, actual local production server with a new isolated temporary SQLite directory.
+- An additional public-origin guard rejects IP literals and reserved/local PageSpeed destinations without outbound requests.
 - Client bundle scan: no GOOGLE_PRIVATE_KEY, GOOGLE_CLIENT_EMAIL or google-auth-library in `.next/static`.
 
 The browser suite verifies real rendered RO/RU/EN SEO scores and recommendations, unconnected metrics/null values/date filters, Axe serious/critical checks and mobile overflow, actual Sharp crop uploads for both hero sizes, a valid generated silent MP4, authenticated ranges, anonymous/public draft denial, actual private preview playback, explicit multilingual publication, reduced motion, catalog/specification translations and rights/model publication guards, real public gallery images and sitemap, role checks and logout revocation.
