@@ -89,8 +89,51 @@ const localizedList = z
   .strict();
 const faq = z.object({ question: localized, answer: localized }).strict();
 const base = { slug, title: localized, summary: localized };
+const sourceUrl = z.union([
+  z.literal(""),
+  z
+    .url()
+    .max(1000)
+    .refine((value) => {
+      const u = new URL(value);
+      return u.protocol === "https:" && !u.username && !u.password;
+    }),
+]);
+const heroAsset = z
+  .object({
+    image,
+    video: z
+      .string()
+      .regex(/^\/api\/media\/[a-f0-9-]{36}\.(mp4|webm)$/)
+      .optional(),
+  })
+  .strict();
+const equipmentCatalog = z
+  .object({
+    model: text(150),
+    manufacturer: z.string().trim().max(150),
+    category: localized,
+    verification: z.enum([
+      "unverified",
+      "manufacturer_documented",
+      "owner_confirmed",
+    ]),
+    sourceUrl,
+    imageRights: z.enum(["pending", "owner", "licensed", "concept"]),
+    licenseNote: z.string().trim().max(2000),
+    order: z.number().int().min(0).max(10000),
+    published: z.boolean(),
+    specs: z
+      .array(z.object({ label: localized, value: localized }).strict())
+      .max(40),
+  })
+  .strict();
 export const contentSchema: z.ZodType<SiteContent> = z
   .object({
+    heroMedia: z
+      .object({ desktop: heroAsset, mobile: heroAsset.optional() })
+      .strict()
+      .optional(),
     banner: z
       .object({
         enabled: z.boolean(),
@@ -151,6 +194,7 @@ export const contentSchema: z.ZodType<SiteContent> = z
             image,
             serviceSlugs: refs,
             facts: z.array(localized).max(30),
+            catalog: equipmentCatalog.optional(),
           })
           .strict(),
       )
@@ -198,6 +242,21 @@ export const contentSchema: z.ZodType<SiteContent> = z
   })
   .strict()
   .superRefine((content, ctx) => {
+    content.equipment.forEach((e, i) => {
+      if (
+        e.catalog?.published &&
+        (e.catalog.verification !== "owner_confirmed" ||
+          !["owner", "licensed"].includes(e.catalog.imageRights) ||
+          !e.catalog.licenseNote.trim() ||
+          (e.catalog.imageRights === "licensed" && !e.catalog.sourceUrl))
+      )
+        ctx.addIssue({
+          code: "custom",
+          path: ["equipment", i, "catalog"],
+          message:
+            "Confirm the workshop model and image rights before publication",
+        });
+    });
     const partnerIds = new Set<string>();
     const partnerNames = new Set<string>();
     (content.partners || []).forEach((p, i) => {

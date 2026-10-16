@@ -23,6 +23,7 @@ export function localDatabase() {
     CREATE TABLE IF NOT EXISTS rate_events(bucket TEXT NOT NULL,time INTEGER NOT NULL);
     CREATE INDEX IF NOT EXISTS rate_bucket ON rate_events(bucket,time);
     CREATE TABLE IF NOT EXISTS quotes(id TEXT PRIMARY KEY,idempotency_key TEXT NOT NULL UNIQUE,payload_hash TEXT NOT NULL,data TEXT NOT NULL,notification TEXT NOT NULL,attempts INTEGER NOT NULL DEFAULT 0,next_attempt INTEGER NOT NULL DEFAULT 0,last_error TEXT);
+    CREATE INDEX IF NOT EXISTS quotes_created_date ON quotes(json_extract(data,'$.createdAt'));
     CREATE TABLE IF NOT EXISTS content(id INTEGER PRIMARY KEY CHECK(id=1),published TEXT,draft TEXT,version INTEGER NOT NULL DEFAULT 0);
     INSERT OR IGNORE INTO content(id) VALUES(1);
     CREATE TABLE IF NOT EXISTS admins(id TEXT PRIMARY KEY,email TEXT NOT NULL UNIQUE,password_hash TEXT NOT NULL,role TEXT NOT NULL CHECK(role IN ('viewer','editor','admin')));

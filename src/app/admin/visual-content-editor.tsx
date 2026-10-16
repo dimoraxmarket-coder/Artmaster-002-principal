@@ -212,6 +212,11 @@ export function VisualContentEditor({
       )}
       {section === "banner" ? (
         <>
+          <p role="note" className={styles.muted}>
+            Bannerul panoramic activ are prioritate față de imaginea/video de
+            fundal din „Acasă și Despre noi”. Dezactivarea lui readuce fundalul
+            salvat, fără ștergerea vreunei variante.
+          </p>
           <p className={styles.muted}>
             Nu suprapunem texte sau butoane peste banner. Titlul SEO și
             descrierile rămân editabile în „Acasă și Despre noi”. Publicarea

@@ -1,3 +1,4 @@
+import { isVideo } from "../content/assets";
 import { contentAssets } from "../content/visual-assets";
 import { readdir, lstat } from "node:fs/promises";
 import { join } from "node:path";
@@ -168,9 +169,11 @@ export async function inventory(
     assets: assets.map((asset) => ({
       ...asset,
       managed: !!asset.managed,
-      replaceable: contentImageUrls(
-        state.draft || state.published || defaultContent,
-      ).includes(asset.url),
+      replaceable:
+        !isVideo(asset.url) &&
+        contentImageUrls(
+          state.draft || state.published || defaultContent,
+        ).includes(asset.url),
       uses: refs.filter((ref) => ref.url === asset.url).map((ref) => ref.use),
     })),
     total,
@@ -253,6 +256,13 @@ export async function replaceDraftMedia(
         item.image = replacementUrl;
         changed++;
       }
+  if (isVideo(url) || isVideo(replacementUrl))
+    throw new BackendError("invalid_input", 400);
+  for (const asset of [draft.heroMedia?.desktop, draft.heroMedia?.mobile])
+    if (asset?.image === url) {
+      asset.image = replacementUrl;
+      changed++;
+    }
   if (draft.banner)
     for (const size of ["desktop", "mobile"] as const) {
       const asset = draft.banner[size];

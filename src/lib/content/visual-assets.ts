@@ -24,6 +24,22 @@ export function contentAssets(content: SiteContent) {
         slug: item.slug,
         title: item.title.ro,
       });
+  for (const [size, asset] of Object.entries(content.heroMedia || {}))
+    if (asset) {
+      refs.push({
+        image: asset.image,
+        section: "hero",
+        slug: size,
+        title: `Hero ${size}`,
+      });
+      if (asset.video)
+        refs.push({
+          image: asset.video,
+          section: "hero",
+          slug: size,
+          title: `Hero video ${size}`,
+        });
+    }
   if (content.banner)
     for (const size of ["desktop", "mobile"] as const) {
       const asset = content.banner[size];
@@ -48,10 +64,18 @@ export function contentAssets(content: SiteContent) {
 export function publishedImageUrls(content: SiteContent) {
   return [
     ...content.services.map((item) => item.image),
-    ...content.equipment.map((item) => item.image),
+    ...content.equipment
+      .filter((item) => item.catalog?.published !== false)
+      .map((item) => item.image),
     ...content.projects
       .filter((item) => item.published)
       .map((item) => item.image),
+    ...(!content.banner?.enabled
+      ? [content.heroMedia?.desktop, content.heroMedia?.mobile].flatMap(
+          (asset) =>
+            asset ? [asset.image, ...(asset.video ? [asset.video] : [])] : [],
+        )
+      : []),
     ...(content.banner?.enabled
       ? [
           content.banner.desktop.image,
