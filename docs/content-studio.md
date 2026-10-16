@@ -2,6 +2,8 @@
 
 Base: verified PR #6 commit `c023f807be7a9a2abde7cec85fe9a1a8a346d1f2`, branch `feature/artmaster-security-center`. Changes are isolated on `feature/artmaster-content-studio`. This phase prioritizes durable history, safe restoration and authenticated real-layout preview. It does not complete every website-management feature in the long-term brief.
 
+> Extensie ulterioară: [bannerul și partenerii administrați](banner-partners.md) adaugă câmpurile opționale `banner`/`partners`. Tabelul de mai jos descrie auditul istoric al PR #7; gestionarea acestor două secțiuni este acum implementată. Importul bannerului original și verificarea logo-urilor sunt încă în așteptare.
+
 ## Public content audit
 
 All public routes are served by `[locale]/page.tsx` and `[locale]/[...segments]/page.tsx`, in RO/RU/EN. The latter now delegates unchanged page markup to `components/public-content.tsx` so preview and published pages share it. Public requests still read **only published** storage through `content/repository.ts`.
