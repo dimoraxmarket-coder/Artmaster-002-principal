@@ -57,6 +57,11 @@ export function localDatabase() {
     CREATE TABLE IF NOT EXISTS media_assets(url TEXT PRIMARY KEY,name TEXT NOT NULL,bytes INTEGER NOT NULL,width INTEGER NOT NULL,height INTEGER NOT NULL,created_at TEXT NOT NULL,created_by TEXT,archived_at TEXT);
   `);
   initializeContentHistory(db);
+  db.exec(`CREATE TABLE IF NOT EXISTS seo_audit_history(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,origin TEXT NOT NULL,path TEXT NOT NULL,
+    formula INTEGER NOT NULL,fingerprint TEXT NOT NULL,actor TEXT NOT NULL,
+    created_at TEXT NOT NULL,result TEXT NOT NULL CHECK(length(result)<=65536));
+    CREATE INDEX IF NOT EXISTS seo_history_lookup ON seo_audit_history(origin,formula,id DESC);`);
   db.function('unicode_lower',{deterministic:true},value=>String(value).toLocaleLowerCase());
   chmodSync(join(dir,'artmaster.sqlite'),0o600);
   databases.set(dir,db);

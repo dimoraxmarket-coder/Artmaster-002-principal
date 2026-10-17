@@ -25,7 +25,7 @@ const serviceNames: Record<string, Localized> = {
   'standuri-expozitionale': l('Standuri și construcții publicitare', 'Выставочные и рекламные конструкции', 'Exhibition and advertising structures'),
 };
 const sectionTitles: Record<string, Localized> = {
-  '': l('Producție publicitară și print în Moldova', 'Рекламное производство и печать в Молдове', 'Advertising production and printing in Moldova'),
+  '': l('Producție publicitară în Chișinău și Moldova', 'Рекламное производство в Кишинёве и Молдове', 'Advertising production in Chisinau, Moldova'),
   servicii: l('Servicii de producție publicitară în Moldova', 'Услуги рекламного производства в Молдове', 'Advertising production services in Moldova'),
   echipamente: l('Echipamente de print, 3D și CNC în Durlești', 'Оборудование для печати, 3D и ЧПУ в Дурлештах', 'Printing, 3D and CNC equipment in Durlești'),
   portofoliu: l('Portofoliu și concepte de producție publicitară', 'Портфолио и концепты рекламного производства', 'Advertising production portfolio and concepts'),

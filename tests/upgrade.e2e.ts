@@ -9,7 +9,7 @@ for (const locale of locales) {
     test.setTimeout(100_000);
     for (const width of [320, 375, 390, 768, 1024, 1440, 1920]) {
       await page.setViewportSize({ width, height: 900 }); await page.goto(`/${locale}`);
-      const logo = page.locator('header .brand-symbol'); await expect(logo).toHaveAttribute('src', '/branding/artmaster-symbol.webp');
+      const logo = page.locator('header .brand-symbol'); await expect(logo).toHaveAttribute('src', /\/_next\/image\?url=%2Fbranding%2Fartmaster-symbol\.webp/);
       await expect(page.locator('header .brand-caption')).toHaveText('ADVERTISING GROUP');
       await expect(page.locator('header')).not.toContainText('CREATIVE SOLUTIONS');
       const box = (await logo.boundingBox())!, header = (await page.locator('header').boundingBox())!;

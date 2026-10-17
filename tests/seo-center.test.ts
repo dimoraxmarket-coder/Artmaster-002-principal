@@ -37,7 +37,7 @@ function fixture() {
   return {
     path: "/ro",
     origin: "https://staging.example.invalid",
-    html: `<html><head><title>ARTMASTER — producție publicitară</title><meta name="description" content="Producție publicitară și proiecte vizuale pentru companii. Consultă serviciile noastre specializate."><link rel="canonical" href="https://staging.example.invalid/ro">${["ro", "ru", "en", "x-default"].map((l) => `<link rel="alternate" hreflang="${l}" href="https://staging.example.invalid/${l === "x-default" ? "ro" : l}">`).join("")}<meta name="robots" content="index, follow"></head><body><a href="/ru">RU</a><a href="https://external.invalid/never-fetch">External</a><img src="/media/decorative.webp" alt=""><script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"ARTMASTER"}</script></body></html>`,
+    html: `<html lang="ro"><head><meta name="viewport" content="width=device-width, initial-scale=1"><meta property="og:title" content="ARTMASTER"><meta property="og:description" content="Synthetic description"><meta property="og:url" content="https://staging.example.invalid/ro"><meta property="og:image" content="https://staging.example.invalid/share.jpg"><meta name="twitter:card" content="summary_large_image"><title>ARTMASTER — producție publicitară</title><meta name="description" content="Producție publicitară și proiecte vizuale pentru companii. Consultă serviciile noastre specializate."><link rel="canonical" href="https://staging.example.invalid/ro">${["ro", "ru", "en", "x-default"].map((l) => `<link rel="alternate" hreflang="${l}" href="https://staging.example.invalid/${l === "x-default" ? "ro" : l}">`).join("")}<meta name="robots" content="index, follow"></head><body><h1>ARTMASTER</h1><a href="/ru">RU</a><a href="https://external.invalid/never-fetch">External</a><img src="/media/decorative.webp" alt=""><script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"ARTMASTER"}</script></body></html>`,
     sitemap:
       "<urlset><url><loc>https://staging.example.invalid/ro</loc></url></urlset>",
     robots: "User-agent: *\nAllow: /\nDisallow: /admin",
@@ -46,10 +46,10 @@ function fixture() {
     indexable: true,
   };
 }
-test("transparent SEO formula gives ten points per actual passing check", () => {
+test("transparent SEO v2 formula totals 100 weighted points", () => {
   const report = auditHTML(fixture());
   assert.equal(report.score, 100);
-  assert.equal(report.checks.length, 10);
+  assert.equal(report.checks.length, 14);
   assert.equal(
     report.checks.reduce((n, c) => n + c.weight, 0),
     100,
@@ -66,7 +66,7 @@ test("SEO issues identify missing alt, broken internal links and invalid JSON-LD
     )
     .replace("</body>", '<a href="/ro/not-there">Broken</a></body>');
   const report = auditHTML(input);
-  assert.equal(report.score, 70);
+  assert.equal(report.score, 76);
   assert.deepEqual(report.brokenLinks, ["/ro/not-there"]);
   for (const id of ["alt", "structured", "links"])
     assert.equal(report.checks.find((c) => c.id === id)?.status, "fail");
@@ -76,7 +76,7 @@ test("local/staging noindex and blocked robots are honest readiness failures", (
   input.indexable = false;
   input.robots = "User-agent: *\nDisallow: /";
   const report = auditHTML(input);
-  assert.equal(report.score, 80);
+  assert.equal(report.score, 86);
   assert.equal(report.checks.find((c) => c.id === "indexing")?.status, "fail");
 });
 test("bad titles, description, canonical, hreflang and missing sitemap lose only their documented weights", () => {
@@ -89,7 +89,7 @@ test("bad titles, description, canonical, hreflang and missing sitemap lose only
     .replace(/<meta name="description"[^>]+>/, "")
     .replace(/<link[^>]+>/g, "");
   input.sitemap = "<urlset/>";
-  assert.equal(auditHTML(input).score, 50);
+  assert.equal(auditHTML(input).score, 56);
 });
 test("public route inventory excludes private catalog entries in every locale and preserves legacy equipment", () => {
   const value = structuredClone(defaultContent),
@@ -268,6 +268,8 @@ test("Google read-only adapters use fixed APIs, real aggregate user totals and s
                 },
               ],
             },
+            { metricHeaders: [{ name: "sessions" }], rows: [] },
+            { metricHeaders: [{ name: "screenPageViews" }], rows: [] },
           ],
         });
       return Response.json(

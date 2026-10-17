@@ -19,6 +19,7 @@ import type {
 import { adminApi, jsonBody } from "./api";
 import { Action, AdminIcon, EmptyState, Notice, Skeleton } from "./components";
 import styles from "./admin.module.css";
+import { SecurityPosture } from "./security-posture";
 export type SessionPolicy = { idleMinutes: number; absoluteHours: number };
 const eventLabels: Record<string, string> = {
   "admin.login": "Autentificare confirmată",
@@ -300,6 +301,7 @@ export function SecurityCenter({
           </p>
         </section>
       </div>
+      {actor.role === "admin" && <SecurityPosture />}
       <SessionManager actor={actor} onLogout={onLogout} />
       {actor.role === "admin" ? (
         <SecurityAudit />

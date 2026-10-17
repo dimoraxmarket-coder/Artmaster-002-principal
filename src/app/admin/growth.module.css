@@ -248,3 +248,5 @@
   overflow-wrap: anywhere;
   border-radius: 4px;
 }
+.historyPages { max-height: 480px; overflow: auto; }
+.historyPages thead { position: sticky; top: 0; background: #1b1f25; z-index: 1; }

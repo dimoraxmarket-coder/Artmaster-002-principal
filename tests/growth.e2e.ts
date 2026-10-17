@@ -190,7 +190,7 @@ test.describe.serial("SEO, hero and equipment integrated workflows", () => {
       });
       expect(response.status()).toBe(200);
       const data = await response.json();
-      expect(data.checks).toHaveLength(10);
+      expect(data.checks).toHaveLength(14);
       expect(data.score).toBe(
         data.checks.reduce(
           (n: number, c: { status: string; weight: number }) =>

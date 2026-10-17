@@ -12,11 +12,15 @@ export type GoogleReports = {
     keyEvents: number | null;
     sessionKeyEventRate: number | null;
     days: { day: string; users: number; sessions: number; keyEvents: number }[];
+    sources: { channel: string; sessions: number }[];
+    popularPages: { path: string; views: number }[];
   };
   search: {
     state: ConnectionState;
     clicks: number | null;
     impressions: number | null;
+    ctr: number | null;
+    averagePosition: number | null;
     days: { day: string; clicks: number; impressions: number }[];
   };
 };
@@ -59,8 +63,17 @@ export function emptyGoogleReports(): GoogleReports {
       keyEvents: null,
       sessionKeyEventRate: null,
       days: [],
+      sources: [],
+      popularPages: [],
     },
-    search: { state: "unconnected", clicks: null, impressions: null, days: [] },
+    search: {
+      state: "unconnected",
+      clicks: null,
+      impressions: null,
+      ctr: null,
+      averagePosition: null,
+      days: [],
+    },
   };
 }
 const cache = new Map<string, { time: number; data: GoogleReports }>();
@@ -93,6 +106,7 @@ export async function requestGoogleReports(
             email: config.email,
             key: config.key,
             scopes: [scope],
+            transporterOptions: { timeout: 12000, retry: false },
           }).authorize()
         ).access_token;
     if (!token) throw Error("authorization");
@@ -135,13 +149,29 @@ export async function requestGoogleReports(
                 limit: 93,
               },
               base,
+              {
+                dateRanges: base.dateRanges,
+                dimensions: [{ name: "sessionDefaultChannelGroup" }],
+                metrics: [{ name: "sessions" }],
+                orderBys: [{ metric: { metricName: "sessions" }, desc: true }],
+                limit: 10,
+              },
+              {
+                dateRanges: base.dateRanges,
+                dimensions: [{ name: "pagePath" }],
+                metrics: [{ name: "screenPageViews" }],
+                orderBys: [
+                  { metric: { metricName: "screenPageViews" }, desc: true },
+                ],
+                limit: 10,
+              },
             ],
           },
           "https://www.googleapis.com/auth/analytics.readonly",
         );
-        if (!Array.isArray(r.reports) || r.reports.length !== 2)
+        if (!Array.isArray(r.reports) || r.reports.length !== 4)
           throw Error("shape");
-        for (const report of r.reports) {
+        for (const report of r.reports.slice(0, 2)) {
           if (
             !Array.isArray(report.metricHeaders) ||
             report.metricHeaders
@@ -150,7 +180,21 @@ export async function requestGoogleReports(
           )
             throw Error("shape");
         }
+        if (
+          r.reports[2].metricHeaders
+            ?.map((v: { name: string }) => v.name)
+            .join(",") !== "sessions" ||
+          r.reports[3].metricHeaders
+            ?.map((v: { name: string }) => v.name)
+            .join(",") !== "screenPageViews"
+        )
+          throw Error("shape");
         const number = (row: Json, index: number) => {
+          if (
+            Object.keys(row).length &&
+            !(row.metricValues as unknown[])?.[index]
+          )
+            throw Error("metric");
           const raw =
               (row.metricValues as { value: string }[] | undefined)?.[index]
                 ?.value ?? "0",
@@ -159,15 +203,42 @@ export async function requestGoogleReports(
           return value;
         };
         const totals = r.reports[1].rows?.[0] || {};
+        if (number(totals, 3) > 1) throw Error("metric");
         data.ga4 = {
           state: "connected",
           users: number(totals, 0),
           sessions: number(totals, 1),
           keyEvents: number(totals, 2),
           sessionKeyEventRate: number(totals, 3),
+          sources: (r.reports[2].rows || []).map((row: Json) => {
+            const channel = (row.dimensionValues as { value: string }[])?.[0]
+              ?.value;
+            if (typeof channel !== "string" || channel.length > 200)
+              throw Error("shape");
+            return { channel, sessions: number(row, 0) };
+          }),
+          popularPages: (r.reports[3].rows || []).map((row: Json) => {
+            const path = (row.dimensionValues as { value: string }[])?.[0]
+              ?.value;
+            if (
+              typeof path !== "string" ||
+              !/^\/(?:[a-z0-9-]+\/)*[a-z0-9-]*$/i.test(path) ||
+              path.length > 250
+            )
+              throw Error("shape");
+            return { path, views: number(row, 0) };
+          }),
           days: (r.reports[0].rows || []).map((row: Json) => {
             const date = (row.dimensionValues as { value: string }[])[0].value;
-            if (!/^\d{8}$/.test(date)) throw Error("date");
+            const day =
+              date.slice(0, 4) + "-" + date.slice(4, 6) + "-" + date.slice(6);
+            if (
+              !/^\d{8}$/.test(date) ||
+              day < range.start ||
+              day > range.end ||
+              new Date(day).toISOString().slice(0, 10) !== day
+            )
+              throw Error("date");
             return {
               day:
                 date.slice(0, 4) + "-" + date.slice(4, 6) + "-" + date.slice(6),
@@ -197,18 +268,28 @@ export async function requestGoogleReports(
         );
         if (!r || !Array.isArray(r.rows || [])) throw Error("shape");
         const days = (r.rows || []).map(
-          (row: { keys: string[]; clicks: number; impressions: number }) => {
+          (row: {
+            keys: string[];
+            clicks: number;
+            impressions: number;
+            position: number;
+          }) => {
             if (
               !/^\d{4}-\d{2}-\d{2}$/.test(row.keys?.[0]) ||
-              ![row.clicks, row.impressions].every(
+              ![row.clicks, row.impressions, row.position].every(
                 (n) => Number.isFinite(n) && n >= 0,
-              )
+              ) ||
+              row.clicks > row.impressions ||
+              row.keys[0] < range.start ||
+              row.keys[0] > range.end ||
+              new Date(row.keys[0]).toISOString().slice(0, 10) !== row.keys[0]
             )
               throw Error("metric");
             return {
               day: row.keys[0],
               clicks: row.clicks,
               impressions: row.impressions,
+              position: row.position,
             };
           },
         );
@@ -223,6 +304,35 @@ export async function requestGoogleReports(
             (n: number, r: { impressions: number }) => n + r.impressions,
             0,
           ),
+          ctr:
+            days.reduce(
+              (n: number, r: { impressions: number }) => n + r.impressions,
+              0,
+            ) > 0
+              ? days.reduce(
+                  (n: number, r: { clicks: number }) => n + r.clicks,
+                  0,
+                ) /
+                days.reduce(
+                  (n: number, r: { impressions: number }) => n + r.impressions,
+                  0,
+                )
+              : 0,
+          averagePosition:
+            days.reduce(
+              (n: number, r: { impressions: number }) => n + r.impressions,
+              0,
+            ) > 0
+              ? days.reduce(
+                  (n: number, r: { impressions: number; position: number }) =>
+                    n + r.impressions * r.position,
+                  0,
+                ) /
+                days.reduce(
+                  (n: number, r: { impressions: number }) => n + r.impressions,
+                  0,
+                )
+              : null,
         };
       } catch {
         data.search.state = "unavailable";
@@ -250,7 +360,10 @@ export function isPublicPageSpeedOrigin(value: string) {
     return false;
   }
 }
-export async function pageSpeed(path: string) {
+export async function pageSpeed(
+  path: string,
+  strategy: "mobile" | "desktop" = "mobile",
+) {
   const config = googleConfiguration(),
     origin = publicOrigin();
   if (!config.pagespeed || !isPublicPageSpeedOrigin(origin))
@@ -260,8 +373,14 @@ export async function pageSpeed(path: string) {
   );
   url.searchParams.set("url", origin + path);
   url.searchParams.set("key", process.env.PAGESPEED_API_KEY!);
-  url.searchParams.set("strategy", "mobile");
-  url.searchParams.append("category", "performance");
+  url.searchParams.set("strategy", strategy);
+  for (const category of [
+    "performance",
+    "accessibility",
+    "best-practices",
+    "seo",
+  ])
+    url.searchParams.append("category", category);
   const r = await fetch(url, {
     cache: "no-store",
     redirect: "error",
@@ -270,18 +389,31 @@ export async function pageSpeed(path: string) {
   if (!r.ok) throw new BackendError("provider_unavailable", 503);
   const d = await r.json(),
     metrics = d.loadingExperience?.metrics || {};
+  const lab = (name: string) => {
+    const n = d.lighthouseResult?.categories?.[name]?.score;
+    return typeof n === "number" && Number.isFinite(n) && n >= 0 && n <= 1
+      ? Math.round(n * 100)
+      : null;
+  };
+  const field = (value: unknown) =>
+    typeof value === "number" && Number.isFinite(value) && value >= 0
+      ? value
+      : null;
   return {
     checkedAt: new Date().toISOString(),
-    strategy: "mobile",
-    labScore:
-      typeof d.lighthouseResult?.categories?.performance?.score === "number"
-        ? Math.round(d.lighthouseResult.categories.performance.score * 100)
-        : null,
+    strategy,
+    labScore: lab("performance"),
+    labCategories: {
+      performance: lab("performance"),
+      accessibility: lab("accessibility"),
+      bestPractices: lab("best-practices"),
+      seo: lab("seo"),
+    },
     field: {
-      lcp: metrics.LARGEST_CONTENTFUL_PAINT_MS?.percentile ?? null,
-      inp: metrics.INTERACTION_TO_NEXT_PAINT?.percentile ?? null,
+      lcp: field(metrics.LARGEST_CONTENTFUL_PAINT_MS?.percentile),
+      inp: field(metrics.INTERACTION_TO_NEXT_PAINT?.percentile),
       cls:
-        typeof metrics.CUMULATIVE_LAYOUT_SHIFT_SCORE?.percentile === "number"
+        field(metrics.CUMULATIVE_LAYOUT_SHIFT_SCORE?.percentile) !== null
           ? metrics.CUMULATIVE_LAYOUT_SHIFT_SCORE.percentile / 100
           : null,
     },

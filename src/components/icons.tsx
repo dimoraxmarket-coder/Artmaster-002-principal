@@ -31,7 +31,7 @@ export function Icon({ name, className, ...props }: SVGProps<SVGSVGElement> & { 
 
 export function Logo({ light = false }: { light?: boolean }) {
   return <span className={`brand${light ? ' brand-light' : ''}`}>
-    <Image src="/branding/artmaster-symbol.webp" width={44} height={40} alt="" aria-hidden="true" className="brand-symbol" unoptimized />
-    <span className="brand-words"><span className="brand-name">ARTMASTER</span><span className="brand-caption">ADVERTISING GROUP</span></span>
+    <Image src="/branding/artmaster-symbol.webp" width={44} height={40} sizes="44px" quality={85} alt="" aria-hidden="true" className="brand-symbol" />
+    <span className="brand-words"><span className="brand-name">ARTMASTER</span>{' '}<span className="brand-caption">ADVERTISING GROUP</span></span>
   </span>;
 }

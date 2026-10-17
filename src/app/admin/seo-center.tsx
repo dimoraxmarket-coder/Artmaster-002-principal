@@ -4,6 +4,7 @@ import { adminApi, jsonBody } from "./api";
 import type { PageAudit } from "@/lib/seo-audit";
 import type { GoogleReports } from "@/lib/server/google-reporting";
 import styles from "./growth.module.css";
+import { SeoHistoryPanel } from "./seo-history-panel";
 type Data = {
   range: { start: string; end: string };
   timezone: string;
@@ -99,6 +100,8 @@ function Trend({
 }
 export function SeoCenter({ canManage = true }: { canManage?: boolean }) {
   const [data, setData] = useState<Data | null>(null),
+    [historyRefresh, setHistoryRefresh] = useState(0),
+    [strategy, setStrategy] = useState<"mobile" | "desktop">("mobile"),
     [start, setStart] = useState(""),
     [end, setEnd] = useState(""),
     [path, setPath] = useState("/ro"),
@@ -108,6 +111,12 @@ export function SeoCenter({ canManage = true }: { canManage?: boolean }) {
     [speed, setSpeed] = useState<{
       checkedAt: string;
       labScore: number | null;
+      labCategories: {
+        performance: number | null;
+        accessibility: number | null;
+        bestPractices: number | null;
+        seo: number | null;
+      };
       field: { lcp: number | null; inp: number | null; cls: number | null };
       note: string;
     } | null>(null);
@@ -148,6 +157,7 @@ export function SeoCenter({ canManage = true }: { canManage?: boolean }) {
         ...jsonBody({ path }),
       });
       setAudits((previous) => ({ ...previous, [path]: v }));
+      setHistoryRefresh((v) => v + 1);
     } catch (e) {
       setError((e as Error).message);
     } finally {
@@ -239,6 +249,20 @@ export function SeoCenter({ canManage = true }: { canManage?: boolean }) {
           note={state(search?.state)}
         />
         <Metric
+          label="CTR · Search Console (%)"
+          value={
+            search?.ctr === null || search?.ctr === undefined
+              ? null
+              : search.ctr * 100
+          }
+          note="Clickuri / afișări × 100, numai pentru perioada conectată. Nu este rata conversiilor."
+        />
+        <Metric
+          label="Poziție medie · Search Console"
+          value={search?.averagePosition ?? null}
+          note="Media pozițiilor zilnice ponderată cu afișările; nu reprezintă un clasament garantat."
+        />
+        <Metric
           label="Evenimente cheie · GA4"
           value={ga?.keyEvents ?? null}
           note="Doar evenimente configurate în proprietatea GA4; nu sunt echivalente automat cu toate cererile CRM."
@@ -271,13 +295,57 @@ export function SeoCenter({ canManage = true }: { canManage?: boolean }) {
           )}
         </div>
       )}
+      {ga?.state === "connected" && (
+        <div className={styles.panel}>
+          <h3>Surse de trafic și pagini populare · GA4</h3>
+          <p>
+            Top 10 canale după sesiuni și pagini după vizualizări. Nu sunt
+            afișate URL-uri cu parametri, termeni de căutare sau date din
+            formulare.
+          </p>
+          <div className={styles.tableWrap}>
+            <table className={styles.table}>
+              <thead>
+                <tr>
+                  <th>Canal</th>
+                  <th>Sesiuni</th>
+                </tr>
+              </thead>
+              <tbody>
+                {ga.sources.map((r) => (
+                  <tr key={r.channel}>
+                    <td>{r.channel}</td>
+                    <td>{r.sessions}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <table className={styles.table}>
+              <thead>
+                <tr>
+                  <th>Pagină</th>
+                  <th>Vizualizări</th>
+                </tr>
+              </thead>
+              <tbody>
+                {ga.popularPages.map((r) => (
+                  <tr key={r.path}>
+                    <td>{r.path}</td>
+                    <td>{r.views}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
       <div className={styles.panel}>
         <h3>Audit pe pagina publicată</h3>
         <p>
           Scor = suma punctelor verificărilor trecute:{" "}
-          <strong>10 verificări × 10 puncte = 100</strong>. Eșecul sau lipsa
-          dovezii acordă 0 puncte. Nu măsoară poziția în Google. Fiecare audit
-          folosește HTML-ul public randat; ciornele sunt excluse.
+          <strong>14 verificări ponderate = 100 · formula v2</strong>. Eșecul
+          sau lipsa dovezii acordă 0 puncte. Nu măsoară poziția în Google.
+          Fiecare audit folosește HTML-ul public randat; ciornele sunt excluse.
         </p>
         <div className={styles.toolbar}>
           <label>
@@ -342,7 +410,14 @@ export function SeoCenter({ canManage = true }: { canManage?: boolean }) {
                         {c.status === "pass" ? c.weight : 0}/{c.weight}
                       </td>
                       <td>
-                        {c.detail}
+                        <strong>
+                          {c.status === "pass"
+                            ? "Trecut"
+                            : c.severity === "critical"
+                              ? "Critic"
+                              : "Atenție"}
+                        </strong>{" "}
+                        · {c.detail}
                         <small>{c.recommendation}</small>
                       </td>
                     </tr>
@@ -364,6 +439,18 @@ export function SeoCenter({ canManage = true }: { canManage?: boolean }) {
           </p>
         )}
       </div>
+      {data && (
+        <SeoHistoryPanel
+          refreshKey={historyRefresh}
+          busy={busy}
+          onBusy={setBusy}
+          pages={data.pages}
+          selected={path}
+          onAudit={(report) =>
+            setAudits((previous) => ({ ...previous, [report.path]: report }))
+          }
+        />
+      )}
       <div className={styles.panel}>
         <h3>Core Web Vitals & PageSpeed</h3>
         <p>
@@ -371,6 +458,20 @@ export function SeoCenter({ canManage = true }: { canManage?: boolean }) {
             ? "Cheia PageSpeed este configurată. Testul trimite URL-ul public selectat către Google."
             : "Neconectat. Necesită activare server-side și o cheie PageSpeed. URL-urile locale/private nu sunt trimise către Google."}
         </p>
+        <label>
+          Dispozitiv{" "}
+          <select
+            aria-label="Dispozitiv PageSpeed"
+            value={strategy}
+            onChange={(e) => {
+              setStrategy(e.target.value as typeof strategy);
+              setSpeed(null);
+            }}
+          >
+            <option value="mobile">Mobil</option>
+            <option value="desktop">Desktop</option>
+          </select>
+        </label>
         <button
           className={styles.button}
           type="button"
@@ -386,7 +487,7 @@ export function SeoCenter({ canManage = true }: { canManage?: boolean }) {
               setSpeed(
                 await adminApi("/api/admin/seo/pagespeed", {
                   method: "POST",
-                  ...jsonBody({ path }),
+                  ...jsonBody({ path, strategy }),
                 }),
               );
             } catch (e) {
@@ -396,7 +497,7 @@ export function SeoCenter({ canManage = true }: { canManage?: boolean }) {
             }
           }}
         >
-          Rulează PageSpeed mobil
+          Rulează PageSpeed {strategy === "mobile" ? "mobil" : "desktop"}
         </button>
         {speed && (
           <>
@@ -412,6 +513,12 @@ export function SeoCenter({ canManage = true }: { canManage?: boolean }) {
               · CLS: {speed.field.cls ?? "Fără date"}
             </p>
             <p>{speed.note}</p>
+            <p>
+              Laborator separat: Accessibility{" "}
+              {speed.labCategories.accessibility ?? "Fără date"} · Best
+              Practices {speed.labCategories.bestPractices ?? "Fără date"} · SEO{" "}
+              {speed.labCategories.seo ?? "Fără date"}.
+            </p>
           </>
         )}
       </div>

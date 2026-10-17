@@ -1,5 +1,23 @@
 import { load } from "cheerio";
 import type { SiteContent } from "./content/types";
+import { structuredIssues } from "./structured-data";
+export const SEO_FORMULA_VERSION = 2;
+export const SEO_WEIGHTS: Record<string, number> = {
+  title: 10,
+  description: 8,
+  canonical: 10,
+  hreflang: 10,
+  sitemap: 6,
+  robots: 6,
+  structured: 10,
+  alt: 6,
+  links: 8,
+  indexing: 8,
+  headings: 6,
+  language: 4,
+  social: 6,
+  viewport: 2,
+};
 export function publicPaths(c: SiteContent) {
   return [
     "",
@@ -25,6 +43,7 @@ export function publicPaths(c: SiteContent) {
   );
 }
 export type SeoCheck = {
+  severity: "critical" | "warning" | "info";
   id: string;
   label: string;
   weight: number;
@@ -33,6 +52,7 @@ export type SeoCheck = {
   recommendation: string;
 };
 export type PageAudit = {
+  formulaVersion: number;
   path: string;
   score: number;
   checkedAt: string;
@@ -63,9 +83,15 @@ export function auditHTML(input: {
     recommendation: string,
   ) =>
     checks.push({
+      severity: pass
+        ? "info"
+        : ["canonical", "hreflang", "structured", "language"].includes(id) ||
+            (indexable && ["robots", "indexing"].includes(id))
+          ? "critical"
+          : "warning",
       id,
       label,
-      weight: 10,
+      weight: SEO_WEIGHTS[id],
       status: pass ? "pass" : "fail",
       detail,
       recommendation,
@@ -83,7 +109,9 @@ export function auditHTML(input: {
   check(
     "description",
     "Meta description",
-    description.length >= 50 && description.length <= 180,
+    description.length >= 50 &&
+      description.length <= 180 &&
+      $('meta[name="description"]').length === 1,
     `${description.length} caractere · ${description}`,
     "Completează o descriere unică de 50–180 caractere; verifică formularea în fiecare limbă.",
   );
@@ -136,26 +164,16 @@ export function auditHTML(input: {
     "Activează indexarea numai pentru originea de producție aprobată. Auditul interpretează regulile emise de această aplicație.",
   );
   const scripts = $('script[type="application/ld+json"]').toArray();
-  let valid = scripts.length > 0;
-  for (const el of scripts) {
-    try {
-      const d = JSON.parse($(el).text());
-      if (
-        !d ||
-        (!d["@type"] && !d["@graph"]) ||
-        d["@context"] !== "https://schema.org"
-      )
-        valid = false;
-    } catch {
-      valid = false;
-    }
-  }
+  const issues = structuredIssues(
+    scripts.map((el) => $(el).text()),
+    origin,
+  );
   check(
     "structured",
     "Date structurate",
-    valid,
-    `${scripts.length} blocuri JSON-LD · sintaxă și context Schema.org.`,
-    "Corectează JSON-LD și validează separat semantica în Google Rich Results Test.",
+    issues.length === 0,
+    `${scripts.length} blocuri JSON-LD · ${issues.join(" ") || "Sintaxă, tipuri, câmpuri și URL-uri verificate pentru schemele aplicației."}`,
+    "Corectează structura și câmpurile necesare. Verificarea locală nu certifică eligibilitatea Rich Results sau adevărul informațiilor comerciale; validează separat cu Google și proprietarul.",
   );
   const images = $("img").toArray(),
     missing = images.filter((el) => $(el).attr("alt") === undefined).length;
@@ -173,6 +191,10 @@ export function auditHTML(input: {
     if (/^(mailto:|tel:|viber:|whatsapp:|#)/i.test(href)) continue;
     try {
       const url = new URL(href, origin + path);
+      if (!["https:", "http:"].includes(url.protocol)) {
+        broken.add(href.slice(0, 200));
+        continue;
+      }
       if (url.origin !== origin) {
         external.add(url.origin + url.pathname);
         continue;
@@ -204,7 +226,47 @@ export function auditHTML(input: {
       : "Indexare dezactivată sau origine locală/staging.",
     "Păstrează noindex în staging/local. După aprobare verifică HTTPS, SITE_INDEXABLE și inspecția URL în Search Console.",
   );
+  const headings = ($("main").length ? $("main") : $("body"))
+    .find("h1,h2,h3,h4,h5,h6")
+    .toArray()
+    .map((el) => Number(el.tagName.slice(1)));
+  check(
+    "headings",
+    "Ierarhia titlurilor",
+    headings.filter((v) => v === 1).length === 1 &&
+      headings[0] === 1 &&
+      headings.every((v, i) => i === 0 || v <= headings[i - 1] + 1),
+    `${headings.filter((v) => v === 1).length} H1; ordinea nivelurilor: ${headings.join(" → ")}.`,
+    "Păstrează un singur H1 și evită trecerea directă de la H1 la H3.",
+  );
+  const language = /^\/(ro|ru|en)(?:\/|$)/.exec(path)?.[1];
+  check(
+    "language",
+    "Limba documentului",
+    !!language && $("html").attr("lang") === language,
+    `lang=${$("html").attr("lang") || "lipsește"}`,
+    "Potrivește HTML lang cu limba URL-ului. Traducerile necesită și verificare editorială.",
+  );
+  check(
+    "social",
+    "Open Graph și Twitter",
+    !!$('meta[property="og:title"]').attr("content") &&
+      !!$('meta[property="og:description"]').attr("content") &&
+      $('meta[property="og:url"]').attr("content") === origin + path &&
+      !!$('meta[property="og:image"]').attr("content") &&
+      $('meta[name="twitter:card"]').attr("content") === "summary_large_image",
+    "Titlu, descriere, URL, imagine OG și card Twitter.",
+    "Completează metadatele de distribuire; verifică vizual imaginea autorizată.",
+  );
+  check(
+    "viewport",
+    "Viewport mobil",
+    /width=device-width/.test($('meta[name="viewport"]').attr("content") || ""),
+    "Viewport responsiv, fără a pretinde un scor PageSpeed.",
+    "Adaugă viewport width=device-width și testează layoutul pe mobil.",
+  );
   return {
+    formulaVersion: SEO_FORMULA_VERSION,
     path,
     score: checks.reduce((n, c) => n + (c.status === "pass" ? c.weight : 0), 0),
     checkedAt: new Date().toISOString(),
@@ -212,6 +274,6 @@ export function auditHTML(input: {
     externalLinksUnchecked: external.size,
     brokenLinks: [...broken],
     scope:
-      "HTML public randat + sitemap/robots ale aplicației. 10 verificări × 10 puncte. Euristici locale, fără garanție de ranking sau indexare Google.",
+      "Formula v2: 14 verificări ponderate, suma 100; puncte numai pentru verificări trecute. HTML public randat + sitemap/robots ale aplicației. Euristici locale, fără garanție de ranking, Rich Results sau indexare Google.",
   };
 }
