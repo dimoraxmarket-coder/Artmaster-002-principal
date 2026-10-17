@@ -1,0 +1,61 @@
+{
+  "checkedAt": "2026-10-17",
+  "sourceCodeCommit": "8ac8919",
+  "environment": {
+    "node": "24.19.0",
+    "next": "16.4.0",
+    "chromium": "154",
+    "os": "Linux",
+    "storage": "Synthetic isolated SQLite; PGlite SQL fixtures"
+  },
+  "results": {
+    "lint": "pass",
+    "typescript": "pass",
+    "build": "pass",
+    "backend": {
+      "passed": 149,
+      "failed": 0,
+      "skipped": 0
+    },
+    "browser": {
+      "passed": 132,
+      "failed": 0,
+      "skipped": 0
+    }
+  },
+  "initialBrowserRun": {
+    "passed": 129,
+    "failed": 1,
+    "didNotRun": 2,
+    "cause": "New fixture retained a synthetic administrator and interfered with last-admin test; cleanup fixed, complete clean rerun passed."
+  },
+  "external": {
+    "supabaseHosted": "NOT TESTED",
+    "googleReporting": "NOT CONNECTED / NOT TESTED",
+    "googleIndexing": "NOT TESTED",
+    "fieldCrux": "NOT TESTED",
+    "nativeWindows": "NOT TESTED"
+  },
+  "logs": {
+    "lint": {
+      "sha256": "ae250b9c30e2f8ae5594c9b6aad46d17ce115582b8efd63a9fde3f54f1926637",
+      "file": "final-lint.log"
+    },
+    "typescript": {
+      "sha256": "65c46a3a1bf9959fa05029c9685160c9da7ebab555f5c45aa22da9fa34eb58d1",
+      "file": "final-types.log"
+    },
+    "backend": {
+      "sha256": "a96db6b0cc6b7718d2d7bf32cb2db885ef11ef7deb54ff71edf31f8e4bbab55c",
+      "file": "final-backend.log"
+    },
+    "browser": {
+      "sha256": "69479012f7ed59de00129b13fcc78ea3173de03fc776c83403c54396d3e2bee0",
+      "file": "final-verified-browser.log"
+    },
+    "build": {
+      "sha256": "b2385a3157eb3a8b62739e0061a7d719d383afd75a5c19fab32dd198664ba1a9",
+      "file": "final-build.log"
+    }
+  }
+}

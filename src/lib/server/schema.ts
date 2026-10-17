@@ -1,5 +1,7 @@
 import { z } from "zod";
 import type { SiteContent } from "../content/types";
+import { contentPaths } from "../content/routes";
+import { isPlainSeoText } from "../content/seo-text";
 
 const text = (max: number) => z.string().trim().min(1).max(max);
 const localized = z
@@ -89,6 +91,11 @@ const localizedList = z
   .strict();
 const faq = z.object({ question: localized, answer: localized }).strict();
 const base = { slug, title: localized, summary: localized };
+const seoText = (min: number, max: number) => z.string().trim().min(min).max(max)
+  .refine(isPlainSeoText, "Use plain text without HTML or control characters");
+const seoLocalized = (min: number, max: number) => z.object({
+  ro: seoText(min, max), ru: seoText(min, max), en: seoText(min, max),
+}).strict();
 const sourceUrl = z.union([
   z.literal(""),
   z
@@ -130,6 +137,11 @@ const equipmentCatalog = z
   .strict();
 export const contentSchema: z.ZodType<SiteContent> = z
   .object({
+    seo: z.array(z.object({
+      path: z.string().max(220).regex(/^(?:[a-z0-9-]+(?:\/[a-z0-9-]+)?)?$/),
+      title: seoLocalized(15, 70),
+      description: seoLocalized(50, 180),
+    }).strict()).max(500).optional(),
     heroMedia: z
       .object({ desktop: heroAsset, mobile: heroAsset.optional() })
       .strict()
@@ -242,6 +254,14 @@ export const contentSchema: z.ZodType<SiteContent> = z
   })
   .strict()
   .superRefine((content, ctx) => {
+    const paths = new Set(contentPaths(content, { drafts: true }));
+    const seenSeo = new Set<string>();
+    (content.seo || []).forEach((entry, i) => {
+      if (!paths.has(entry.path) || seenSeo.has(entry.path)) ctx.addIssue({
+        code: "custom", path: ["seo", i, "path"], message: "SEO requires a unique existing public content route",
+      });
+      seenSeo.add(entry.path);
+    });
     content.equipment.forEach((e, i) => {
       if (
         e.catalog?.published &&

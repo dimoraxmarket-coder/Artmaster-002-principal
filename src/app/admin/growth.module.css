@@ -21,6 +21,11 @@
   color: #f4d342;
   text-underline-offset: 4px;
 }
+.panel a.button {
+  color: #101216;
+  display: inline-block;
+  text-decoration: none;
+}
 .panel label {
   display: block;
   margin: 14px 0;
@@ -250,3 +255,7 @@
 }
 .historyPages { max-height: 480px; overflow: auto; }
 .historyPages thead { position: sticky; top: 0; background: #1b1f25; z-index: 1; }
+.searchPreview { margin:20px 0;padding:20px;border:1px solid #454b55;border-radius:10px;overflow-wrap:anywhere;background:#101216; }
+.searchPreview > span { color:#c4c9d2;font-size:.78rem; }
+.searchPreview > strong { display:block;color:#f4d342;font-size:1.1rem;margin:10px 0; }
+.searchPreview > p { margin:0; }

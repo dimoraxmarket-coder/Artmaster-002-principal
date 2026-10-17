@@ -14,8 +14,8 @@ const titles = {
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
-  const copy=websiteCopy(await getContent());
-  return pageMetadata(locale, '', titles[locale], copy.hero.description[locale]);
+  const content=await getContent(),copy=websiteCopy(content);
+  return pageMetadata(locale, '', titles[locale], copy.hero.description[locale], true, content.seo?.find(entry=>entry.path===''));
 }
 
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {

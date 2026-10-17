@@ -1,5 +1,6 @@
 import { load } from "cheerio";
 import type { SiteContent } from "./content/types";
+import { contentPaths } from "./content/routes";
 import { structuredIssues } from "./structured-data";
 export const SEO_FORMULA_VERSION = 2;
 export const SEO_WEIGHTS: Record<string, number> = {
@@ -19,26 +20,7 @@ export const SEO_WEIGHTS: Record<string, number> = {
   viewport: 2,
 };
 export function publicPaths(c: SiteContent) {
-  return [
-    "",
-    "servicii",
-    "echipamente",
-    "portofoliu",
-    "despre-noi",
-    "contact",
-    "solicita-oferta",
-    "intrebari-frecvente",
-    "blog",
-    "confidentialitate",
-    "termeni",
-    "cookies",
-    ...c.services.map((s) => "servicii/" + s.slug),
-    ...c.equipment
-      .filter((e) => e.catalog?.published !== false)
-      .map((e) => "echipamente/" + e.slug),
-    ...c.projects.filter((p) => p.published).map((p) => "portofoliu/" + p.slug),
-    ...c.articles.filter((a) => a.published).map((a) => "blog/" + a.slug),
-  ].flatMap((path) =>
+  return contentPaths(c).flatMap((path) =>
     ["ro", "ru", "en"].map((l) => `/${l}${path ? "/" + path : ""}`),
   );
 }

@@ -1,6 +1,6 @@
 # ARTMASTER — versiunea completă pentru testare locală
 
-Acest pachet reunește codul PR-urilor #2–#9 într-un singur proiect Next.js: site public + cabinet administrativ. SEO, echipamentele, bannerul panoramic și partenerii sunt disponibile împreună. Nu trebuie să alegi între ZIP-urile anterioare.
+Acest pachet reunește codul PR-urilor #2–#11 și actualizarea Moldova Organic Growth într-un singur proiect Next.js: site public + cabinet administrativ. SEO, echipamentele, bannerul panoramic și partenerii sunt disponibile împreună. Nu trebuie să alegi între ZIP-urile anterioare.
 
 ## Pornire rapidă pe Windows
 
@@ -48,3 +48,5 @@ Instrucțiuni complete și depanare: [README-WINDOWS.md](README-WINDOWS.md).
 
 Aceasta este copia integrată a tuturor funcțiilor implementate, pregătită pentru testare locală. Nu este un deploy sau o certificare de producție. PR-urile existente nu sunt fuzionate pe GitHub; DNS, Host.md și site-ul live nu sunt modificate. [Checklist de release](docs/release-readiness-phase6.md).
 Actualizarea tehnică din 17 octombrie 2026 păstrează această integrare și adaugă protecția împotriva cache-ului public pentru media administrată, sanitizarea atașamentelor imagine, istoricul SEO persistent, formula SEO v2 cu 14 verificări și stări verificabile în Security Center. Citește [raportul de pregătire](ARTMASTER-PRODUCTION-READINESS.md). Partenerii și fișierele lor nu sunt modificați de actualizare; datele proprii de pe PC trebuie păstrate conform README-WINDOWS.md.
+
+Actualizarea Moldova Organic Growth adaugă **Conținut → Metadate SEO**, cu titlu/descriere RO/RU/EN, preview privat și publicare explicită, plus inventarul editorial din **SEO & Analytics**. Serviciile afișează automat ghidurile asociate și proiectele reale publicate. [Rezultate și limite](ARTMASTER-SEO-IMPLEMENTATION-REPORT.md), [concurență](ARTMASTER-MOLDOVA-COMPETITORS.md), [keyword map](ARTMASTER-KEYWORD-MAP.md), [configurare Google](ARTMASTER-TECHNICAL-SEO.md), [plan șase luni](ARTMASTER-SEO-ROADMAP-6-MONTHS.md). Setările și imaginile deja publicate de proprietar rămân în baza sa; observațiile istorice de mai sus despre fișiere lipsă descriu baseline-ul distribuției, nu retrag confirmări sau logo-uri adăugate ulterior de proprietar.

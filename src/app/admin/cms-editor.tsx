@@ -1,5 +1,8 @@
 'use client';
 import { VisualContentEditor } from './visual-content-editor';
+import { SeoContentFields } from './seo-content-fields';
+import { contentPaths, renameSeoPath } from '@/lib/content/routes';
+import { isPlainSeoText } from '@/lib/content/seo-text';
 import { contentAssets } from '@/lib/content/visual-assets';
 
 import Image from 'next/image';
@@ -14,10 +17,11 @@ import { useEffect, useId, useState } from 'react';
 import type { Article, Equipment, Faq, Locale, Localized, Project, Service, SiteContent } from '@/lib/content/types';
 import type { Actor } from '@/lib/server/types';
 
-type Section = 'banner' | 'partners' | 'copy' | 'contact' | 'services' | 'equipment' | 'projects' | 'articles' | 'faqs';
-type EntitySection = Exclude<Section, 'copy' | 'contact' | 'faqs' | 'banner' | 'partners'>;
+type Section = 'seo' | 'banner' | 'partners' | 'copy' | 'contact' | 'services' | 'equipment' | 'projects' | 'articles' | 'faqs';
+type EntitySection = Exclude<Section, 'seo' | 'copy' | 'contact' | 'faqs' | 'banner' | 'partners'>;
 type ContentResponse = { published: SiteContent; draft: SiteContent | null; version: number };
 const sectionLabels: Record<Section, string> = {
+  seo: 'Metadate SEO',
   banner: 'Banner Acasă', partners: 'Parteneri', copy: 'Acasă și Despre noi', contact: 'Date de contact', services: 'Servicii', equipment: 'Echipamente',
   projects: 'Galerie și proiecte', articles: 'Articole', faqs: 'Întrebări frecvente',
 };
@@ -147,6 +151,10 @@ function cleanContent(value: SiteContent): SiteContent {
 function findIncomplete(value: SiteContent): string | null {
   const allLocales: Locale[] = ['ro', 'ru', 'en'];
   const check = (text: Localized, label: string) => allLocales.find(locale => !text[locale].trim()) ? `${label}: completează româna, rusa și engleza.` : null;
+  for (const entry of value.seo || []) for (const locale of allLocales) {
+    const title = entry.title[locale].trim(), description = entry.description[locale].trim();
+    if (title.length < 15 || title.length > 70 || description.length < 50 || description.length > 180 || !isPlainSeoText(title + description)) return `SEO /${locale}/${entry.path}: titlu 15–70 și descriere 50–180 caractere, text simplu fără HTML sau linii noi. Completează toate trei limbile.`;
+  }
   for (const [section, label] of [['services', 'Serviciu'], ['equipment', 'Echipament'], ['projects', 'Proiect'], ['articles', 'Articol']] as const) {
     const seen = new Set<string>();
     for (const item of value[section]) {
@@ -180,6 +188,7 @@ export function CmsEditor({ actor, workspaceSection, onDirtyChange }: { actor: A
   const [contentSection, setSection] = useState<Section>(workspaceSection?'services':'contact');
   const section:Section=workspaceSection&&workspaceSection!=='services'?workspaceSection:contentSection;
   const [locale, setLocale] = useState<Locale>('ro');
+  const [seoPreviewPath, setSeoPreviewPath] = useState('');
   const [selected, setSelected] = useState<Record<EntitySection, number>>({ services: 0, equipment: 0, projects: 0, articles: 0 });
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
@@ -276,6 +285,8 @@ export function CmsEditor({ actor, workspaceSection, onDirtyChange }: { actor: A
     const oldSlug = content[key][index].slug;
     mutate(next => {
       next[key][index].slug = slug;
+      const prefix = ({ services:'servicii', equipment:'echipamente', projects:'portofoliu', articles:'blog' })[key];
+      renameSeoPath(next, `${prefix}/${oldSlug}`, `${prefix}/${slug}`);
       if (key === 'services') {
         for (const service of next.services) service.relatedSlugs = service.relatedSlugs.map(value => value === oldSlug ? slug : value);
         for (const entity of [...next.equipment, ...next.projects, ...next.articles]) entity.serviceSlugs = entity.serviceSlugs.map(value => value === oldSlug ? slug : value);
@@ -299,7 +310,11 @@ export function CmsEditor({ actor, workspaceSection, onDirtyChange }: { actor: A
     if (!content || deletionReason(key, index)) return;
     const item = content[key][index];
     if (!window.confirm(`Ștergi „${item.title.ro || item.slug}” din toate cele trei limbi? Pentru o pagină deja publicată verifică și redirecționarea adresei.`)) return;
-    mutate(next => { next[key].splice(index, 1); });
+    mutate(next => {
+      next[key].splice(index, 1);
+      const prefix = ({ services:'servicii', equipment:'echipamente', projects:'portofoliu', articles:'blog' })[key];
+      if (next.seo) next.seo = next.seo.filter(entry => entry.path !== `${prefix}/${item.slug}`);
+    });
     setSelected(previous => ({ ...previous, [key]: Math.max(0, index - 1) }));
   }
 
@@ -341,7 +356,7 @@ export function CmsEditor({ actor, workspaceSection, onDirtyChange }: { actor: A
   if (loading) return <section className="admin-cms" aria-busy="true"><h2>Conținutul site-ului</h2><p role="status">Se încarcă editorul…</p></section>;
   if (!content) return <section className="admin-cms"><h2>Conținutul site-ului</h2><p className="form-status form-status-error" role="alert">{error || 'Conținutul nu este disponibil.'}</p><button type="button" className="button" disabled={busy} onClick={() => void reload()}>Reîncearcă încărcarea</button></section>;
 
-  const entityKey: EntitySection | null = section !== 'banner' && section !== 'partners' && section !== 'copy' && section !== 'contact' && section !== 'faqs' ? section : null;
+  const entityKey: EntitySection | null = section !== 'seo' && section !== 'banner' && section !== 'partners' && section !== 'copy' && section !== 'contact' && section !== 'faqs' ? section : null;
   const index = entityKey ? Math.min(selected[entityKey], Math.max(0, content[entityKey].length - 1)) : 0;
   const entity = entityKey ? content[entityKey][index] : null;
   const blockedDelete = entityKey && entity ? deletionReason(entityKey, index) : null;
@@ -349,6 +364,7 @@ export function CmsEditor({ actor, workspaceSection, onDirtyChange }: { actor: A
   const equipment = section === 'equipment' ? content.equipment[index] : null;
   const project = section === 'projects' ? content.projects[index] : null;
   const article = section === 'articles' ? content.articles[index] : null;
+  const seoPath = contentPaths(content, { drafts:true }).includes(seoPreviewPath) ? seoPreviewPath : '';
 
   return <section className="admin-cms"  aria-busy={busy}>
     <h2>{workspaceSection==='equipment'?'Equipment Studio':workspaceSection==='projects'?'Portofoliu Studio':workspaceSection==='contact'?'Informațiile companiei':'Conținut Studio'}</h2>
@@ -360,7 +376,7 @@ export function CmsEditor({ actor, workspaceSection, onDirtyChange }: { actor: A
     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, marginBottom: 25 }}>
       {!readOnly && <button type="button" className="button" disabled={busy || conflict} onClick={() => void save('save-draft')}>{busy ? 'Se procesează…' : 'Salvează ciorna'}</button>}
       {actor.role === 'admin' && <button type="button" className="button button-primary" disabled={busy || conflict} onClick={() => void save('publish')}>Publică această versiune</button>}
-      <a className="button" href={`/admin-preview/${locale}${entityKey&&entity?'/'+({services:'servicii',equipment:'echipamente',projects:'portofoliu',articles:'blog'})[entityKey]+'/'+entity.slug:section==='contact'?'/contact':section==='faqs'?'/intrebari-frecvente':''}`} target="_blank" rel="noopener noreferrer">Previzualizează ciorna salvată ↗</a>
+      <a className="button" href={`/admin-preview/${locale}${section==='seo'?(seoPath?'/'+seoPath:''):entityKey&&entity?'/'+({services:'servicii',equipment:'echipamente',projects:'portofoliu',articles:'blog'})[entityKey]+'/'+entity.slug:section==='contact'?'/contact':section==='faqs'?'/intrebari-frecvente':''}`} target="_blank" rel="noopener noreferrer">Previzualizează ciorna salvată ↗</a>
       <button type="button" className="button" disabled={busy} onClick={() => void reload()}>Încarcă versiunea actuală</button>
       {!conflict && <button type="button" className="button" disabled={busy} onClick={downloadCopy}>Descarcă o copie</button>}
     </div>
@@ -368,7 +384,7 @@ export function CmsEditor({ actor, workspaceSection, onDirtyChange }: { actor: A
     <ContentHistory onRestoring={setBusy} content={content} version={version} disabled={busy||dirty||conflict} canRestore={!readOnly} onRestored={(restored,nextVersion)=>{setContent(restored);setVersion(nextVersion);setVerifiedImages(imageURLs(restored));setHasDraft(true);setDirty(false);setConflict(false);setMessage('Versiunea a fost restaurată într-o ciornă nouă. Revizuiește previzualizarea înainte de publicare.');}}/>
     {actor.role === 'admin' && actor.aal !== 'aal2' && <p className="banner">Publicarea și salvarea protejată necesită autentificare cu doi factori. Dacă serverul solicită acest pas, activează-l în cont și autentifică-te din nou.</p>}
     <nav aria-label="Categorii de conținut" style={{ display: 'flex', gap: 9, flexWrap: 'wrap', marginBottom: 24 }}>
-      {(workspaceSection?workspaceSection==='services'?['copy','banner','partners','services','equipment','articles','faqs'] as Section[]:[]:Object.keys(sectionLabels) as Section[]).map(key => <button type="button" key={key} className={`button${section === key ? ' button-primary' : ''}`} aria-pressed={section === key} disabled={busy} onClick={() => setSection(key)}>{sectionLabels[key]}</button>)}
+      {(workspaceSection?workspaceSection==='services'?['copy','banner','partners','services','equipment','articles','faqs','seo'] as Section[]:[]:Object.keys(sectionLabels) as Section[]).map(key => <button type="button" key={key} className={`button${section === key ? ' button-primary' : ''}`} aria-pressed={section === key} disabled={busy} onClick={() => setSection(key)}>{sectionLabels[key]}</button>)}
     </nav>
     <div role="group" aria-label="Limba conținutului editat" style={{ display: 'flex', gap: 9, flexWrap: 'wrap', marginBottom: 25 }}>
       {(['ro', 'ru', 'en'] as const).map(key => <button type="button" key={key} className={`button${locale === key ? ' button-primary' : ''}`} aria-pressed={locale === key} disabled={busy} onClick={() => setLocale(key)}>{key.toUpperCase()} · {localeLabels[key]}</button>)}
@@ -383,6 +399,7 @@ export function CmsEditor({ actor, workspaceSection, onDirtyChange }: { actor: A
     </div>}
     <fieldset disabled={readOnly || busy} style={{ border: 0, padding: 0, margin: 0, minWidth: 0 }}>
       <legend className="sr-only">Editare {sectionLabels[section]}</legend>
+      {section==='seo' && <SeoContentFields content={content} locale={locale} path={seoPath} onPathChange={setSeoPreviewPath} mutate={mutate}/>}
       {(section==='banner'||section==='partners')&&<VisualContentEditor key={`${section}-${version}`} content={content} locale={locale} section={section} disabled={readOnly||busy} mutate={mutate} onBusy={setBusy}/>}
       {section === 'copy' && <>
         <HeroEditor panoramicActive={Boolean(content.banner?.enabled)} value={content.heroMedia} onBusy={setBusy} onChange={value=>mutate(next=>{if(value)next.heroMedia=value;else delete next.heroMedia;})}/>

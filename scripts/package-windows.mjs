@@ -25,6 +25,11 @@ const files = new Set([
   "ARTMASTER-SECURITY-AUDIT.md",
   "ARTMASTER-PERFORMANCE-REPORT.md",
   "ARTMASTER-PRODUCTION-READINESS.md",
+  "ARTMASTER-MOLDOVA-COMPETITORS.md",
+  "ARTMASTER-KEYWORD-MAP.md",
+  "ARTMASTER-TECHNICAL-SEO.md",
+  "ARTMASTER-SEO-ROADMAP-6-MONTHS.md",
+  "ARTMASTER-SEO-IMPLEMENTATION-REPORT.md",
   "START.bat",
   "CREATE-ADMIN.bat",
   "START-WINDOWS.cmd",
@@ -103,6 +108,11 @@ export async function packageWindows(destination) {
     "ARTMASTER-SECURITY-AUDIT.md",
     "ARTMASTER-PERFORMANCE-REPORT.md",
     "ARTMASTER-PRODUCTION-READINESS.md",
+    "ARTMASTER-MOLDOVA-COMPETITORS.md",
+    "ARTMASTER-KEYWORD-MAP.md",
+    "ARTMASTER-TECHNICAL-SEO.md",
+    "ARTMASTER-SEO-ROADMAP-6-MONTHS.md",
+    "ARTMASTER-SEO-IMPLEMENTATION-REPORT.md",
   ])
     if (!selected.includes(required))
       throw new Error(`Lipseste un fisier obligatoriu: ${required}`);
