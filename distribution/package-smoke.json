@@ -1,0 +1,17 @@
+{
+  "checkedAt": "2026-10-17T10:28:22.286Z",
+  "platform": "linux",
+  "node": "24.19.0",
+  "checks": [
+    "portable Windows Node launcher starts the application on loopback (Linux execution only)",
+    "public RO/RU/EN, root redirect and integrated admin page",
+    "anonymous CRM and sensitive security diagnostics denied",
+    "actual public PNG form submission, duplicate receipt, persistent CRM search/detail/status/note and private attachment",
+    "real SEO audit/history and explicit security states",
+    "logout immediately revokes private CRM access"
+  ],
+  "passed": true,
+  "nativeWindows": "NOT TESTED",
+  "Supabase": "NOT TESTED",
+  "Google": "NOT TESTED"
+}

@@ -1,0 +1,13 @@
+{
+  "sourceCommit": "6603bc6ae611383072985582ddcad88ab56c6976",
+  "archive": "/workspace/artifacts/6603bc6ae611/ARTMASTER-COMPLETE-WINDOWS.zip",
+  "archiveFiles": 391,
+  "archiveBytes": 35387189,
+  "patch": "/workspace/artifacts/6603bc6ae611/ARTMASTER-UPDATE-FROM-1293224.zip",
+  "patchBytes": 685885,
+  "changedFiles": 71,
+  "sourceBlobsMatch": true,
+  "zipCrcPassed": true,
+  "batchesCRLF": true,
+  "extraction": "/tmp/artmaster-audit-package-6603bc6ae611/ARTMASTER-COMPLETE-WINDOWS"
+}
