@@ -1,9 +1,0 @@
-ARTMASTER — Machete de design
-
-1. Dezarhivează ZIP-ul (pe Windows: clic dreapta > Extract All / Extrage tot).
-2. Deschide folderul artmaster-machete.
-3. Deschide DESCHIDE.html prin dublu clic.
-
-Poți deschide separat varianta-1.png și varianta-2.png în orice program de imagini.
-Nu este necesară instalarea unui program sau o conexiune la internet.
-Aceste fișiere conțin machete vizuale, nu site-ul implementat.

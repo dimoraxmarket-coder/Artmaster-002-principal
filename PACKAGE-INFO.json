@@ -1,0 +1,9 @@
+{
+  "name": "ARTMASTER-COMPLETE-WINDOWS",
+  "sourceCommit": "c5bf8f8179e569f2027b55fddf8551104b343a71",
+  "sourceTree": "3a30b226e573867335831d7e43d893c329585f47",
+  "nodeMinimum": "24",
+  "purpose": "Isolated local testing only. SQLite password authentication is not Supabase MFA.",
+  "files": 424,
+  "omitted": "Git metadata, legacy archive, dependencies, build output, runtime configuration, databases, attachments and backups"
+}
