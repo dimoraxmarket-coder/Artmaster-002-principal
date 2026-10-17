@@ -1,0 +1,86 @@
+{
+  "checkedDate": "2026-10-17",
+  "pullRequests": [
+    {
+      "number": 2,
+      "head": "5fca3825d50dfe8fe486e48b81c60e62bf4db825",
+      "base": "website-variant-1",
+      "unchanged": true,
+      "state": "open",
+      "mergedAt": null
+    },
+    {
+      "number": 3,
+      "head": "bf52ef7dec6a443df9e6312dcec39cc6af9a3756",
+      "base": "feature/artmaster-security-foundation",
+      "unchanged": true,
+      "state": "open",
+      "mergedAt": null
+    },
+    {
+      "number": 4,
+      "head": "a3b0d6f8c2675b4ea7f6a29636e5f4bc91c421ab",
+      "base": "feature/artmaster-admin-security-validation",
+      "unchanged": true,
+      "state": "open",
+      "mergedAt": null
+    },
+    {
+      "number": 5,
+      "head": "8d955e97fe81d15049cdbd35527d45d72412cebe",
+      "base": "feature/artmaster-premium-admin",
+      "unchanged": true,
+      "state": "open",
+      "mergedAt": null
+    },
+    {
+      "number": 6,
+      "head": "c023f807be7a9a2abde7cec85fe9a1a8a346d1f2",
+      "base": "feature/artmaster-crm-media",
+      "unchanged": true,
+      "state": "open",
+      "mergedAt": null
+    },
+    {
+      "number": 7,
+      "head": "c63ad4100bc014e440b056daf4b2a40e76e330c7",
+      "base": "feature/artmaster-security-center",
+      "unchanged": true,
+      "state": "open",
+      "mergedAt": null
+    },
+    {
+      "number": 8,
+      "head": "81333005501423e6dfd18923de208981087b8816",
+      "base": "feature/artmaster-content-studio",
+      "unchanged": true,
+      "state": "open",
+      "mergedAt": null
+    },
+    {
+      "number": 9,
+      "head": "93c4f89f2b60b829bb7817890935b65289dfa7ae",
+      "base": "feature/artmaster-content-studio",
+      "unchanged": true,
+      "state": "open",
+      "mergedAt": null
+    },
+    {
+      "number": 10,
+      "head": "129322483e2b9d6892913c9f5c0f2c380628f705",
+      "base": "feature/artmaster-banner-partners",
+      "unchanged": true,
+      "state": "open",
+      "mergedAt": null
+    },
+    {
+      "number": 11,
+      "head": "6603bc6ae611383072985582ddcad88ab56c6976",
+      "base": "feature/artmaster-complete-integration",
+      "unchanged": true,
+      "state": "open",
+      "mergedAt": null
+    }
+  ],
+  "scope": "Public head SHA, base ref, state, title, body and merged_at match the pre-task snapshot."
+}

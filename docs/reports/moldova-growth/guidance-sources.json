@@ -1,0 +1,70 @@
+[
+  {
+    "url": "https://developers.google.com/search/docs/specialty/international/localized-versions",
+    "checkedAt": "2026-10-17T18:58:21.902363+00:00",
+    "status": 200,
+    "finalUrl": "https://developers.google.com/search/docs/specialty/international/localized-versions",
+    "bytes": 198993
+  },
+  {
+    "url": "https://developers.google.com/search/docs/appearance/title-link",
+    "checkedAt": "2026-10-17T18:58:21.903038+00:00",
+    "status": 200,
+    "finalUrl": "https://developers.google.com/search/docs/appearance/title-link",
+    "bytes": 189025
+  },
+  {
+    "url": "https://developers.google.com/search/docs/appearance/snippet",
+    "checkedAt": "2026-10-17T18:58:21.903474+00:00",
+    "status": 200,
+    "finalUrl": "https://developers.google.com/search/docs/appearance/snippet",
+    "bytes": 182258
+  },
+  {
+    "url": "https://developers.google.com/search/docs/appearance/structured-data/local-business",
+    "checkedAt": "2026-10-17T18:58:21.903880+00:00",
+    "status": 200,
+    "finalUrl": "https://developers.google.com/search/docs/appearance/structured-data/local-business",
+    "bytes": 226021
+  },
+  {
+    "url": "https://developers.google.com/search/docs/appearance/structured-data/faqpage",
+    "checkedAt": "2026-10-17T18:58:22.331164+00:00",
+    "status": 200,
+    "finalUrl": "https://developers.google.com/search/updates#removing-faq-rich-result",
+    "bytes": 386729
+  },
+  {
+    "url": "https://support.google.com/business/answer/3038177",
+    "checkedAt": "2026-10-17T18:58:22.601120+00:00",
+    "result": "NOT RETRIEVED: environment access/network limitation"
+  },
+  {
+    "url": "https://developers.google.com/analytics/devguides/reporting/data/v1",
+    "checkedAt": "2026-10-17T18:58:22.611711+00:00",
+    "status": 200,
+    "finalUrl": "https://developers.google.com/analytics/devguides/reporting/data/v1",
+    "bytes": 141411
+  },
+  {
+    "url": "https://developers.google.com/webmaster-tools/v1/searchanalytics/query",
+    "checkedAt": "2026-10-17T18:58:22.668964+00:00",
+    "status": 200,
+    "finalUrl": "https://developers.google.com/webmaster-tools/v1/searchanalytics/query",
+    "bytes": 97793
+  },
+  {
+    "url": "https://developers.google.com/speed/docs/insights/v5/get-started",
+    "checkedAt": "2026-10-17T18:58:22.796043+00:00",
+    "status": 200,
+    "finalUrl": "https://developers.google.com/speed/docs/insights/v5/get-started",
+    "bytes": 129803
+  },
+  {
+    "url": "https://web.dev/articles/vitals",
+    "checkedAt": "2026-10-17T18:58:22.899189+00:00",
+    "status": 200,
+    "finalUrl": "https://web.dev/articles/vitals",
+    "bytes": 143740
+  }
+]

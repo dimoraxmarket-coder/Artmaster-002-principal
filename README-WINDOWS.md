@@ -1,6 +1,6 @@
 # ARTMASTER COMPLET — testare locală pe Windows
 
-**Pachet integrat PR #2–#9:** include împreună SEO & Analytics, Echipamente, bannerul panoramic și Parteneri. Începe cu [VERSIUNEA-COMPLETA.md](VERSIUNEA-COMPLETA.md) pentru lista funcțiilor, acces și limite. Documentele din fazele vechi descriu versiunile de atunci.
+**Pachet integrat PR #2–#11 + Moldova Organic Growth:** include împreună SEO & Analytics, Echipamente, bannerul panoramic și Parteneri. Începe cu [VERSIUNEA-COMPLETA.md](VERSIUNEA-COMPLETA.md) pentru lista funcțiilor, acces și limite. Documentele din fazele vechi descriu versiunile de atunci.
 
 Acesta este același proiect Next.js: website public RO/RU/EN + cabinetul administrativ premium + CRM + Media Studio + Content Studio + Security Center. Nu există un backend PHP separat. Codul include etapele suprapuse PR #2–#7; PR-urile nu trebuie îmbinate pentru testarea acestei copii.
 
@@ -51,7 +51,11 @@ Folosește numai nume/date sintetice, de exemplu „TEST LOCAL — nu este cerer
 
 Modulele sunt în același cabinet: Dashboard, CRM, Portofoliu, Media, Conținut, Setări website, Echipă și Securitate. [Auditul CMS](docs/content-studio.md) enumeră exact câmpurile editabile și cele rămase în cod: galerii multiple, unele imagini/texte statice și linkuri sociale nu au încă management complet. Toate controalele activate au funcționalitate existentă; nu reprezintă o promisiune că fiecare secțiune a site-ului este deja editabilă.
 
+**SEO:** intră la `http://localhost:3000/admin#seo` pentru auditul tehnic, istoric și inventarul editorial RO/RU/EN. Pentru editare: **Conținut → Metadate SEO**, alege pagina și limba, salvează ciorna, deschide preview-ul privat și publică separat după revizie. Publicarea privește întreaga versiune CMS. Restaurează doar într-o ciornă nouă dacă vrei să revii la metadate anterioare. Local, GA4/Search Console/PageSpeed rămân „Neconectat”, iar noindex/robots blochează intenționat indexarea; nu activa indexarea pentru a crește scorul. [Metodă, limite și configurare Google](ARTMASTER-TECHNICAL-SEO.md).
+
 ## Banner și parteneri — extensia acestui pachet
+
+Observațiile următoare descriu resursele implicite ale distribuției inițiale. Nu înlocui configurația, baza sau logo-urile deja publicate în copia ta; extrage noul pachet separat și păstrează datele existente conform secțiunii de mai jos.
 
 În **Conținut → Banner Acasă**, încarcă PNG/JPEG (maximum 5 MB), bifează afișarea și salvează ciorna. Imaginea WebP este păstrată integral, fără tăiere și fără texte/butoane suprapuse. Poți selecta separat un fișier mobil. Verifică previzualizarea privată RO/RU/EN, apoi publică explicit versiunea. Fișierul original al noului banner nu a fost disponibil pentru descărcare în mediul cloud: pachetul păstrează imaginea existentă până la import; imaginea sintetică din teste NU este instalată ca banner.
 

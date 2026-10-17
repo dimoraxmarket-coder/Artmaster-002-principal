@@ -1,0 +1,2235 @@
+{
+  "scope": "Synthetic loopback published baseline, intentional noindex/robots. Nine concept pages excluded from sitemap. Internal check results are not Google index/ranking measurements.",
+  "runs": [
+    {
+      "phase": "before",
+      "checkedAt": "2026-10-17T10:55:11.318Z",
+      "sourceCommit": "6603bc6ae611383072985582ddcad88ab56c6976",
+      "count": 99,
+      "statusFailures": [],
+      "duplicateTitles": [],
+      "duplicateDescriptions": [],
+      "failedCheckCounts": {
+        "robots": 99,
+        "indexing": 99,
+        "sitemap": 9
+      },
+      "pages": [
+        {
+          "path": "/ro",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Producție publicitară în Chișinău și Moldova | ARTMASTER",
+          "description": "Print UV, litere volumetrice, imprimare 3D și prelucrare laser / CNC. Proiecte de comunicare vizuală, pornind de la ceea ce ai în minte."
+        },
+        {
+          "path": "/ru",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Рекламное производство в Кишинёве и Молдове | ARTMASTER",
+          "description": "УФ-печать, объёмные буквы, 3D-печать, лазерная обработка и фрезеровка с ЧПУ. Проекты визуальной коммуникации, которые начинаются с вашего замысла."
+        },
+        {
+          "path": "/en",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Advertising production in Chisinau, Moldova | ARTMASTER",
+          "description": "UV printing, dimensional lettering, 3D printing and laser / CNC machining. Visual communication projects that start with what you have in mind."
+        },
+        {
+          "path": "/ro/servicii",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Servicii de producție publicitară în Moldova | ARTMASTER",
+          "description": "De la print la forme cu volum, găsește direcția potrivită pentru proiect. Detaliile tehnice se confirmă după evaluarea solicitării."
+        },
+        {
+          "path": "/ru/servicii",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Услуги рекламного производства в Молдове | ARTMASTER",
+          "description": "От печати до объёмных форм — найдите направление для вашего проекта. Технические детали подтверждаются после оценки запроса."
+        },
+        {
+          "path": "/en/servicii",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Advertising production services in Moldova | ARTMASTER",
+          "description": "From printing to dimensional shapes, find the right direction for your project. Technical details are confirmed after assessing your enquiry."
+        },
+        {
+          "path": "/ro/echipamente",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Echipamente de print, 3D și CNC în Durlești | ARTMASTER",
+          "description": "Descoperă tehnologiile confirmate la ARTMASTER. Modelele și parametrii încă nedocumentați se confirmă înainte de ofertarea unei lucrări."
+        },
+        {
+          "path": "/ru/echipamente",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Оборудование для печати, 3D и ЧПУ в Дурлештах | ARTMASTER",
+          "description": "Узнайте о подтверждённых технологиях ARTMASTER. Модели и ещё не документированные параметры уточняются до расчёта предложения."
+        },
+        {
+          "path": "/en/echipamente",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Printing, 3D and CNC equipment in Durlești | ARTMASTER",
+          "description": "Discover ARTMASTER’s confirmed technologies. Models and parameters not yet documented are confirmed before quoting a job."
+        },
+        {
+          "path": "/ro/portofoliu",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Portofoliu și concepte de producție publicitară | ARTMASTER",
+          "description": "Explorează concepte pentru print, volum și imprimare 3D. Fiecare concept este marcat explicit; proiectele reale vor fi publicate după verificare."
+        },
+        {
+          "path": "/ru/portofoliu",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Портфолио и концепты рекламного производства | ARTMASTER",
+          "description": "Изучите концепты печати, объёмного оформления и 3D-печати. Каждый концепт явно помечен; реальные проекты будут опубликованы после проверки."
+        },
+        {
+          "path": "/en/portofoliu",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Advertising production portfolio and concepts | ARTMASTER",
+          "description": "Explore concepts for printing, dimensional design and 3D printing. Each concept is clearly labelled; real projects will be published after verification."
+        },
+        {
+          "path": "/ro/despre-noi",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Despre atelierul ARTMASTER din Durlești | ARTMASTER",
+          "description": "Un atelier din Durlești pentru print, litere volumetrice, imprimare 3D și prelucrare laser / CNC. Pornim de la proiectul tău și alegem împreună o direcție de realizare."
+        },
+        {
+          "path": "/ru/despre-noi",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "О мастерской ARTMASTER в Дурлештах | ARTMASTER",
+          "description": "Мастерская в Дурлештах для печати, объёмных букв, 3D-печати, лазерной обработки и фрезеровки с ЧПУ. Начинаем с вашего проекта и вместе выбираем способ реализации."
+        },
+        {
+          "path": "/en/despre-noi",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "About the ARTMASTER workshop in Durlești | ARTMASTER",
+          "description": "A workshop in Durlești for printing, dimensional lettering, 3D printing and laser / CNC machining. We start with your project and choose a production direction together."
+        },
+        {
+          "path": "/ro/contact",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Contact — oficiu în Durlești, Moldova | ARTMASTER",
+          "description": "Spune-ne ce dorești să realizezi, iar echipa noastră te va ajuta să găsești soluția potrivită."
+        },
+        {
+          "path": "/ru/contact",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Контакты — офис в Дурлештах, Молдова | ARTMASTER",
+          "description": "Расскажите, что вы хотите изготовить, и наша команда поможет подобрать подходящее решение."
+        },
+        {
+          "path": "/en/contact",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Contact — Durlești office, Moldova | ARTMASTER",
+          "description": "Tell us what you would like to create, and our team will help you find the right solution."
+        },
+        {
+          "path": "/ro/solicita-oferta",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Solicită o ofertă | ARTMASTER",
+          "description": "Spune-ne ce vrei să realizezi. Dimensiunile, cantitatea și fișierele ne ajută să evaluăm corect proiectul."
+        },
+        {
+          "path": "/ru/solicita-oferta",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Запросить предложение | ARTMASTER",
+          "description": "Расскажите, что вы хотите изготовить. Размеры, количество и файлы помогут нам оценить проект."
+        },
+        {
+          "path": "/en/solicita-oferta",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Request a quote | ARTMASTER",
+          "description": "Tell us what you would like to produce. Dimensions, quantity and files help us assess your project."
+        },
+        {
+          "path": "/ro/intrebari-frecvente",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Întrebări frecvente | ARTMASTER",
+          "description": "Răspunsuri utile înainte de pregătirea unui proiect de producție publicitară."
+        },
+        {
+          "path": "/ru/intrebari-frecvente",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Частые вопросы | ARTMASTER",
+          "description": "Полезные ответы перед подготовкой рекламного проекта."
+        },
+        {
+          "path": "/en/intrebari-frecvente",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "FAQ | ARTMASTER",
+          "description": "Useful answers before preparing an advertising production project."
+        },
+        {
+          "path": "/ro/blog",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Mai clar, înainte de producție. | ARTMASTER",
+          "description": "Ghiduri practice pentru pregătirea fișierelor și planificarea unui proiect vizual."
+        },
+        {
+          "path": "/ru/blog",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Больше ясности до производства. | ARTMASTER",
+          "description": "Практические руководства по подготовке файлов и планированию визуального проекта."
+        },
+        {
+          "path": "/en/blog",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "More clarity before production. | ARTMASTER",
+          "description": "Practical guides to preparing files and planning a visual project."
+        },
+        {
+          "path": "/ro/confidentialitate",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Politica de confidențialitate | ARTMASTER",
+          "description": "Cum sunt prelucrate datele de contact, cererile de ofertă și fișierele trimise către ARTMASTER. Acces restricționat și drepturile tale."
+        },
+        {
+          "path": "/ru/confidentialitate",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Политика конфиденциальности | ARTMASTER",
+          "description": "Как ARTMASTER обрабатывает контактные данные, запросы и файлы. Ограниченный доступ к заявкам и ваши права."
+        },
+        {
+          "path": "/en/confidentialitate",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Privacy policy | ARTMASTER",
+          "description": "How ARTMASTER processes contact details, quote requests and uploaded files. Restricted access and your data rights."
+        },
+        {
+          "path": "/ro/termeni",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Condiții de utilizare | ARTMASTER",
+          "description": "Condiții pentru solicitarea ofertelor ARTMASTER, confirmarea comenzilor, utilizarea fișierelor și conținutul vizual."
+        },
+        {
+          "path": "/ru/termeni",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Условия использования | ARTMASTER",
+          "description": "Условия запросов ARTMASTER, подтверждения заказов, использования файлов и визуального контента."
+        },
+        {
+          "path": "/en/termeni",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Terms of use | ARTMASTER",
+          "description": "Terms for ARTMASTER quote requests, order confirmation, submitted files and visual content."
+        },
+        {
+          "path": "/ro/cookies",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Politica privind cookie-urile | ARTMASTER",
+          "description": "Informații despre cookie-urile necesare și analiza opțională a vizitelor ARTMASTER. Alege și modifică preferințele tale."
+        },
+        {
+          "path": "/ru/cookies",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Политика файлов cookie | ARTMASTER",
+          "description": "Информация о необходимых cookie и необязательной аналитике ARTMASTER. Выбор и изменение ваших настроек."
+        },
+        {
+          "path": "/en/cookies",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Cookie policy | ARTMASTER",
+          "description": "Necessary cookies and optional ARTMASTER website analytics. Choose and change your preferences."
+        },
+        {
+          "path": "/ro/servicii/print-uv",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Print UV în Moldova | ARTMASTER",
+          "description": "Grafică imprimată cu tehnologie UV pentru proiecte de comunicare vizuală."
+        },
+        {
+          "path": "/ru/servicii/print-uv",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "УФ-печать в Молдове | ARTMASTER",
+          "description": "Печать графики по УФ-технологии для проектов визуальной коммуникации."
+        },
+        {
+          "path": "/en/servicii/print-uv",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "UV printing in Moldova | ARTMASTER",
+          "description": "UV-printed graphics for visual communication projects."
+        },
+        {
+          "path": "/ro/servicii/imprimare-mari-dimensiuni",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Imprimare de format mare în Moldova | ARTMASTER",
+          "description": "Imagini de impact, pregătite pentru suprafețe mari și citire de la distanță."
+        },
+        {
+          "path": "/ru/servicii/imprimare-mari-dimensiuni",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Широкоформатная печать в Молдове | ARTMASTER",
+          "description": "Выразительная графика для больших поверхностей и просмотра на расстоянии."
+        },
+        {
+          "path": "/en/servicii/imprimare-mari-dimensiuni",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Large-format printing in Moldova | ARTMASTER",
+          "description": "High-impact graphics designed for large surfaces and viewing at a distance."
+        },
+        {
+          "path": "/ro/servicii/litere-volumetrice",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Litere volumetrice în Moldova | ARTMASTER",
+          "description": "Identitate vizuală cu volum pentru nume, logo-uri și elemente de orientare."
+        },
+        {
+          "path": "/ru/servicii/litere-volumetrice",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Объёмные буквы в Молдове | ARTMASTER",
+          "description": "Объёмное оформление названий, логотипов и навигационных элементов."
+        },
+        {
+          "path": "/en/servicii/litere-volumetrice",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Dimensional lettering in Moldova | ARTMASTER",
+          "description": "Three-dimensional identity for names, logos and wayfinding."
+        },
+        {
+          "path": "/ro/servicii/imprimare-3d",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Imprimare 3D în Moldova | ARTMASTER",
+          "description": "De la model digital la obiect fizic, pentru prototipuri și idei de prezentare."
+        },
+        {
+          "path": "/ru/servicii/imprimare-3d",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "3D-печать в Молдове | ARTMASTER",
+          "description": "От цифровой модели к физическому объекту для прототипов и презентаций."
+        },
+        {
+          "path": "/en/servicii/imprimare-3d",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "3D printing in Moldova | ARTMASTER",
+          "description": "From a digital model to a physical object for prototypes and presentations."
+        },
+        {
+          "path": "/ro/servicii/gravura-laser",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Gravură laser în Moldova | ARTMASTER",
+          "description": "Detalii, texte și contururi pentru personalizarea unui proiect."
+        },
+        {
+          "path": "/ru/servicii/gravura-laser",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Лазерная гравировка в Молдове | ARTMASTER",
+          "description": "Детали, надписи и контуры для индивидуального оформления проекта."
+        },
+        {
+          "path": "/en/servicii/gravura-laser",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Laser engraving in Moldova | ARTMASTER",
+          "description": "Details, text and outlines for a personalised project."
+        },
+        {
+          "path": "/ro/servicii/frezare-cnc",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Frezare și debitare CNC în Moldova | ARTMASTER",
+          "description": "Contururi și forme realizate pornind de la un desen digital."
+        },
+        {
+          "path": "/ru/servicii/frezare-cnc",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Фрезеровка и резка ЧПУ в Молдове | ARTMASTER",
+          "description": "Контуры и формы, изготовленные на основе цифрового чертежа."
+        },
+        {
+          "path": "/en/servicii/frezare-cnc",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "CNC routing and cutting in Moldova | ARTMASTER",
+          "description": "Contours and shapes produced from a digital drawing."
+        },
+        {
+          "path": "/ro/servicii/colantare-auto",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Colantare și inscripționare auto în Moldova | ARTMASTER",
+          "description": "Identitate vizuală pe automobile și flote, de la inscripționare la grafică extinsă."
+        },
+        {
+          "path": "/ru/servicii/colantare-auto",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Оклейка и брендирование автомобилей в Молдове | ARTMASTER",
+          "description": "Фирменная графика на автомобилях и автопарках: от надписей до комплексного оформления."
+        },
+        {
+          "path": "/en/servicii/colantare-auto",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Vehicle wrapping and graphics in Moldova | ARTMASTER",
+          "description": "Brand graphics for vehicles and fleets, from lettering to larger visual layouts."
+        },
+        {
+          "path": "/ro/servicii/stickere-personalizate",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Stickere și etichete personalizate în Moldova | ARTMASTER",
+          "description": "Etichete, autocolante și grafică pentru vitrine, produse și promovare."
+        },
+        {
+          "path": "/ru/servicii/stickere-personalizate",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Индивидуальные наклейки и этикетки в Молдове | ARTMASTER",
+          "description": "Этикетки, наклейки и графика для витрин, продукции и продвижения."
+        },
+        {
+          "path": "/en/servicii/stickere-personalizate",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Custom stickers and labels in Moldova | ARTMASTER",
+          "description": "Labels, decals and graphics for shop windows, products and promotion."
+        },
+        {
+          "path": "/ro/servicii/print-bannere",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Print bannere în Moldova | ARTMASTER",
+          "description": "Mesaje lizibile la scară mare pentru evenimente, spații comerciale și campanii."
+        },
+        {
+          "path": "/ru/servicii/print-bannere",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Печать баннеров в Молдове | ARTMASTER",
+          "description": "Читаемые крупные сообщения для мероприятий, коммерческих пространств и кампаний."
+        },
+        {
+          "path": "/en/servicii/print-bannere",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Banner printing in Moldova | ARTMASTER",
+          "description": "Readable large-scale messages for events, commercial spaces and campaigns."
+        },
+        {
+          "path": "/ro/servicii/branding-design",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Branding și design publicitar în Moldova | ARTMASTER",
+          "description": "De la identitate vizuală la fișiere pregătite pentru print și producție."
+        },
+        {
+          "path": "/ru/servicii/branding-design",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Брендинг и рекламный дизайн в Молдове | ARTMASTER",
+          "description": "От фирменного стиля до файлов для печати и изготовления."
+        },
+        {
+          "path": "/en/servicii/branding-design",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Branding and advertising design in Moldova | ARTMASTER",
+          "description": "From visual identity to artwork ready for print and production."
+        },
+        {
+          "path": "/ro/servicii/standuri-expozitionale",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Standuri și construcții publicitare în Moldova | ARTMASTER",
+          "description": "Rame, standuri, vitrine și elemente construite pentru prezentarea afacerii."
+        },
+        {
+          "path": "/ru/servicii/standuri-expozitionale",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Выставочные и рекламные конструкции в Молдове | ARTMASTER",
+          "description": "Рамы, стенды, витрины и конструкции для презентации бизнеса."
+        },
+        {
+          "path": "/en/servicii/standuri-expozitionale",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Exhibition and advertising structures in Moldova | ARTMASTER",
+          "description": "Frames, stands, shop-window displays and structures for presenting a business."
+        },
+        {
+          "path": "/ro/echipamente/uv-mimaki",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Echipament UV Mimaki | ARTMASTER",
+          "description": "Tehnologie UV pentru proiecte de imprimare și comunicare vizuală."
+        },
+        {
+          "path": "/ru/echipamente/uv-mimaki",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "УФ-оборудование Mimaki | ARTMASTER",
+          "description": "УФ-технология для печати и визуальной коммуникации."
+        },
+        {
+          "path": "/en/echipamente/uv-mimaki",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Mimaki UV equipment | ARTMASTER",
+          "description": "UV technology for printing and visual communication."
+        },
+        {
+          "path": "/ro/echipamente/imprimante-3d",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "4 imprimante 3D | ARTMASTER",
+          "description": "Patru echipamente pentru transformarea modelelor digitale în obiecte."
+        },
+        {
+          "path": "/ru/echipamente/imprimante-3d",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "4 3D-принтера | ARTMASTER",
+          "description": "Четыре устройства для превращения цифровых моделей в объекты."
+        },
+        {
+          "path": "/en/echipamente/imprimante-3d",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "4 3D printers | ARTMASTER",
+          "description": "Four machines for turning digital models into objects."
+        },
+        {
+          "path": "/ro/echipamente/laser",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Echipament laser | ARTMASTER",
+          "description": "Atelierul include echipament laser. Tipul laserului, puterea și suprafața utilă nu sunt încă documentate public. Compatibilitatea suportului și dimensiunea zonei de gravare se…"
+        },
+        {
+          "path": "/ru/echipamente/laser",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Лазерное оборудование | ARTMASTER",
+          "description": "Оборудование для графических деталей и гравировки."
+        },
+        {
+          "path": "/en/echipamente/laser",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Laser equipment | ARTMASTER",
+          "description": "The workshop includes laser equipment. Laser type, power and usable area are not yet publicly documented. Substrate compatibility and engraving area are checked before work is…"
+        },
+        {
+          "path": "/ro/echipamente/freza-cnc",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Freză CNC | ARTMASTER",
+          "description": "Prelucrare ghidată de desen digital pentru forme și contururi."
+        },
+        {
+          "path": "/ru/echipamente/freza-cnc",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Фрезерный станок с ЧПУ | ARTMASTER",
+          "description": "Фрезерный станок с ЧПУ входит в подтверждённое оборудование мастерской. Модель и рабочая область будут документированы отдельно. Параметры обработки и подходящие материалы…"
+        },
+        {
+          "path": "/en/echipamente/freza-cnc",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "CNC router | ARTMASTER",
+          "description": "A CNC router is part of the workshop’s confirmed equipment. Its model and working area will be documented separately. Machining parameters and suitable materials are determined…"
+        },
+        {
+          "path": "/ro/echipamente/formare-borduri-litere",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Echipament pentru borduri de litere | ARTMASTER",
+          "description": "Formarea bordurilor pentru proiecte cu litere volumetrice."
+        },
+        {
+          "path": "/ru/echipamente/formare-borduri-litere",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Оборудование для бортов букв | ARTMASTER",
+          "description": "В мастерской есть устройство для формирования бортов букв. Модель и параметры обработки будут проверены отдельно. Применение в проекте подтверждается после анализа контура и…"
+        },
+        {
+          "path": "/en/echipamente/formare-borduri-litere",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Letter-side forming equipment | ARTMASTER",
+          "description": "Forming sidewalls for dimensional lettering projects."
+        },
+        {
+          "path": "/ro/blog/pregatirea-fisierelor-pentru-print",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Cum pregătești un proiect pentru print | ARTMASTER",
+          "description": "Dimensiuni, fișiere și context: informațiile care fac o solicitare mai clară."
+        },
+        {
+          "path": "/ru/blog/pregatirea-fisierelor-pentru-print",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Как подготовить проект к печати | ARTMASTER",
+          "description": "Размеры, файлы и контекст: что делает запрос понятнее."
+        },
+        {
+          "path": "/en/blog/pregatirea-fisierelor-pentru-print",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "How to prepare a print project | ARTMASTER",
+          "description": "Dimensions, files and context: the information that makes an enquiry clearer."
+        },
+        {
+          "path": "/ro/blog/de-la-idee-la-prototip-3d",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "De la idee la prototip: ce trebuie clarificat | ARTMASTER",
+          "description": "Un ghid de planificare pentru modele 3D, forme și componente personalizate."
+        },
+        {
+          "path": "/ru/blog/de-la-idee-la-prototip-3d",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "От идеи к прототипу: что нужно уточнить | ARTMASTER",
+          "description": "Руководство по планированию 3D-моделей, форм и индивидуальных компонентов."
+        },
+        {
+          "path": "/en/blog/de-la-idee-la-prototip-3d",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "From idea to prototype: what to clarify | ARTMASTER",
+          "description": "A planning guide for 3D models, shapes and custom components."
+        },
+        {
+          "path": "/ro/portofoliu/concept-grafica-spatiu-comercial",
+          "status": 200,
+          "score": 80,
+          "failedChecks": [
+            "sitemap",
+            "robots",
+            "indexing"
+          ],
+          "title": "Concept: grafică pentru un spațiu comercial | ARTMASTER",
+          "description": "O direcție vizuală pentru explorarea unui proiect de print."
+        },
+        {
+          "path": "/ro/portofoliu/concept-identitate-volumetrica",
+          "status": 200,
+          "score": 80,
+          "failedChecks": [
+            "sitemap",
+            "robots",
+            "indexing"
+          ],
+          "title": "Concept: identitate cu litere volumetrice | ARTMASTER",
+          "description": "Studiu de prezentare a unui nume prin volum și contrast."
+        },
+        {
+          "path": "/ro/portofoliu/concept-obiect-imprimat-3d",
+          "status": 200,
+          "score": 80,
+          "failedChecks": [
+            "sitemap",
+            "robots",
+            "indexing"
+          ],
+          "title": "Concept: obiect de prezentare 3D | ARTMASTER",
+          "description": "O idee vizuală pentru trecerea de la formă digitală la obiect."
+        },
+        {
+          "path": "/ru/portofoliu/concept-grafica-spatiu-comercial",
+          "status": 200,
+          "score": 80,
+          "failedChecks": [
+            "sitemap",
+            "robots",
+            "indexing"
+          ],
+          "title": "Концепт: графика коммерческого пространства | ARTMASTER",
+          "description": "Визуальное направление для разработки печатного проекта."
+        },
+        {
+          "path": "/ru/portofoliu/concept-identitate-volumetrica",
+          "status": 200,
+          "score": 80,
+          "failedChecks": [
+            "sitemap",
+            "robots",
+            "indexing"
+          ],
+          "title": "Концепт: айдентика с объёмными буквами | ARTMASTER",
+          "description": "Исследование оформления названия через объём и контраст."
+        },
+        {
+          "path": "/ru/portofoliu/concept-obiect-imprimat-3d",
+          "status": 200,
+          "score": 80,
+          "failedChecks": [
+            "sitemap",
+            "robots",
+            "indexing"
+          ],
+          "title": "Концепт: презентационный 3D-объект | ARTMASTER",
+          "description": "Визуальная идея перехода от цифровой формы к объекту."
+        },
+        {
+          "path": "/en/portofoliu/concept-grafica-spatiu-comercial",
+          "status": 200,
+          "score": 80,
+          "failedChecks": [
+            "sitemap",
+            "robots",
+            "indexing"
+          ],
+          "title": "Concept: graphics for a commercial space | ARTMASTER",
+          "description": "This concept visual illustrates a possible design direction. It does not represent a completed commission, a client or a photograph of the ARTMASTER workshop. Dimensions,…"
+        },
+        {
+          "path": "/en/portofoliu/concept-identitate-volumetrica",
+          "status": 200,
+          "score": 80,
+          "failedChecks": [
+            "sitemap",
+            "robots",
+            "indexing"
+          ],
+          "title": "Concept: dimensional brand identity | ARTMASTER",
+          "description": "A study of presenting a name through depth and contrast."
+        },
+        {
+          "path": "/en/portofoliu/concept-obiect-imprimat-3d",
+          "status": 200,
+          "score": 80,
+          "failedChecks": [
+            "sitemap",
+            "robots",
+            "indexing"
+          ],
+          "title": "Concept: 3D presentation object | ARTMASTER",
+          "description": "A visual idea for moving from a digital shape to an object."
+        }
+      ],
+      "rawArtifactSha256": "525f97a89c8eab7d9b19b42783ecc97200a95ebfcaec55c0354b3ece1b9d1904"
+    },
+    {
+      "phase": "after",
+      "checkedAt": "2026-10-17T19:10:28.315Z",
+      "sourceCommit": "8ac8919",
+      "count": 99,
+      "statusFailures": [],
+      "duplicateTitles": [],
+      "duplicateDescriptions": [],
+      "failedCheckCounts": {
+        "robots": 99,
+        "indexing": 99,
+        "sitemap": 9
+      },
+      "pages": [
+        {
+          "path": "/ro",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Producție publicitară în Chișinău și Moldova | ARTMASTER",
+          "description": "Print UV, litere volumetrice, imprimare 3D și prelucrare laser / CNC. Proiecte de comunicare vizuală, pornind de la ceea ce ai în minte."
+        },
+        {
+          "path": "/ru",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Рекламное производство в Кишинёве и Молдове | ARTMASTER",
+          "description": "УФ-печать, объёмные буквы, 3D-печать, лазерная обработка и фрезеровка с ЧПУ. Проекты визуальной коммуникации, которые начинаются с вашего замысла."
+        },
+        {
+          "path": "/en",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Advertising production in Chisinau, Moldova | ARTMASTER",
+          "description": "UV printing, dimensional lettering, 3D printing and laser / CNC machining. Visual communication projects that start with what you have in mind."
+        },
+        {
+          "path": "/ro/servicii",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Servicii de producție publicitară în Moldova | ARTMASTER",
+          "description": "De la print la forme cu volum, găsește direcția potrivită pentru proiect. Detaliile tehnice se confirmă după evaluarea solicitării."
+        },
+        {
+          "path": "/ru/servicii",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Услуги рекламного производства в Молдове | ARTMASTER",
+          "description": "От печати до объёмных форм — найдите направление для вашего проекта. Технические детали подтверждаются после оценки запроса."
+        },
+        {
+          "path": "/en/servicii",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Advertising production services in Moldova | ARTMASTER",
+          "description": "From printing to dimensional shapes, find the right direction for your project. Technical details are confirmed after assessing your enquiry."
+        },
+        {
+          "path": "/ro/echipamente",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Echipamente de print, 3D și CNC în Durlești | ARTMASTER",
+          "description": "Descoperă tehnologiile confirmate la ARTMASTER. Modelele și parametrii încă nedocumentați se confirmă înainte de ofertarea unei lucrări."
+        },
+        {
+          "path": "/ru/echipamente",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Оборудование для печати, 3D и ЧПУ в Дурлештах | ARTMASTER",
+          "description": "Узнайте о подтверждённых технологиях ARTMASTER. Модели и ещё не документированные параметры уточняются до расчёта предложения."
+        },
+        {
+          "path": "/en/echipamente",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Printing, 3D and CNC equipment in Durlești | ARTMASTER",
+          "description": "Discover ARTMASTER’s confirmed technologies. Models and parameters not yet documented are confirmed before quoting a job."
+        },
+        {
+          "path": "/ro/portofoliu",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Portofoliu și concepte de producție publicitară | ARTMASTER",
+          "description": "Explorează concepte pentru print, volum și imprimare 3D. Fiecare concept este marcat explicit; proiectele reale vor fi publicate după verificare."
+        },
+        {
+          "path": "/ru/portofoliu",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Портфолио и концепты рекламного производства | ARTMASTER",
+          "description": "Изучите концепты печати, объёмного оформления и 3D-печати. Каждый концепт явно помечен; реальные проекты будут опубликованы после проверки."
+        },
+        {
+          "path": "/en/portofoliu",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Advertising production portfolio and concepts | ARTMASTER",
+          "description": "Explore concepts for printing, dimensional design and 3D printing. Each concept is clearly labelled; real projects will be published after verification."
+        },
+        {
+          "path": "/ro/despre-noi",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Despre atelierul ARTMASTER din Durlești | ARTMASTER",
+          "description": "Un atelier din Durlești pentru print, litere volumetrice, imprimare 3D și prelucrare laser / CNC. Pornim de la proiectul tău și alegem împreună o direcție de realizare."
+        },
+        {
+          "path": "/ru/despre-noi",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "О мастерской ARTMASTER в Дурлештах | ARTMASTER",
+          "description": "Мастерская в Дурлештах для печати, объёмных букв, 3D-печати, лазерной обработки и фрезеровки с ЧПУ. Начинаем с вашего проекта и вместе выбираем способ реализации."
+        },
+        {
+          "path": "/en/despre-noi",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "About the ARTMASTER workshop in Durlești | ARTMASTER",
+          "description": "A workshop in Durlești for printing, dimensional lettering, 3D printing and laser / CNC machining. We start with your project and choose a production direction together."
+        },
+        {
+          "path": "/ro/contact",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Contact — oficiu în Durlești, Moldova | ARTMASTER",
+          "description": "Spune-ne ce dorești să realizezi, iar echipa noastră te va ajuta să găsești soluția potrivită."
+        },
+        {
+          "path": "/ru/contact",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Контакты — офис в Дурлештах, Молдова | ARTMASTER",
+          "description": "Расскажите, что вы хотите изготовить, и наша команда поможет подобрать подходящее решение."
+        },
+        {
+          "path": "/en/contact",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Contact — Durlești office, Moldova | ARTMASTER",
+          "description": "Tell us what you would like to create, and our team will help you find the right solution."
+        },
+        {
+          "path": "/ro/solicita-oferta",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Solicită o ofertă | ARTMASTER",
+          "description": "Spune-ne ce vrei să realizezi. Dimensiunile, cantitatea și fișierele ne ajută să evaluăm corect proiectul."
+        },
+        {
+          "path": "/ru/solicita-oferta",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Запросить предложение | ARTMASTER",
+          "description": "Расскажите, что вы хотите изготовить. Размеры, количество и файлы помогут нам оценить проект."
+        },
+        {
+          "path": "/en/solicita-oferta",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Request a quote | ARTMASTER",
+          "description": "Tell us what you would like to produce. Dimensions, quantity and files help us assess your project."
+        },
+        {
+          "path": "/ro/intrebari-frecvente",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Întrebări frecvente | ARTMASTER",
+          "description": "Răspunsuri utile înainte de pregătirea unui proiect de producție publicitară."
+        },
+        {
+          "path": "/ru/intrebari-frecvente",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Частые вопросы | ARTMASTER",
+          "description": "Полезные ответы перед подготовкой рекламного проекта."
+        },
+        {
+          "path": "/en/intrebari-frecvente",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "FAQ | ARTMASTER",
+          "description": "Useful answers before preparing an advertising production project."
+        },
+        {
+          "path": "/ro/blog",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Mai clar, înainte de producție. | ARTMASTER",
+          "description": "Ghiduri practice pentru pregătirea fișierelor și planificarea unui proiect vizual."
+        },
+        {
+          "path": "/ru/blog",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Больше ясности до производства. | ARTMASTER",
+          "description": "Практические руководства по подготовке файлов и планированию визуального проекта."
+        },
+        {
+          "path": "/en/blog",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "More clarity before production. | ARTMASTER",
+          "description": "Practical guides to preparing files and planning a visual project."
+        },
+        {
+          "path": "/ro/confidentialitate",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Politica de confidențialitate | ARTMASTER",
+          "description": "Cum sunt prelucrate datele de contact, cererile de ofertă și fișierele trimise către ARTMASTER. Acces restricționat și drepturile tale."
+        },
+        {
+          "path": "/ru/confidentialitate",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Политика конфиденциальности | ARTMASTER",
+          "description": "Как ARTMASTER обрабатывает контактные данные, запросы и файлы. Ограниченный доступ к заявкам и ваши права."
+        },
+        {
+          "path": "/en/confidentialitate",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Privacy policy | ARTMASTER",
+          "description": "How ARTMASTER processes contact details, quote requests and uploaded files. Restricted access and your data rights."
+        },
+        {
+          "path": "/ro/termeni",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Condiții de utilizare | ARTMASTER",
+          "description": "Condiții pentru solicitarea ofertelor ARTMASTER, confirmarea comenzilor, utilizarea fișierelor și conținutul vizual."
+        },
+        {
+          "path": "/ru/termeni",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Условия использования | ARTMASTER",
+          "description": "Условия запросов ARTMASTER, подтверждения заказов, использования файлов и визуального контента."
+        },
+        {
+          "path": "/en/termeni",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Terms of use | ARTMASTER",
+          "description": "Terms for ARTMASTER quote requests, order confirmation, submitted files and visual content."
+        },
+        {
+          "path": "/ro/cookies",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Politica privind cookie-urile | ARTMASTER",
+          "description": "Informații despre cookie-urile necesare și analiza opțională a vizitelor ARTMASTER. Alege și modifică preferințele tale."
+        },
+        {
+          "path": "/ru/cookies",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Политика файлов cookie | ARTMASTER",
+          "description": "Информация о необходимых cookie и необязательной аналитике ARTMASTER. Выбор и изменение ваших настроек."
+        },
+        {
+          "path": "/en/cookies",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Cookie policy | ARTMASTER",
+          "description": "Necessary cookies and optional ARTMASTER website analytics. Choose and change your preferences."
+        },
+        {
+          "path": "/ro/servicii/print-uv",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Print UV în Moldova | ARTMASTER",
+          "description": "Grafică imprimată cu tehnologie UV pentru proiecte de comunicare vizuală."
+        },
+        {
+          "path": "/ru/servicii/print-uv",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "УФ-печать в Молдове | ARTMASTER",
+          "description": "Печать графики по УФ-технологии для проектов визуальной коммуникации."
+        },
+        {
+          "path": "/en/servicii/print-uv",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "UV printing in Moldova | ARTMASTER",
+          "description": "UV-printed graphics for visual communication projects."
+        },
+        {
+          "path": "/ro/servicii/imprimare-mari-dimensiuni",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Imprimare de format mare în Moldova | ARTMASTER",
+          "description": "Imagini de impact, pregătite pentru suprafețe mari și citire de la distanță."
+        },
+        {
+          "path": "/ru/servicii/imprimare-mari-dimensiuni",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Широкоформатная печать в Молдове | ARTMASTER",
+          "description": "Выразительная графика для больших поверхностей и просмотра на расстоянии."
+        },
+        {
+          "path": "/en/servicii/imprimare-mari-dimensiuni",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Large-format printing in Moldova | ARTMASTER",
+          "description": "High-impact graphics designed for large surfaces and viewing at a distance."
+        },
+        {
+          "path": "/ro/servicii/litere-volumetrice",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Litere volumetrice în Moldova | ARTMASTER",
+          "description": "Identitate vizuală cu volum pentru nume, logo-uri și elemente de orientare."
+        },
+        {
+          "path": "/ru/servicii/litere-volumetrice",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Объёмные буквы в Молдове | ARTMASTER",
+          "description": "Объёмное оформление названий, логотипов и навигационных элементов."
+        },
+        {
+          "path": "/en/servicii/litere-volumetrice",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Dimensional lettering in Moldova | ARTMASTER",
+          "description": "Three-dimensional identity for names, logos and wayfinding."
+        },
+        {
+          "path": "/ro/servicii/imprimare-3d",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Imprimare 3D în Moldova | ARTMASTER",
+          "description": "De la model digital la obiect fizic, pentru prototipuri și idei de prezentare."
+        },
+        {
+          "path": "/ru/servicii/imprimare-3d",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "3D-печать в Молдове | ARTMASTER",
+          "description": "От цифровой модели к физическому объекту для прототипов и презентаций."
+        },
+        {
+          "path": "/en/servicii/imprimare-3d",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "3D printing in Moldova | ARTMASTER",
+          "description": "From a digital model to a physical object for prototypes and presentations."
+        },
+        {
+          "path": "/ro/servicii/gravura-laser",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Gravură laser în Moldova | ARTMASTER",
+          "description": "Detalii, texte și contururi pentru personalizarea unui proiect."
+        },
+        {
+          "path": "/ru/servicii/gravura-laser",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Лазерная гравировка в Молдове | ARTMASTER",
+          "description": "Детали, надписи и контуры для индивидуального оформления проекта."
+        },
+        {
+          "path": "/en/servicii/gravura-laser",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Laser engraving in Moldova | ARTMASTER",
+          "description": "Details, text and outlines for a personalised project."
+        },
+        {
+          "path": "/ro/servicii/frezare-cnc",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Frezare și debitare CNC în Moldova | ARTMASTER",
+          "description": "Contururi și forme realizate pornind de la un desen digital."
+        },
+        {
+          "path": "/ru/servicii/frezare-cnc",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Фрезеровка и резка ЧПУ в Молдове | ARTMASTER",
+          "description": "Контуры и формы, изготовленные на основе цифрового чертежа."
+        },
+        {
+          "path": "/en/servicii/frezare-cnc",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "CNC routing and cutting in Moldova | ARTMASTER",
+          "description": "Contours and shapes produced from a digital drawing."
+        },
+        {
+          "path": "/ro/servicii/colantare-auto",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Colantare și inscripționare auto în Moldova | ARTMASTER",
+          "description": "Identitate vizuală pe automobile și flote, de la inscripționare la grafică extinsă."
+        },
+        {
+          "path": "/ru/servicii/colantare-auto",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Оклейка и брендирование автомобилей в Молдове | ARTMASTER",
+          "description": "Фирменная графика на автомобилях и автопарках: от надписей до комплексного оформления."
+        },
+        {
+          "path": "/en/servicii/colantare-auto",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Vehicle wrapping and graphics in Moldova | ARTMASTER",
+          "description": "Brand graphics for vehicles and fleets, from lettering to larger visual layouts."
+        },
+        {
+          "path": "/ro/servicii/stickere-personalizate",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Stickere și etichete personalizate în Moldova | ARTMASTER",
+          "description": "Etichete, autocolante și grafică pentru vitrine, produse și promovare."
+        },
+        {
+          "path": "/ru/servicii/stickere-personalizate",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Индивидуальные наклейки и этикетки в Молдове | ARTMASTER",
+          "description": "Этикетки, наклейки и графика для витрин, продукции и продвижения."
+        },
+        {
+          "path": "/en/servicii/stickere-personalizate",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Custom stickers and labels in Moldova | ARTMASTER",
+          "description": "Labels, decals and graphics for shop windows, products and promotion."
+        },
+        {
+          "path": "/ro/servicii/print-bannere",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Print bannere în Moldova | ARTMASTER",
+          "description": "Mesaje lizibile la scară mare pentru evenimente, spații comerciale și campanii."
+        },
+        {
+          "path": "/ru/servicii/print-bannere",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Печать баннеров в Молдове | ARTMASTER",
+          "description": "Читаемые крупные сообщения для мероприятий, коммерческих пространств и кампаний."
+        },
+        {
+          "path": "/en/servicii/print-bannere",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Banner printing in Moldova | ARTMASTER",
+          "description": "Readable large-scale messages for events, commercial spaces and campaigns."
+        },
+        {
+          "path": "/ro/servicii/branding-design",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Branding și design publicitar în Moldova | ARTMASTER",
+          "description": "De la identitate vizuală la fișiere pregătite pentru print și producție."
+        },
+        {
+          "path": "/ru/servicii/branding-design",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Брендинг и рекламный дизайн в Молдове | ARTMASTER",
+          "description": "От фирменного стиля до файлов для печати и изготовления."
+        },
+        {
+          "path": "/en/servicii/branding-design",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Branding and advertising design in Moldova | ARTMASTER",
+          "description": "From visual identity to artwork ready for print and production."
+        },
+        {
+          "path": "/ro/servicii/standuri-expozitionale",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Standuri și construcții publicitare în Moldova | ARTMASTER",
+          "description": "Rame, standuri, vitrine și elemente construite pentru prezentarea afacerii."
+        },
+        {
+          "path": "/ru/servicii/standuri-expozitionale",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Выставочные и рекламные конструкции в Молдове | ARTMASTER",
+          "description": "Рамы, стенды, витрины и конструкции для презентации бизнеса."
+        },
+        {
+          "path": "/en/servicii/standuri-expozitionale",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Exhibition and advertising structures in Moldova | ARTMASTER",
+          "description": "Frames, stands, shop-window displays and structures for presenting a business."
+        },
+        {
+          "path": "/ro/echipamente/uv-mimaki",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Echipament UV Mimaki | ARTMASTER",
+          "description": "Tehnologie UV pentru proiecte de imprimare și comunicare vizuală."
+        },
+        {
+          "path": "/ru/echipamente/uv-mimaki",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "УФ-оборудование Mimaki | ARTMASTER",
+          "description": "УФ-технология для печати и визуальной коммуникации."
+        },
+        {
+          "path": "/en/echipamente/uv-mimaki",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Mimaki UV equipment | ARTMASTER",
+          "description": "UV technology for printing and visual communication."
+        },
+        {
+          "path": "/ro/echipamente/imprimante-3d",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "4 imprimante 3D | ARTMASTER",
+          "description": "Patru echipamente pentru transformarea modelelor digitale în obiecte."
+        },
+        {
+          "path": "/ru/echipamente/imprimante-3d",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "4 3D-принтера | ARTMASTER",
+          "description": "Четыре устройства для превращения цифровых моделей в объекты."
+        },
+        {
+          "path": "/en/echipamente/imprimante-3d",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "4 3D printers | ARTMASTER",
+          "description": "Four machines for turning digital models into objects."
+        },
+        {
+          "path": "/ro/echipamente/laser",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Echipament laser | ARTMASTER",
+          "description": "Atelierul include echipament laser. Tipul laserului, puterea și suprafața utilă nu sunt încă documentate public. Compatibilitatea suportului și dimensiunea zonei de gravare se…"
+        },
+        {
+          "path": "/ru/echipamente/laser",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Лазерное оборудование | ARTMASTER",
+          "description": "Оборудование для графических деталей и гравировки."
+        },
+        {
+          "path": "/en/echipamente/laser",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Laser equipment | ARTMASTER",
+          "description": "The workshop includes laser equipment. Laser type, power and usable area are not yet publicly documented. Substrate compatibility and engraving area are checked before work is…"
+        },
+        {
+          "path": "/ro/echipamente/freza-cnc",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Freză CNC | ARTMASTER",
+          "description": "Prelucrare ghidată de desen digital pentru forme și contururi."
+        },
+        {
+          "path": "/ru/echipamente/freza-cnc",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Фрезерный станок с ЧПУ | ARTMASTER",
+          "description": "Фрезерный станок с ЧПУ входит в подтверждённое оборудование мастерской. Модель и рабочая область будут документированы отдельно. Параметры обработки и подходящие материалы…"
+        },
+        {
+          "path": "/en/echipamente/freza-cnc",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "CNC router | ARTMASTER",
+          "description": "A CNC router is part of the workshop’s confirmed equipment. Its model and working area will be documented separately. Machining parameters and suitable materials are determined…"
+        },
+        {
+          "path": "/ro/echipamente/formare-borduri-litere",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Echipament pentru borduri de litere | ARTMASTER",
+          "description": "Formarea bordurilor pentru proiecte cu litere volumetrice."
+        },
+        {
+          "path": "/ru/echipamente/formare-borduri-litere",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Оборудование для бортов букв | ARTMASTER",
+          "description": "В мастерской есть устройство для формирования бортов букв. Модель и параметры обработки будут проверены отдельно. Применение в проекте подтверждается после анализа контура и…"
+        },
+        {
+          "path": "/en/echipamente/formare-borduri-litere",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Letter-side forming equipment | ARTMASTER",
+          "description": "Forming sidewalls for dimensional lettering projects."
+        },
+        {
+          "path": "/ro/blog/pregatirea-fisierelor-pentru-print",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Cum pregătești un proiect pentru print | ARTMASTER",
+          "description": "Dimensiuni, fișiere și context: informațiile care fac o solicitare mai clară."
+        },
+        {
+          "path": "/ru/blog/pregatirea-fisierelor-pentru-print",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "Как подготовить проект к печати | ARTMASTER",
+          "description": "Размеры, файлы и контекст: что делает запрос понятнее."
+        },
+        {
+          "path": "/en/blog/pregatirea-fisierelor-pentru-print",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "How to prepare a print project | ARTMASTER",
+          "description": "Dimensions, files and context: the information that makes an enquiry clearer."
+        },
+        {
+          "path": "/ro/blog/de-la-idee-la-prototip-3d",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "De la idee la prototip: ce trebuie clarificat | ARTMASTER",
+          "description": "Un ghid de planificare pentru modele 3D, forme și componente personalizate."
+        },
+        {
+          "path": "/ru/blog/de-la-idee-la-prototip-3d",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "От идеи к прототипу: что нужно уточнить | ARTMASTER",
+          "description": "Руководство по планированию 3D-моделей, форм и индивидуальных компонентов."
+        },
+        {
+          "path": "/en/blog/de-la-idee-la-prototip-3d",
+          "status": 200,
+          "score": 86,
+          "failedChecks": [
+            "robots",
+            "indexing"
+          ],
+          "title": "From idea to prototype: what to clarify | ARTMASTER",
+          "description": "A planning guide for 3D models, shapes and custom components."
+        },
+        {
+          "path": "/ro/portofoliu/concept-grafica-spatiu-comercial",
+          "status": 200,
+          "score": 80,
+          "failedChecks": [
+            "sitemap",
+            "robots",
+            "indexing"
+          ],
+          "title": "Concept: grafică pentru un spațiu comercial | ARTMASTER",
+          "description": "O direcție vizuală pentru explorarea unui proiect de print."
+        },
+        {
+          "path": "/ro/portofoliu/concept-identitate-volumetrica",
+          "status": 200,
+          "score": 80,
+          "failedChecks": [
+            "sitemap",
+            "robots",
+            "indexing"
+          ],
+          "title": "Concept: identitate cu litere volumetrice | ARTMASTER",
+          "description": "Studiu de prezentare a unui nume prin volum și contrast."
+        },
+        {
+          "path": "/ro/portofoliu/concept-obiect-imprimat-3d",
+          "status": 200,
+          "score": 80,
+          "failedChecks": [
+            "sitemap",
+            "robots",
+            "indexing"
+          ],
+          "title": "Concept: obiect de prezentare 3D | ARTMASTER",
+          "description": "O idee vizuală pentru trecerea de la formă digitală la obiect."
+        },
+        {
+          "path": "/ru/portofoliu/concept-grafica-spatiu-comercial",
+          "status": 200,
+          "score": 80,
+          "failedChecks": [
+            "sitemap",
+            "robots",
+            "indexing"
+          ],
+          "title": "Концепт: графика коммерческого пространства | ARTMASTER",
+          "description": "Визуальное направление для разработки печатного проекта."
+        },
+        {
+          "path": "/ru/portofoliu/concept-identitate-volumetrica",
+          "status": 200,
+          "score": 80,
+          "failedChecks": [
+            "sitemap",
+            "robots",
+            "indexing"
+          ],
+          "title": "Концепт: айдентика с объёмными буквами | ARTMASTER",
+          "description": "Исследование оформления названия через объём и контраст."
+        },
+        {
+          "path": "/ru/portofoliu/concept-obiect-imprimat-3d",
+          "status": 200,
+          "score": 80,
+          "failedChecks": [
+            "sitemap",
+            "robots",
+            "indexing"
+          ],
+          "title": "Концепт: презентационный 3D-объект | ARTMASTER",
+          "description": "Визуальная идея перехода от цифровой формы к объекту."
+        },
+        {
+          "path": "/en/portofoliu/concept-grafica-spatiu-comercial",
+          "status": 200,
+          "score": 80,
+          "failedChecks": [
+            "sitemap",
+            "robots",
+            "indexing"
+          ],
+          "title": "Concept: graphics for a commercial space | ARTMASTER",
+          "description": "This concept visual illustrates a possible design direction. It does not represent a completed commission, a client or a photograph of the ARTMASTER workshop. Dimensions,…"
+        },
+        {
+          "path": "/en/portofoliu/concept-identitate-volumetrica",
+          "status": 200,
+          "score": 80,
+          "failedChecks": [
+            "sitemap",
+            "robots",
+            "indexing"
+          ],
+          "title": "Concept: dimensional brand identity | ARTMASTER",
+          "description": "A study of presenting a name through depth and contrast."
+        },
+        {
+          "path": "/en/portofoliu/concept-obiect-imprimat-3d",
+          "status": 200,
+          "score": 80,
+          "failedChecks": [
+            "sitemap",
+            "robots",
+            "indexing"
+          ],
+          "title": "Concept: 3D presentation object | ARTMASTER",
+          "description": "A visual idea for moving from a digital shape to an object."
+        }
+      ],
+      "rawArtifactSha256": "3534233267482bb836256d347a431366ac552b64011b924f42320161e4d23aa4"
+    }
+  ]
+}

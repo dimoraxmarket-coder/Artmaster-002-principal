@@ -1,0 +1,21 @@
+{
+  "checkedDate": "2026-10-17",
+  "command": "npm audit --json",
+  "vulnerabilities": {
+    "info": 0,
+    "low": 0,
+    "moderate": 0,
+    "high": 0,
+    "critical": 0,
+    "total": 0
+  },
+  "dependencyCount": {
+    "prod": 96,
+    "dev": 327,
+    "optional": 89,
+    "peer": 0,
+    "peerOptional": 0,
+    "total": 457
+  },
+  "scope": "Registry advisory result at this date; not proof of absence of vulnerabilities or hosted security validation."
+}

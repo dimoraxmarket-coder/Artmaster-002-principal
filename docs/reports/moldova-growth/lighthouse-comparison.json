@@ -1,0 +1,660 @@
+{
+  "scope": "Single local production lab sample per scenario before/after; not field CWV, hosting validation or Google rankings. Local noindex intentionally retained.",
+  "runs": [
+    {
+      "phase": "before",
+      "scenario": "home-mobile",
+      "checkedAt": "2026-10-17T10:55:14.637Z",
+      "lighthouseVersion": "13.5.0",
+      "requestedUrl": "http://127.0.0.1:3100/ro",
+      "finalUrl": "http://127.0.0.1:3100/ro",
+      "categories": {
+        "performance": 95,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 69
+      },
+      "metrics": {
+        "largest-contentful-paint": 2801.45175,
+        "cumulative-layout-shift": 0.001290118910391126,
+        "total-blocking-time": 43,
+        "first-contentful-paint": 1671.1614
+      },
+      "specificChecks": {
+        "color-contrast": {
+          "score": 1,
+          "displayValue": null,
+          "items": []
+        },
+        "image-aspect-ratio": {
+          "score": 1,
+          "displayValue": null,
+          "items": []
+        },
+        "is-crawlable": {
+          "score": 0,
+          "displayValue": null,
+          "items": [
+            {
+              "source": {
+                "type": "node",
+                "lhId": "1-162-META",
+                "path": "1,HTML,0,HEAD,15,META",
+                "selector": "head > meta",
+                "boundingRect": {
+                  "top": 0,
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0,
+                  "width": 0,
+                  "height": 0
+                },
+                "snippet": "<meta name=\"robots\" content=\"noindex, nofollow\" />",
+                "nodeLabel": "head > meta"
+              }
+            },
+            {
+              "source": "x-robots-tag: noindex, nofollow"
+            },
+            {
+              "source": {
+                "type": "source-location",
+                "url": "http://127.0.0.1:3100/robots.txt",
+                "urlProvider": "network",
+                "line": 1,
+                "column": 0
+              }
+            }
+          ]
+        },
+        "robots-txt": {
+          "score": 1,
+          "displayValue": null,
+          "items": []
+        }
+      },
+      "config": {
+        "formFactor": "mobile",
+        "screenEmulation": {
+          "mobile": true,
+          "width": 412,
+          "height": 823,
+          "deviceScaleFactor": 1.75,
+          "disabled": false
+        },
+        "throttling": {
+          "rttMs": 150,
+          "throughputKbps": 1638.4,
+          "requestLatencyMs": 562.5,
+          "downloadThroughputKbps": 1474.5600000000002,
+          "uploadThroughputKbps": 675,
+          "cpuSlowdownMultiplier": 4
+        },
+        "throttlingMethod": "simulate",
+        "locale": "en-US"
+      },
+      "environment": {
+        "networkUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Mobile Safari/537.36",
+        "hostUserAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/154.0.0.0 Safari/537.36",
+        "benchmarkIndex": 2702,
+        "credits": {
+          "axe-core": "4.14.0"
+        }
+      },
+      "rawArtifactSha256": "38bc4f56e4540475051ba761dfb0d85add943509ed90c74e41016e1cda3f2cdd"
+    },
+    {
+      "phase": "before",
+      "scenario": "service-mobile",
+      "checkedAt": "2026-10-17T10:55:27.588Z",
+      "lighthouseVersion": "13.5.0",
+      "requestedUrl": "http://127.0.0.1:3100/ro/servicii/print-uv",
+      "finalUrl": "http://127.0.0.1:3100/ro/servicii/print-uv",
+      "categories": {
+        "performance": 99,
+        "accessibility": 96,
+        "best-practices": 96,
+        "seo": 69
+      },
+      "metrics": {
+        "largest-contentful-paint": 1977.3078,
+        "cumulative-layout-shift": 0.0009974894430954929,
+        "total-blocking-time": 48,
+        "first-contentful-paint": 1137.6539
+      },
+      "specificChecks": {
+        "color-contrast": {
+          "score": 0,
+          "displayValue": null,
+          "items": [
+            {
+              "node": {
+                "type": "node",
+                "lhId": "1-0-A",
+                "path": "1,HTML,1,BODY,3,MAIN,3,SECTION,0,DIV,5,A",
+                "selector": "main#main-content > section.section > div.prose > a.button",
+                "boundingRect": {
+                  "top": 967,
+                  "bottom": 1018,
+                  "left": 18,
+                  "right": 187,
+                  "width": 169,
+                  "height": 50
+                },
+                "snippet": "<a class=\"button\" href=\"/ro/solicita-oferta?serviciu=print-uv\">",
+                "nodeLabel": "Solicită o ofertă ↗",
+                "explanation": "Fix any of the following:\n  Element has insufficient color contrast of 3.68 (foreground color: #886000, background color: #ffca05, font size: 10.8pt (14.4px), font weight: bold). Expected contrast ratio of 4.5:1"
+              }
+            }
+          ]
+        },
+        "image-aspect-ratio": {
+          "score": 0,
+          "displayValue": null,
+          "items": [
+            {
+              "url": "http://127.0.0.1:3100/_next/image?url=%2Fmedia%2Fprint-workshop.png&w=750&q=75",
+              "node": {
+                "type": "node",
+                "lhId": "1-2-IMG",
+                "path": "1,HTML,1,BODY,3,MAIN,5,SECTION,1,DIV,0,A,0,DIV,0,IMG",
+                "selector": "div.card-grid > a.card > div.card-media > img",
+                "boundingRect": {
+                  "top": 1784,
+                  "bottom": 1919,
+                  "left": 19,
+                  "right": 199,
+                  "width": 180,
+                  "height": 135
+                },
+                "snippet": "<img alt=\"Echipament UV Mimaki\" loading=\"lazy\" decoding=\"async\" data-nimg=\"fill\" style=\"position: absolute; height: 100%; width: 100%; inset: 0px;\" sizes=\"(max-width:600px) 100vw,(max-width:1000px) 50vw,33vw\" srcset=\"/_next/image?url=%2Fmedia%2Fprint-workshop.png&amp;w=384&amp;q=75 384w, /_next/ima…\" src=\"http://127.0.0.1:3100/_next/image?url=%2Fmedia%2Fprint-workshop.png&amp;w=750&amp;…\">",
+                "nodeLabel": "Echipament UV Mimaki"
+              },
+              "displayedAspectRatio": "180 x 135\n        (1.33)",
+              "actualAspectRatio": "750 x 422\n        (1.78)",
+              "doRatiosMatch": false
+            }
+          ]
+        },
+        "is-crawlable": {
+          "score": 0,
+          "displayValue": null,
+          "items": [
+            {
+              "source": {
+                "type": "node",
+                "lhId": "1-83-META",
+                "path": "1,HTML,0,HEAD,15,META",
+                "selector": "head > meta",
+                "boundingRect": {
+                  "top": 0,
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0,
+                  "width": 0,
+                  "height": 0
+                },
+                "snippet": "<meta name=\"robots\" content=\"noindex, nofollow\" />",
+                "nodeLabel": "head > meta"
+              }
+            },
+            {
+              "source": "x-robots-tag: noindex, nofollow"
+            },
+            {
+              "source": {
+                "type": "source-location",
+                "url": "http://127.0.0.1:3100/robots.txt",
+                "urlProvider": "network",
+                "line": 1,
+                "column": 0
+              }
+            }
+          ]
+        },
+        "robots-txt": {
+          "score": 1,
+          "displayValue": null,
+          "items": []
+        }
+      },
+      "config": {
+        "formFactor": "mobile",
+        "screenEmulation": {
+          "mobile": true,
+          "width": 412,
+          "height": 823,
+          "deviceScaleFactor": 1.75,
+          "disabled": false
+        },
+        "throttling": {
+          "rttMs": 150,
+          "throughputKbps": 1638.4,
+          "requestLatencyMs": 562.5,
+          "downloadThroughputKbps": 1474.5600000000002,
+          "uploadThroughputKbps": 675,
+          "cpuSlowdownMultiplier": 4
+        },
+        "throttlingMethod": "simulate",
+        "locale": "en-US"
+      },
+      "environment": {
+        "networkUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Mobile Safari/537.36",
+        "hostUserAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/154.0.0.0 Safari/537.36",
+        "benchmarkIndex": 2638,
+        "credits": {
+          "axe-core": "4.14.0"
+        }
+      },
+      "rawArtifactSha256": "d55a7b9d9a937c6b6909fc024c59a35f9bb96d441fc96a329c3985781db9a6fa"
+    },
+    {
+      "phase": "before",
+      "scenario": "home-desktop",
+      "checkedAt": "2026-10-17T10:55:39.839Z",
+      "lighthouseVersion": "13.5.0",
+      "requestedUrl": "http://127.0.0.1:3100/ro",
+      "finalUrl": "http://127.0.0.1:3100/ro",
+      "categories": {
+        "performance": 99,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 69
+      },
+      "metrics": {
+        "largest-contentful-paint": 851.864425,
+        "cumulative-layout-shift": 0.003897636471026087,
+        "total-blocking-time": 0,
+        "first-contentful-paint": 417.3511
+      },
+      "specificChecks": {
+        "color-contrast": {
+          "score": 1,
+          "displayValue": null,
+          "items": []
+        },
+        "image-aspect-ratio": {
+          "score": 1,
+          "displayValue": null,
+          "items": []
+        },
+        "is-crawlable": {
+          "score": 0,
+          "displayValue": null,
+          "items": [
+            {
+              "source": {
+                "type": "node",
+                "lhId": "1-162-META",
+                "path": "1,HTML,0,HEAD,15,META",
+                "selector": "head > meta",
+                "boundingRect": {
+                  "top": 0,
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0,
+                  "width": 0,
+                  "height": 0
+                },
+                "snippet": "<meta name=\"robots\" content=\"noindex, nofollow\" />",
+                "nodeLabel": "head > meta"
+              }
+            },
+            {
+              "source": "x-robots-tag: noindex, nofollow"
+            },
+            {
+              "source": {
+                "type": "source-location",
+                "url": "http://127.0.0.1:3100/robots.txt",
+                "urlProvider": "network",
+                "line": 1,
+                "column": 0
+              }
+            }
+          ]
+        },
+        "robots-txt": {
+          "score": 1,
+          "displayValue": null,
+          "items": []
+        }
+      },
+      "config": {
+        "formFactor": "desktop",
+        "screenEmulation": {
+          "mobile": false,
+          "width": 1350,
+          "height": 940,
+          "deviceScaleFactor": 1,
+          "disabled": false
+        },
+        "throttling": {
+          "rttMs": 40,
+          "throughputKbps": 10240,
+          "requestLatencyMs": 0,
+          "downloadThroughputKbps": 0,
+          "uploadThroughputKbps": 0,
+          "cpuSlowdownMultiplier": 1
+        },
+        "throttlingMethod": "simulate",
+        "locale": "en-US"
+      },
+      "environment": {
+        "networkUserAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36",
+        "hostUserAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/154.0.0.0 Safari/537.36",
+        "benchmarkIndex": 2681,
+        "credits": {
+          "axe-core": "4.14.0"
+        }
+      },
+      "rawArtifactSha256": "69d8575d7362f5daf6bc3430357dda626812bbacb097dc0a80997f89666a08eb"
+    },
+    {
+      "phase": "after",
+      "scenario": "home-mobile",
+      "checkedAt": "2026-10-17T19:10:32.115Z",
+      "lighthouseVersion": "13.5.0",
+      "requestedUrl": "http://127.0.0.1:3100/ro",
+      "finalUrl": "http://127.0.0.1:3100/ro",
+      "categories": {
+        "performance": 95,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 69
+      },
+      "metrics": {
+        "largest-contentful-paint": 2808.52625,
+        "cumulative-layout-shift": 0.001290118910391126,
+        "total-blocking-time": 50.00000000000023,
+        "first-contentful-paint": 1676.821
+      },
+      "specificChecks": {
+        "color-contrast": {
+          "score": 1,
+          "displayValue": null,
+          "items": []
+        },
+        "image-aspect-ratio": {
+          "score": 1,
+          "displayValue": null,
+          "items": []
+        },
+        "is-crawlable": {
+          "score": 0,
+          "displayValue": null,
+          "items": [
+            {
+              "source": {
+                "type": "node",
+                "lhId": "1-162-META",
+                "path": "1,HTML,0,HEAD,15,META",
+                "selector": "head > meta",
+                "boundingRect": {
+                  "top": 0,
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0,
+                  "width": 0,
+                  "height": 0
+                },
+                "snippet": "<meta name=\"robots\" content=\"noindex, nofollow\" />",
+                "nodeLabel": "head > meta"
+              }
+            },
+            {
+              "source": "x-robots-tag: noindex, nofollow"
+            },
+            {
+              "source": {
+                "type": "source-location",
+                "url": "http://127.0.0.1:3100/robots.txt",
+                "urlProvider": "network",
+                "line": 1,
+                "column": 0
+              }
+            }
+          ]
+        },
+        "robots-txt": {
+          "score": 1,
+          "displayValue": null,
+          "items": []
+        }
+      },
+      "config": {
+        "formFactor": "mobile",
+        "screenEmulation": {
+          "mobile": true,
+          "width": 412,
+          "height": 823,
+          "deviceScaleFactor": 1.75,
+          "disabled": false
+        },
+        "throttling": {
+          "rttMs": 150,
+          "throughputKbps": 1638.4,
+          "requestLatencyMs": 562.5,
+          "downloadThroughputKbps": 1474.5600000000002,
+          "uploadThroughputKbps": 675,
+          "cpuSlowdownMultiplier": 4
+        },
+        "throttlingMethod": "simulate",
+        "locale": "en-US"
+      },
+      "environment": {
+        "networkUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Mobile Safari/537.36",
+        "hostUserAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/154.0.0.0 Safari/537.36",
+        "benchmarkIndex": 2241.5,
+        "credits": {
+          "axe-core": "4.14.0"
+        }
+      },
+      "rawArtifactSha256": "a86e786daf94c0d4eb263579e284497c68013b281ce4f85ed3dfeb43fd30e26c"
+    },
+    {
+      "phase": "after",
+      "scenario": "service-mobile",
+      "checkedAt": "2026-10-17T19:10:45.101Z",
+      "lighthouseVersion": "13.5.0",
+      "requestedUrl": "http://127.0.0.1:3100/ro/servicii/print-uv",
+      "finalUrl": "http://127.0.0.1:3100/ro/servicii/print-uv",
+      "categories": {
+        "performance": 97,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 69
+      },
+      "metrics": {
+        "largest-contentful-paint": 2488.9263,
+        "cumulative-layout-shift": 0.0009974894430954929,
+        "total-blocking-time": 56.5,
+        "first-contentful-paint": 1663.9263
+      },
+      "specificChecks": {
+        "color-contrast": {
+          "score": 1,
+          "displayValue": null,
+          "items": []
+        },
+        "image-aspect-ratio": {
+          "score": 1,
+          "displayValue": null,
+          "items": []
+        },
+        "is-crawlable": {
+          "score": 0,
+          "displayValue": null,
+          "items": [
+            {
+              "source": {
+                "type": "node",
+                "lhId": "1-85-META",
+                "path": "1,HTML,0,HEAD,15,META",
+                "selector": "head > meta",
+                "boundingRect": {
+                  "top": 0,
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0,
+                  "width": 0,
+                  "height": 0
+                },
+                "snippet": "<meta name=\"robots\" content=\"noindex, nofollow\" />",
+                "nodeLabel": "head > meta"
+              }
+            },
+            {
+              "source": "x-robots-tag: noindex, nofollow"
+            },
+            {
+              "source": {
+                "type": "source-location",
+                "url": "http://127.0.0.1:3100/robots.txt",
+                "urlProvider": "network",
+                "line": 1,
+                "column": 0
+              }
+            }
+          ]
+        },
+        "robots-txt": {
+          "score": 1,
+          "displayValue": null,
+          "items": []
+        }
+      },
+      "config": {
+        "formFactor": "mobile",
+        "screenEmulation": {
+          "mobile": true,
+          "width": 412,
+          "height": 823,
+          "deviceScaleFactor": 1.75,
+          "disabled": false
+        },
+        "throttling": {
+          "rttMs": 150,
+          "throughputKbps": 1638.4,
+          "requestLatencyMs": 562.5,
+          "downloadThroughputKbps": 1474.5600000000002,
+          "uploadThroughputKbps": 675,
+          "cpuSlowdownMultiplier": 4
+        },
+        "throttlingMethod": "simulate",
+        "locale": "en-US"
+      },
+      "environment": {
+        "networkUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Mobile Safari/537.36",
+        "hostUserAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/154.0.0.0 Safari/537.36",
+        "benchmarkIndex": 2610.5,
+        "credits": {
+          "axe-core": "4.14.0"
+        }
+      },
+      "rawArtifactSha256": "ded9d07b21a23cc9e82bab6b513f035ae4783e25ef663024cd6b2c042722d45f"
+    },
+    {
+      "phase": "after",
+      "scenario": "home-desktop",
+      "checkedAt": "2026-10-17T19:10:57.254Z",
+      "lighthouseVersion": "13.5.0",
+      "requestedUrl": "http://127.0.0.1:3100/ro",
+      "finalUrl": "http://127.0.0.1:3100/ro",
+      "categories": {
+        "performance": 100,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 69
+      },
+      "metrics": {
+        "largest-contentful-paint": 764.2544,
+        "cumulative-layout-shift": 0.000945496350933554,
+        "total-blocking-time": 0,
+        "first-contentful-paint": 424.25440000000003
+      },
+      "specificChecks": {
+        "color-contrast": {
+          "score": 1,
+          "displayValue": null,
+          "items": []
+        },
+        "image-aspect-ratio": {
+          "score": 1,
+          "displayValue": null,
+          "items": []
+        },
+        "is-crawlable": {
+          "score": 0,
+          "displayValue": null,
+          "items": [
+            {
+              "source": {
+                "type": "node",
+                "lhId": "1-162-META",
+                "path": "1,HTML,0,HEAD,15,META",
+                "selector": "head > meta",
+                "boundingRect": {
+                  "top": 0,
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0,
+                  "width": 0,
+                  "height": 0
+                },
+                "snippet": "<meta name=\"robots\" content=\"noindex, nofollow\" />",
+                "nodeLabel": "head > meta"
+              }
+            },
+            {
+              "source": "x-robots-tag: noindex, nofollow"
+            },
+            {
+              "source": {
+                "type": "source-location",
+                "url": "http://127.0.0.1:3100/robots.txt",
+                "urlProvider": "network",
+                "line": 1,
+                "column": 0
+              }
+            }
+          ]
+        },
+        "robots-txt": {
+          "score": 1,
+          "displayValue": null,
+          "items": []
+        }
+      },
+      "config": {
+        "formFactor": "desktop",
+        "screenEmulation": {
+          "mobile": false,
+          "width": 1350,
+          "height": 940,
+          "deviceScaleFactor": 1,
+          "disabled": false
+        },
+        "throttling": {
+          "rttMs": 40,
+          "throughputKbps": 10240,
+          "requestLatencyMs": 0,
+          "downloadThroughputKbps": 0,
+          "uploadThroughputKbps": 0,
+          "cpuSlowdownMultiplier": 1
+        },
+        "throttlingMethod": "simulate",
+        "locale": "en-US"
+      },
+      "environment": {
+        "networkUserAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36",
+        "hostUserAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/154.0.0.0 Safari/537.36",
+        "benchmarkIndex": 2657,
+        "credits": {
+          "axe-core": "4.14.0"
+        }
+      },
+      "rawArtifactSha256": "2a40e408af44dec1d0aa6fff761ffccad31722d91abcbc558cd62447d9532c94"
+    }
+  ]
+}
