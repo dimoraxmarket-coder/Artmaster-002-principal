@@ -1,0 +1,1630 @@
+{
+  "checkedAt": "2026-10-17T09:46:14.554Z",
+  "scope": "Isolated loopback crawl; staging intentionally noindex. Not a Google ranking or hosted integration test.",
+  "count": 99,
+  "duplicateTitles": [],
+  "duplicateDescriptions": [],
+  "rawReportSha256": "dbb4d23024d1b362e72becfa328bd41a651dab276e22061d94440cd3af45e540",
+  "results": [
+    {
+      "path": "/ro",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Producție publicitară în Chișinău și Moldova | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/ru",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Рекламное производство в Кишинёве и Молдове | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/en",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Advertising production in Chisinau, Moldova | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/ro/servicii",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Servicii de producție publicitară în Moldova | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/ru/servicii",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Услуги рекламного производства в Молдове | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/en/servicii",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Advertising production services in Moldova | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/ro/echipamente",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Echipamente de print, 3D și CNC în Durlești | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/ru/echipamente",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Оборудование для печати, 3D и ЧПУ в Дурлештах | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/en/echipamente",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Printing, 3D and CNC equipment in Durlești | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/ro/portofoliu",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Portofoliu și concepte de producție publicitară | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/ru/portofoliu",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Портфолио и концепты рекламного производства | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/en/portofoliu",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Advertising production portfolio and concepts | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/ro/despre-noi",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Despre atelierul ARTMASTER din Durlești | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/ru/despre-noi",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "О мастерской ARTMASTER в Дурлештах | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/en/despre-noi",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "About the ARTMASTER workshop in Durlești | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/ro/contact",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Contact — oficiu în Durlești, Moldova | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/ru/contact",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Контакты — офис в Дурлештах, Молдова | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/en/contact",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Contact — Durlești office, Moldova | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/ro/solicita-oferta",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Solicită o ofertă | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/ru/solicita-oferta",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Запросить предложение | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/en/solicita-oferta",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Request a quote | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/ro/intrebari-frecvente",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Întrebări frecvente | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/ru/intrebari-frecvente",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Частые вопросы | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/en/intrebari-frecvente",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "FAQ | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/ro/blog",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Mai clar, înainte de producție. | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/ru/blog",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Больше ясности до производства. | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/en/blog",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "More clarity before production. | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/ro/confidentialitate",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Politica de confidențialitate | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/ru/confidentialitate",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Политика конфиденциальности | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/en/confidentialitate",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Privacy policy | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/ro/termeni",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Condiții de utilizare | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/ru/termeni",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Условия использования | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/en/termeni",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Terms of use | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/ro/cookies",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Politica privind cookie-urile | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/ru/cookies",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Политика файлов cookie | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/en/cookies",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Cookie policy | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/ro/servicii/print-uv",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Print UV în Moldova | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/ru/servicii/print-uv",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "УФ-печать в Молдове | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/en/servicii/print-uv",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "UV printing in Moldova | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/ro/servicii/imprimare-mari-dimensiuni",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Imprimare de format mare în Moldova | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/ru/servicii/imprimare-mari-dimensiuni",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Широкоформатная печать в Молдове | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/en/servicii/imprimare-mari-dimensiuni",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Large-format printing in Moldova | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/ro/servicii/litere-volumetrice",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Litere volumetrice în Moldova | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/ru/servicii/litere-volumetrice",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Объёмные буквы в Молдове | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/en/servicii/litere-volumetrice",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Dimensional lettering in Moldova | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/ro/servicii/imprimare-3d",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Imprimare 3D în Moldova | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/ru/servicii/imprimare-3d",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "3D-печать в Молдове | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/en/servicii/imprimare-3d",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "3D printing in Moldova | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/ro/servicii/gravura-laser",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Gravură laser în Moldova | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/ru/servicii/gravura-laser",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Лазерная гравировка в Молдове | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/en/servicii/gravura-laser",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Laser engraving in Moldova | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/ro/servicii/frezare-cnc",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Frezare și debitare CNC în Moldova | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/ru/servicii/frezare-cnc",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Фрезеровка и резка ЧПУ в Молдове | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/en/servicii/frezare-cnc",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "CNC routing and cutting in Moldova | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/ro/servicii/colantare-auto",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Colantare și inscripționare auto în Moldova | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/ru/servicii/colantare-auto",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Оклейка и брендирование автомобилей в Молдове | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/en/servicii/colantare-auto",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Vehicle wrapping and graphics in Moldova | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/ro/servicii/stickere-personalizate",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Stickere și etichete personalizate în Moldova | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/ru/servicii/stickere-personalizate",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Индивидуальные наклейки и этикетки в Молдове | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/en/servicii/stickere-personalizate",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Custom stickers and labels in Moldova | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/ro/servicii/print-bannere",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Print bannere în Moldova | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/ru/servicii/print-bannere",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Печать баннеров в Молдове | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/en/servicii/print-bannere",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Banner printing in Moldova | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/ro/servicii/branding-design",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Branding și design publicitar în Moldova | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/ru/servicii/branding-design",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Брендинг и рекламный дизайн в Молдове | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/en/servicii/branding-design",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Branding and advertising design in Moldova | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/ro/servicii/standuri-expozitionale",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Standuri și construcții publicitare în Moldova | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/ru/servicii/standuri-expozitionale",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Выставочные и рекламные конструкции в Молдове | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/en/servicii/standuri-expozitionale",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Exhibition and advertising structures in Moldova | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/ro/echipamente/uv-mimaki",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Echipament UV Mimaki | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/ru/echipamente/uv-mimaki",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "УФ-оборудование Mimaki | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/en/echipamente/uv-mimaki",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Mimaki UV equipment | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/ro/echipamente/imprimante-3d",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "4 imprimante 3D | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/ru/echipamente/imprimante-3d",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "4 3D-принтера | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/en/echipamente/imprimante-3d",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "4 3D printers | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/ro/echipamente/laser",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Echipament laser | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/ru/echipamente/laser",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Лазерное оборудование | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/en/echipamente/laser",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Laser equipment | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/ro/echipamente/freza-cnc",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Freză CNC | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/ru/echipamente/freza-cnc",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Фрезерный станок с ЧПУ | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/en/echipamente/freza-cnc",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "CNC router | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/ro/echipamente/formare-borduri-litere",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Echipament pentru borduri de litere | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/ru/echipamente/formare-borduri-litere",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Оборудование для бортов букв | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/en/echipamente/formare-borduri-litere",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Letter-side forming equipment | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/ro/blog/pregatirea-fisierelor-pentru-print",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Cum pregătești un proiect pentru print | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/ru/blog/pregatirea-fisierelor-pentru-print",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "Как подготовить проект к печати | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/en/blog/pregatirea-fisierelor-pentru-print",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "How to prepare a print project | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/ro/blog/de-la-idee-la-prototip-3d",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "De la idee la prototip: ce trebuie clarificat | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/ru/blog/de-la-idee-la-prototip-3d",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "От идеи к прототипу: что нужно уточнить | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/en/blog/de-la-idee-la-prototip-3d",
+      "score": 86,
+      "httpStatus": 200,
+      "title": "From idea to prototype: what to clarify | ARTMASTER",
+      "issues": [
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/ro/portofoliu/concept-grafica-spatiu-comercial",
+      "score": 80,
+      "httpStatus": 200,
+      "title": "Concept: grafică pentru un spațiu comercial | ARTMASTER",
+      "issues": [
+        {
+          "id": "sitemap",
+          "detail": "URL căutat în sitemap.xml randat."
+        },
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/ro/portofoliu/concept-identitate-volumetrica",
+      "score": 80,
+      "httpStatus": 200,
+      "title": "Concept: identitate cu litere volumetrice | ARTMASTER",
+      "issues": [
+        {
+          "id": "sitemap",
+          "detail": "URL căutat în sitemap.xml randat."
+        },
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/ro/portofoliu/concept-obiect-imprimat-3d",
+      "score": 80,
+      "httpStatus": 200,
+      "title": "Concept: obiect de prezentare 3D | ARTMASTER",
+      "issues": [
+        {
+          "id": "sitemap",
+          "detail": "URL căutat în sitemap.xml randat."
+        },
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/ru/portofoliu/concept-grafica-spatiu-comercial",
+      "score": 80,
+      "httpStatus": 200,
+      "title": "Концепт: графика коммерческого пространства | ARTMASTER",
+      "issues": [
+        {
+          "id": "sitemap",
+          "detail": "URL căutat în sitemap.xml randat."
+        },
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/ru/portofoliu/concept-identitate-volumetrica",
+      "score": 80,
+      "httpStatus": 200,
+      "title": "Концепт: айдентика с объёмными буквами | ARTMASTER",
+      "issues": [
+        {
+          "id": "sitemap",
+          "detail": "URL căutat în sitemap.xml randat."
+        },
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/ru/portofoliu/concept-obiect-imprimat-3d",
+      "score": 80,
+      "httpStatus": 200,
+      "title": "Концепт: презентационный 3D-объект | ARTMASTER",
+      "issues": [
+        {
+          "id": "sitemap",
+          "detail": "URL căutat în sitemap.xml randat."
+        },
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/en/portofoliu/concept-grafica-spatiu-comercial",
+      "score": 80,
+      "httpStatus": 200,
+      "title": "Concept: graphics for a commercial space | ARTMASTER",
+      "issues": [
+        {
+          "id": "sitemap",
+          "detail": "URL căutat în sitemap.xml randat."
+        },
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/en/portofoliu/concept-identitate-volumetrica",
+      "score": 80,
+      "httpStatus": 200,
+      "title": "Concept: dimensional brand identity | ARTMASTER",
+      "issues": [
+        {
+          "id": "sitemap",
+          "detail": "URL căutat în sitemap.xml randat."
+        },
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    },
+    {
+      "path": "/en/portofoliu/concept-obiect-imprimat-3d",
+      "score": 80,
+      "httpStatus": 200,
+      "title": "Concept: 3D presentation object | ARTMASTER",
+      "issues": [
+        {
+          "id": "sitemap",
+          "detail": "URL căutat în sitemap.xml randat."
+        },
+        {
+          "id": "robots",
+          "detail": "Accesul crawlerelor este blocat global."
+        },
+        {
+          "id": "indexing",
+          "detail": "Indexare dezactivată sau origine locală/staging."
+        }
+      ]
+    }
+  ]
+}

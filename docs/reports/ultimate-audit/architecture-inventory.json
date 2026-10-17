@@ -1,0 +1,384 @@
+{
+  "checkedAt": "2026-10-17T09:45:05.995438+00:00",
+  "basis": "129322483e2b9d6892913c9f5c0f2c380628f705",
+  "counts": {
+    "apiRouteFiles": 28,
+    "reactComponents": 16,
+    "unitTestFiles": 17,
+    "browserTestFiles": 12,
+    "migrations": 9
+  },
+  "scope": "Static inventory supports manual review and functional tests; a string match alone does not certify authorization. Login/MFA/logout, public forms/tokens and publication-authorized media are intentional exceptions.",
+  "routes": [
+    {
+      "file": "src/app/api/admin/content/history/[id]/route.ts",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "actorGuard": true,
+      "sameOrigin": true,
+      "delegatesQuote": false,
+      "mfaBootstrap": false,
+      "publicationGuard": false,
+      "loginBootstrap": false,
+      "logout": false
+    },
+    {
+      "file": "src/app/api/admin/content/history/route.ts",
+      "methods": [
+        "GET"
+      ],
+      "actorGuard": true,
+      "sameOrigin": false,
+      "delegatesQuote": false,
+      "mfaBootstrap": false,
+      "publicationGuard": false,
+      "loginBootstrap": false,
+      "logout": false
+    },
+    {
+      "file": "src/app/api/admin/content/route.ts",
+      "methods": [
+        "GET",
+        "PUT"
+      ],
+      "actorGuard": true,
+      "sameOrigin": true,
+      "delegatesQuote": false,
+      "mfaBootstrap": false,
+      "publicationGuard": false,
+      "loginBootstrap": false,
+      "logout": false
+    },
+    {
+      "file": "src/app/api/admin/hero/route.ts",
+      "methods": [
+        "POST"
+      ],
+      "actorGuard": true,
+      "sameOrigin": true,
+      "delegatesQuote": false,
+      "mfaBootstrap": false,
+      "publicationGuard": false,
+      "loginBootstrap": false,
+      "logout": false
+    },
+    {
+      "file": "src/app/api/admin/login/route.ts",
+      "methods": [
+        "POST"
+      ],
+      "actorGuard": false,
+      "sameOrigin": true,
+      "delegatesQuote": false,
+      "mfaBootstrap": false,
+      "publicationGuard": false,
+      "loginBootstrap": true,
+      "logout": false
+    },
+    {
+      "file": "src/app/api/admin/logout/route.ts",
+      "methods": [
+        "POST"
+      ],
+      "actorGuard": false,
+      "sameOrigin": true,
+      "delegatesQuote": false,
+      "mfaBootstrap": false,
+      "publicationGuard": false,
+      "loginBootstrap": false,
+      "logout": true
+    },
+    {
+      "file": "src/app/api/admin/media/[name]/route.ts",
+      "methods": [
+        "GET",
+        "DELETE"
+      ],
+      "actorGuard": true,
+      "sameOrigin": true,
+      "delegatesQuote": false,
+      "mfaBootstrap": false,
+      "publicationGuard": false,
+      "loginBootstrap": false,
+      "logout": false
+    },
+    {
+      "file": "src/app/api/admin/media/replace/route.ts",
+      "methods": [
+        "POST"
+      ],
+      "actorGuard": true,
+      "sameOrigin": true,
+      "delegatesQuote": false,
+      "mfaBootstrap": false,
+      "publicationGuard": false,
+      "loginBootstrap": false,
+      "logout": false
+    },
+    {
+      "file": "src/app/api/admin/media/route.ts",
+      "methods": [
+        "POST",
+        "GET"
+      ],
+      "actorGuard": true,
+      "sameOrigin": true,
+      "delegatesQuote": false,
+      "mfaBootstrap": false,
+      "publicationGuard": false,
+      "loginBootstrap": false,
+      "logout": false
+    },
+    {
+      "file": "src/app/api/admin/mfa/enroll/route.ts",
+      "methods": [
+        "POST"
+      ],
+      "actorGuard": false,
+      "sameOrigin": true,
+      "delegatesQuote": false,
+      "mfaBootstrap": true,
+      "publicationGuard": false,
+      "loginBootstrap": false,
+      "logout": false
+    },
+    {
+      "file": "src/app/api/admin/notifications/retry/route.ts",
+      "methods": [
+        "POST"
+      ],
+      "actorGuard": true,
+      "sameOrigin": true,
+      "delegatesQuote": false,
+      "mfaBootstrap": false,
+      "publicationGuard": false,
+      "loginBootstrap": false,
+      "logout": false
+    },
+    {
+      "file": "src/app/api/admin/quotes/[id]/files/[fileId]/route.ts",
+      "methods": [
+        "GET"
+      ],
+      "actorGuard": true,
+      "sameOrigin": false,
+      "delegatesQuote": false,
+      "mfaBootstrap": false,
+      "publicationGuard": false,
+      "loginBootstrap": false,
+      "logout": false
+    },
+    {
+      "file": "src/app/api/admin/quotes/[id]/route.ts",
+      "methods": [
+        "GET",
+        "PATCH"
+      ],
+      "actorGuard": true,
+      "sameOrigin": true,
+      "delegatesQuote": false,
+      "mfaBootstrap": false,
+      "publicationGuard": false,
+      "loginBootstrap": false,
+      "logout": false
+    },
+    {
+      "file": "src/app/api/admin/quotes/route.ts",
+      "methods": [
+        "GET"
+      ],
+      "actorGuard": true,
+      "sameOrigin": false,
+      "delegatesQuote": false,
+      "mfaBootstrap": false,
+      "publicationGuard": false,
+      "loginBootstrap": false,
+      "logout": false
+    },
+    {
+      "file": "src/app/api/admin/security/accounts/[id]/route.ts",
+      "methods": [
+        "PATCH"
+      ],
+      "actorGuard": true,
+      "sameOrigin": true,
+      "delegatesQuote": false,
+      "mfaBootstrap": false,
+      "publicationGuard": false,
+      "loginBootstrap": false,
+      "logout": false
+    },
+    {
+      "file": "src/app/api/admin/security/accounts/route.ts",
+      "methods": [
+        "GET"
+      ],
+      "actorGuard": true,
+      "sameOrigin": false,
+      "delegatesQuote": false,
+      "mfaBootstrap": false,
+      "publicationGuard": false,
+      "loginBootstrap": false,
+      "logout": false
+    },
+    {
+      "file": "src/app/api/admin/security/audit/route.ts",
+      "methods": [
+        "GET"
+      ],
+      "actorGuard": true,
+      "sameOrigin": false,
+      "delegatesQuote": false,
+      "mfaBootstrap": false,
+      "publicationGuard": false,
+      "loginBootstrap": false,
+      "logout": false
+    },
+    {
+      "file": "src/app/api/admin/security/mfa/route.ts",
+      "methods": [
+        "GET"
+      ],
+      "actorGuard": false,
+      "sameOrigin": false,
+      "delegatesQuote": false,
+      "mfaBootstrap": false,
+      "publicationGuard": false,
+      "loginBootstrap": false,
+      "logout": false
+    },
+    {
+      "file": "src/app/api/admin/security/posture/route.ts",
+      "methods": [
+        "GET"
+      ],
+      "actorGuard": true,
+      "sameOrigin": false,
+      "delegatesQuote": false,
+      "mfaBootstrap": false,
+      "publicationGuard": false,
+      "loginBootstrap": false,
+      "logout": false
+    },
+    {
+      "file": "src/app/api/admin/security/sessions/route.ts",
+      "methods": [
+        "GET",
+        "DELETE"
+      ],
+      "actorGuard": true,
+      "sameOrigin": true,
+      "delegatesQuote": false,
+      "mfaBootstrap": false,
+      "publicationGuard": false,
+      "loginBootstrap": false,
+      "logout": false
+    },
+    {
+      "file": "src/app/api/admin/seo/audit/route.ts",
+      "methods": [
+        "POST"
+      ],
+      "actorGuard": true,
+      "sameOrigin": true,
+      "delegatesQuote": false,
+      "mfaBootstrap": false,
+      "publicationGuard": false,
+      "loginBootstrap": false,
+      "logout": false
+    },
+    {
+      "file": "src/app/api/admin/seo/history/route.ts",
+      "methods": [
+        "GET"
+      ],
+      "actorGuard": true,
+      "sameOrigin": false,
+      "delegatesQuote": false,
+      "mfaBootstrap": false,
+      "publicationGuard": false,
+      "loginBootstrap": false,
+      "logout": false
+    },
+    {
+      "file": "src/app/api/admin/seo/pagespeed/route.ts",
+      "methods": [
+        "POST"
+      ],
+      "actorGuard": true,
+      "sameOrigin": true,
+      "delegatesQuote": false,
+      "mfaBootstrap": false,
+      "publicationGuard": false,
+      "loginBootstrap": false,
+      "logout": false
+    },
+    {
+      "file": "src/app/api/admin/seo/route.ts",
+      "methods": [
+        "GET"
+      ],
+      "actorGuard": true,
+      "sameOrigin": false,
+      "delegatesQuote": false,
+      "mfaBootstrap": false,
+      "publicationGuard": false,
+      "loginBootstrap": false,
+      "logout": false
+    },
+    {
+      "file": "src/app/api/admin/team/route.ts",
+      "methods": [
+        "GET"
+      ],
+      "actorGuard": true,
+      "sameOrigin": false,
+      "delegatesQuote": false,
+      "mfaBootstrap": false,
+      "publicationGuard": false,
+      "loginBootstrap": false,
+      "logout": false
+    },
+    {
+      "file": "src/app/api/media/[name]/route.ts",
+      "methods": [
+        "GET"
+      ],
+      "actorGuard": false,
+      "sameOrigin": false,
+      "delegatesQuote": false,
+      "mfaBootstrap": false,
+      "publicationGuard": true,
+      "loginBootstrap": false,
+      "logout": false
+    },
+    {
+      "file": "src/app/api/quote-token/route.ts",
+      "methods": [
+        "GET"
+      ],
+      "actorGuard": false,
+      "sameOrigin": false,
+      "delegatesQuote": false,
+      "mfaBootstrap": false,
+      "publicationGuard": false,
+      "loginBootstrap": false,
+      "logout": false
+    },
+    {
+      "file": "src/app/api/quotes/route.ts",
+      "methods": [
+        "POST"
+      ],
+      "actorGuard": false,
+      "sameOrigin": false,
+      "delegatesQuote": true,
+      "mfaBootstrap": false,
+      "publicationGuard": false,
+      "loginBootstrap": false,
+      "logout": false
+    }
+  ]
+}

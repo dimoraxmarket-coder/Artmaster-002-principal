@@ -20,6 +20,11 @@ const files = new Set([
   "README.md",
   "README-WINDOWS.md",
   "VERSIUNEA-COMPLETA.md",
+  "ARTMASTER-COMPETITOR-ANALYSIS.md",
+  "ARTMASTER-SEO-AUDIT.md",
+  "ARTMASTER-SECURITY-AUDIT.md",
+  "ARTMASTER-PERFORMANCE-REPORT.md",
+  "ARTMASTER-PRODUCTION-READINESS.md",
   "START.bat",
   "CREATE-ADMIN.bat",
   "START-WINDOWS.cmd",
@@ -91,6 +96,13 @@ export async function packageWindows(destination) {
     "supabase/migrations/202610160002_homepage_visuals.sql",
     "src/app/admin/seo-center.tsx",
     "src/app/admin/visual-content-editor.tsx",
+    "supabase/migrations/202610170001_seo_audit_history.sql",
+    "src/app/admin/security-posture.tsx",
+    "ARTMASTER-COMPETITOR-ANALYSIS.md",
+    "ARTMASTER-SEO-AUDIT.md",
+    "ARTMASTER-SECURITY-AUDIT.md",
+    "ARTMASTER-PERFORMANCE-REPORT.md",
+    "ARTMASTER-PRODUCTION-READINESS.md",
   ])
     if (!selected.includes(required))
       throw new Error(`Lipseste un fisier obligatoriu: ${required}`);

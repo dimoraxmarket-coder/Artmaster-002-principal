@@ -1,0 +1,19 @@
+{
+  "before": {
+    "checkedAt": "2026-10-17T09:19:46.758Z",
+    "scope": "Only synthetic isolated local data; no production access.",
+    "directPublished": 200,
+    "optimizerPublished": 200,
+    "directUnpublished": 404,
+    "optimizerUnpublished": 200,
+    "optimizerCache": "HIT",
+    "upstreamCacheControl": "private, no-store, max-age=0"
+  },
+  "after": {
+    "checkedAt": "2026-10-17T09:49:03.147Z",
+    "scope": "Same previously cached synthetic media URL from before proof; no production data.",
+    "directUnpublished": 404,
+    "optimizerUnpublished": 400,
+    "publicStaticOptimizer": 200
+  }
+}

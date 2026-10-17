@@ -1,0 +1,64 @@
+{
+  "checkedAt": "2026-10-17T10:19:55.843004+00:00",
+  "base": "129322483e2b9d6892913c9f5c0f2c380628f705",
+  "platform": "Linux x86_64",
+  "node": "24.19.0",
+  "npm": "11.9.0",
+  "scope": "Synthetic isolated local data only. Full suite plus focused checks for final incremental changes. Packaged-copy results are published separately next to the archive.",
+  "checks": {
+    "backend": {
+      "passed": 139,
+      "failed": 0,
+      "skipped": 0,
+      "logSha256": "e1dbe90200502f21c5f51b33055ede369ce5c458165c5609972a985702c8b3f9"
+    },
+    "browser": {
+      "passed": 126,
+      "failed": 0,
+      "skipped": 0,
+      "logSha256": "f8a675202cbf295cb85e820860283e0bb0105f2025dd94cdf253c378e3759a8b"
+    },
+    "finalRelated": {
+      "passed": 5,
+      "failed": 0,
+      "skipped": 0,
+      "logSha256": "5468c7ef1fa5f7161bfbe850d716e21aa71dd1d28cbcadb1fb873d40c829a507"
+    },
+    "configuredConsent": {
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0,
+      "logSha256": "681bf63581a8fe3d0812b948806d32174a068026f1b767d4b48161e72dfcef7d"
+    },
+    "lint-final.log": {
+      "status": "passed",
+      "logSha256": "ae250b9c30e2f8ae5594c9b6aad46d17ce115582b8efd63a9fde3f54f1926637"
+    },
+    "types-final.log": {
+      "status": "passed",
+      "logSha256": "65c46a3a1bf9959fa05029c9685160c9da7ebab555f5c45aa22da9fa34eb58d1"
+    },
+    "build-final.log": {
+      "status": "passed",
+      "logSha256": "ebf0121be419b95bfc48675eb05e0d3353584e102f00cc1d331e0bba447a722f"
+    }
+  },
+  "clientBundles": {
+    "files": 23,
+    "searchedIdentifiers": [
+      "SUPABASE_SERVICE_ROLE_KEY",
+      "GOOGLE_PRIVATE_KEY",
+      "ARTMASTER_SESSION_SECRET"
+    ],
+    "matches": 0,
+    "scope": "No real secrets were configured; this is an identifier scan, not proof against all secret leakage."
+  },
+  "notTested": [
+    "Hosted Supabase TOTP/AAL2/RLS/Storage",
+    "Real Google APIs and property settings",
+    "Native Windows",
+    "Production hosting/CDN/backup restoration",
+    "Field Core Web Vitals/INP",
+    "Legacy redirects: empty map"
+  ]
+}
