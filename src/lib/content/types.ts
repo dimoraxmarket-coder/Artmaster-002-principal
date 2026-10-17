@@ -103,6 +103,12 @@ export type ManagedPartner = {
   rights: "unverified" | "owner-authorized" | "official-permission";
   status: "draft" | "published" | "hidden" | "archived";
 };
+export type PageSeo = {
+  /** Existing route without a locale prefix or leading slash; empty string means home. */
+  path: string;
+  title: Localized;
+  description: Localized;
+};
 export type SiteContent = {
   services: Service[];
   equipment: Equipment[];
@@ -114,6 +120,7 @@ export type SiteContent = {
   heroMedia?: HeroMedia;
   banner?: HomepageBanner;
   partners?: ManagedPartner[];
+  seo?: PageSeo[];
 };
 export function isLocale(value: string): value is Locale {
   return (locales as readonly string[]).includes(value);

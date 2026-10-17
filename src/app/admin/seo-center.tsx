@@ -5,6 +5,7 @@ import type { PageAudit } from "@/lib/seo-audit";
 import type { GoogleReports } from "@/lib/server/google-reporting";
 import styles from "./growth.module.css";
 import { SeoHistoryPanel } from "./seo-history-panel";
+import { SeoContentInsights } from "./seo-content-insights";
 type Data = {
   range: { start: string; end: string };
   timezone: string;
@@ -451,6 +452,7 @@ export function SeoCenter({ canManage = true }: { canManage?: boolean }) {
           }
         />
       )}
+      <SeoContentInsights />
       <div className={styles.panel}>
         <h3>Core Web Vitals & PageSpeed</h3>
         <p>

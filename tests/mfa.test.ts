@@ -1,3 +1,4 @@
+import { GET as seoContent } from '../src/app/api/admin/seo/content/route';
 import { GET as seoOverview } from '../src/app/api/admin/seo/route';
 import { POST as seoAudit } from '../src/app/api/admin/seo/audit/route';
 import { POST as seoSpeed } from '../src/app/api/admin/seo/pagespeed/route';
@@ -142,13 +143,13 @@ for(const selectedRole of ['viewer','editor','admin'] as const)test(`${selectedR
   for(const cookie of [undefined,result.cookie]){
     const req=request(cookie);
     const responses=await Promise.all([
-      seoOverview(req),seoAudit(request(cookie,false,'POST',{path:'/ro'})),seoSpeed(request(cookie,false,'POST',{path:'/ro'})),heroUpload(request(cookie,false,'POST')),securitySessions(req),securityAccounts(req),securityAudit(req),securityMfa(req),securityRevoke(request(cookie,false,'DELETE',{allOthers:true,confirm:true})),securityChange(request(cookie,false,'PATCH',{role:'admin',enabled:true,expectedVersion:0,confirm:true}),{params:Promise.resolve({id:userId})}),team(req),detail(req,{params:Promise.resolve({id:userId})}),inventory(req),archive(request(cookie,false,'DELETE',{confirm:true}),{params:Promise.resolve({name:`${factorId}.webp`})}),replace(request(cookie,false,'POST',{})),quotes(req),content(req),history(req),historySnapshot(req,{params:Promise.resolve({id:'1'})}),restoreSnapshot(request(cookie,false,'POST',{version:0,confirm:true}),{params:Promise.resolve({id:'1'})}),preview(req,{params:Promise.resolve({name:`${factorId}.webp`})}),attachment(req,{params:Promise.resolve({id:userId,fileId:factorId})}),
+      seoContent(req),seoOverview(req),seoAudit(request(cookie,false,'POST',{path:'/ro'})),seoSpeed(request(cookie,false,'POST',{path:'/ro'})),heroUpload(request(cookie,false,'POST')),securitySessions(req),securityAccounts(req),securityAudit(req),securityMfa(req),securityRevoke(request(cookie,false,'DELETE',{allOthers:true,confirm:true})),securityChange(request(cookie,false,'PATCH',{role:'admin',enabled:true,expectedVersion:0,confirm:true}),{params:Promise.resolve({id:userId})}),team(req),detail(req,{params:Promise.resolve({id:userId})}),inventory(req),archive(request(cookie,false,'DELETE',{confirm:true}),{params:Promise.resolve({name:`${factorId}.webp`})}),replace(request(cookie,false,'POST',{})),quotes(req),content(req),history(req),historySnapshot(req,{params:Promise.resolve({id:'1'})}),restoreSnapshot(request(cookie,false,'POST',{version:0,confirm:true}),{params:Promise.resolve({id:'1'})}),preview(req,{params:Promise.resolve({name:`${factorId}.webp`})}),attachment(req,{params:Promise.resolve({id:userId,fileId:factorId})}),
       status(request(cookie,false,'PATCH',{status:'in_progress'}),{params:Promise.resolve({id:userId})}),
       media(request(cookie,false,'POST')),retry(request(cookie,false,'POST')),
       saveContent(request(cookie,false,'PUT',{content:defaultContent,version:0,action:'save-draft'})),
     ]);
     await assert.rejects(()=>savedDraftPreview(req),(error:unknown)=>error instanceof BackendError&&error.code==='unauthorized');
-    assert.deepEqual(responses.map(response=>response.status),Array(26).fill(401));
+    assert.deepEqual(responses.map(response=>response.status),Array(27).fill(401));
   }
   assert.equal(dataReads,0,'no protected records read before MFA');
   const setup=await enroll(request(result.cookie,true,'POST'));
@@ -197,6 +198,7 @@ test('legacy AAL1 cookies are denied even outside production; expired, forged, r
     await assert.rejects(()=>requireActor(request(old)),code('mfa_required'));
   }
   assert.equal((await quotes(request(old))).status,403);
+  assert.equal((await seoContent(request(old))).status,403);
   const valid=encrypted({access:token('aal2'),refresh:'synthetic',expires:Date.now()+60000,sid});
   assert.equal((await requireActor(request(valid))).aal,'aal2');
   assert.equal(await actorForSession(valid+'x'),null);
@@ -244,7 +246,7 @@ test('Supabase sessions expire on idle and absolute deadlines; activity never re
     if(kind==='revoked')sessions.delete(hash);
     assert.equal((await quotes(request(cookie))).status,401);
     assert.equal((await preview(request(cookie),{params:Promise.resolve({name:`${factorId}.webp`})})).status,401);
-    for(const response of await Promise.all([securitySessions(request(cookie)),securityAccounts(request(cookie)),securityAudit(request(cookie)),securityMfa(request(cookie)),securityRevoke(request(cookie,false,'DELETE',{allOthers:true,confirm:true})),securityChange(request(cookie,false,'PATCH',{role:'admin',enabled:true,expectedVersion:0,confirm:true}),{params:Promise.resolve({id:userId})}),team(request(cookie)),detail(request(cookie),{params:Promise.resolve({id:userId})}),inventory(request(cookie)),replace(request(cookie,false,'POST',{})),archive(request(cookie,false,'DELETE',{confirm:true}),{params:Promise.resolve({name:`${factorId}.webp`})})]))assert.equal(response.status,401);
+    for(const response of await Promise.all([seoContent(request(cookie)),securitySessions(request(cookie)),securityAccounts(request(cookie)),securityAudit(request(cookie)),securityMfa(request(cookie)),securityRevoke(request(cookie,false,'DELETE',{allOthers:true,confirm:true})),securityChange(request(cookie,false,'PATCH',{role:'admin',enabled:true,expectedVersion:0,confirm:true}),{params:Promise.resolve({id:userId})}),team(request(cookie)),detail(request(cookie),{params:Promise.resolve({id:userId})}),inventory(request(cookie)),replace(request(cookie,false,'POST',{})),archive(request(cookie,false,'DELETE',{confirm:true}),{params:Promise.resolve({name:`${factorId}.webp`})})]))assert.equal(response.status,401);
     sessions.clear();
   }
 });

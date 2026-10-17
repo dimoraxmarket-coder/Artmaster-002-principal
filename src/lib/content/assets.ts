@@ -1,11 +1,14 @@
 import { contentAssets as contentReferences } from "./visual-assets";
 import type { SiteContent } from "./types";
+import { contentPaths } from "./routes";
 export function contentAssets(content: SiteContent) {
   return contentReferences(content).map((item) => item.image);
 }
 export function publicContent(content: SiteContent): SiteContent {
+  const paths = new Set(contentPaths(content));
   return {
     ...content,
+    ...(content.seo ? { seo: content.seo.filter((entry) => paths.has(entry.path)) } : {}),
     equipment: content.equipment
       .map((e, i) => ({ e, i }))
       .filter(({ e }) => e.catalog?.published !== false)

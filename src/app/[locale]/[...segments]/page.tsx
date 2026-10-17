@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { getContent } from "@/lib/content/repository";
 import { isLocale } from "@/lib/content/types";
 import { pageMetadata } from "@/lib/seo";
+import { metadataDescription } from "@/lib/content/seo";
 import {
   PublicContent,
   resolvePublicContent,
@@ -27,19 +28,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         ? item.description
         : item.description[locale]
       : summary;
-  const description =
-    summary.trim().length < 50 && detail.trim().length >= 50
-      ? detail
-          .trim()
-          .slice(0, 177)
-          .replace(/\s+\S*$/, "") + "…"
-      : summary;
+  const description = metadataDescription(summary, detail);
   return pageMetadata(
     locale,
     segments.join("/"),
     title,
     description,
     !("kind" in item && item.kind === "concept"),
+    content.seo?.find((entry) => entry.path === segments.join("/")),
   );
 }
 

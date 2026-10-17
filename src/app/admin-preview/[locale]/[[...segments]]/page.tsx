@@ -8,16 +8,41 @@ import { Home } from "@/components/home";
 import { Header } from "@/components/header";
 import { FloatingActions } from "@/components/floating-actions";
 import { Footer } from "@/components/footer";
-import { PublicContent } from "@/components/public-content";
+import { PublicContent, resolvePublicContent } from "@/components/public-content";
+import { localizedSeoCopy } from "@/lib/seo-content";
+import { metadataDescription } from "@/lib/content/seo";
+import { websiteCopy } from "@/lib/content/page-copy";
 import { PublicPreviewProvider } from "@/components/public-runtime";
 import { PreviewWorkbench } from "./workbench";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
-export const metadata: Metadata = {
+const privateMetadata: Metadata = {
   title: "Protected draft preview | ARTMASTER",
   robots: { index: false, follow: false, noarchive: true },
 };
+export async function generateMetadata({ params }: { params: Promise<{ locale: string; segments?: string[] }> }): Promise<Metadata> {
+  const { locale, segments = [] } = await params;
+  if (!isLocale(locale)) return privateMetadata;
+  try {
+    const state = await savedDraftPreview(new Request(publicOrigin() + "/admin-preview", {
+      headers: new Headers(await headers()),
+    }));
+    const content = state.content, path = segments.join("/");
+    const item = segments.length ? resolvePublicContent(content, segments, locale, true) : null;
+    if (segments.length && !item) return privateMetadata;
+    const override = content.seo?.find((entry) => entry.path === path);
+    const rawTitle = item ? typeof item.title === "string" ? item.title : item.title[locale] : websiteCopy(content).hero.title[locale];
+    const rawSummary = item ? typeof item.summary === "string" ? item.summary : item.summary[locale] : websiteCopy(content).hero.description[locale];
+    const detail = item && "description" in item ? typeof item.description === "string" ? item.description : item.description[locale] : rawSummary;
+    const copy = override ? { title: override.title[locale], description: override.description[locale] }
+      : localizedSeoCopy(locale, path, rawTitle, metadataDescription(rawSummary, detail));
+    return { ...privateMetadata, title: { absolute: copy.title + (override ? "" : " | ARTMASTER") }, description: copy.description };
+  } catch (error) {
+    if (error instanceof BackendError && [401, 403].includes(error.status)) return privateMetadata;
+    throw error;
+  }
+}
 export default async function PreviewPage({
   params,
   searchParams,
