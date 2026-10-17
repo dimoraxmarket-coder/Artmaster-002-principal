@@ -8,6 +8,7 @@ import {
 import { auditPage } from "@/lib/server/seo-center";
 import { getStorage } from "@/lib/server/storage";
 import { BackendError } from "@/lib/server/config";
+import { publishedFingerprint, recordSeoAudit } from "@/lib/server/seo-history";
 export const runtime = "nodejs";
 export async function POST(request: Request) {
   try {
@@ -22,8 +23,10 @@ export async function POST(request: Request) {
       !(await getStorage().consumeRate(`seo-audit:${actor.id}`, 120, 3600000))
     )
       throw new BackendError("rate_limited", 429);
+    const fingerprint = await publishedFingerprint();
     const data = await auditPage(input.data.path);
-    await requireActor(request);
+    const liveActor = await requireActor(request);
+    await recordSeoAudit(data, liveActor, fingerprint);
     return Response.json(data, {
       headers: { "Cache-Control": "private, no-store" },
     });

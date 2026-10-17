@@ -37,7 +37,10 @@ export function PublicImage({
   ...props
 }: ComponentProps<typeof NextImage>) {
   const preview = usePublicPreview();
-  // Never send authenticated draft bytes to the public Next image optimizer/cache.
+  // Managed bytes must be authorized on every request, including after unpublish.
+  // An optimizer cache can outlive the public reference even with no-store upstream.
+  const managed =
+    typeof src === "string" && /^\/api\/(?:admin\/)?media\//.test(src);
   const path =
     preview && typeof src === "string" && src.startsWith("/api/media/")
       ? src.replace("/api/media/", "/api/admin/media/")
@@ -46,7 +49,7 @@ export function PublicImage({
     <NextImage
       {...props}
       src={path}
-      unoptimized={preview || props.unoptimized}
+      unoptimized={preview || managed || props.unoptimized}
     />
   );
 }

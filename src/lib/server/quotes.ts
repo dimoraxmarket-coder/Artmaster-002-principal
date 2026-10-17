@@ -1,4 +1,5 @@
-import { randomUUID, createHash } from 'node:crypto';
+import { randomUUID } from 'node:crypto';
+import { quotePayloadHash } from './quote-identity';
 import { getContent } from '../content/repository';
 import { quoteSchema } from './schema';
 import { BackendError } from './config';
@@ -25,7 +26,9 @@ export async function submitQuote(request:Request){
   const content=await getContent();
   if(!content.services.some(service=>service.slug===data.service))throw new BackendError('invalid_input',400,{service:['invalid']});
   const files=await validateUploads(form.getAll('files'));
-  const payloadHash=createHash('sha256').update(JSON.stringify({locale:data.locale,service:data.service,name:data.name,email:data.email,phone:data.phone,message:data.message,company:data.company,dimensions:data.dimensions,quantity:data.quantity,deadline:data.deadline,sourcePath:data.sourcePath,files:files.map(file=>({name:file.name,mime:file.mime,hash:createHash('sha256').update(file.bytes).digest('hex')}))})).digest('hex');
+  // Keep original input identity for retries of records saved before sanitization.
+  // The original bytes are not stored for new raster attachments.
+  const payloadHash=quotePayloadHash(data,files);
   const storage=getStorage(),existing=await storage.findQuote(data.idempotencyKey);
   if(existing){if(existing.payloadHash!==payloadHash)throw new BackendError('idempotency_conflict',409);return {id:existing.id,notification:existing.notification,duplicate:true};}
   if(!await storage.consumeRate(`quotes:${requestBucket(request)}`,5,900000))throw new BackendError('rate_limited',429);

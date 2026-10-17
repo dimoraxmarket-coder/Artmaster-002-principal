@@ -10,6 +10,7 @@ import { getStorage } from "./storage";
 import { registerMedia } from "./media-inventory";
 import type { Actor } from "./types";
 import { validateUploads } from "./uploads";
+import { rasterWork } from "./raster-work";
 export async function storeMedia(
   file: File,
   actor?: Actor,
@@ -20,96 +21,105 @@ export async function storeMedia(
 ) {
   const crop = typeof options === "object" ? options : undefined;
   const purpose = typeof options === "string" ? options : "photo";
-  const uploads = await validateUploads([file]);
+  const uploads = await validateUploads([file], false);
   if (uploads.length !== 1 || uploads[0].mime === "application/pdf")
     throw new BackendError("invalid_file", 400);
-  try {
-    const oriented = await sharp(uploads[0].bytes, {
-      limitInputPixels: 30000000,
-      animated: false,
-      failOn: "warning",
-    })
-      .rotate()
-      .png()
-      .toBuffer({ resolveWithObject: true });
-    let pipeline = sharp(oriented.data, { limitInputPixels: 30000000 });
-    if (crop) {
-      if (
-        ![crop.x, crop.y, crop.width, crop.height].every(Number.isFinite) ||
-        crop.x < 0 ||
-        crop.y < 0 ||
-        crop.width < 0.01 ||
-        crop.height < 0.01 ||
-        crop.x + crop.width > 1.000001 ||
-        crop.y + crop.height > 1.000001
-      )
-        throw new BackendError("invalid_input", 400);
-      const left = Math.floor(crop.x * oriented.info.width),
-        top = Math.floor(crop.y * oriented.info.height);
-      pipeline = pipeline.extract({
-        left,
-        top,
-        width: Math.max(
-          1,
-          Math.min(
-            oriented.info.width - left,
-            Math.floor(crop.width * oriented.info.width),
-          ),
-        ),
-        height: Math.max(
-          1,
-          Math.min(
-            oriented.info.height - top,
-            Math.floor(crop.height * oriented.info.height),
-          ),
-        ),
-      });
-    }
-    pipeline = pipeline
-      .resize({
-        width: 2400,
-        height: 2400,
-        fit: "inside",
-        withoutEnlargement: true,
+  return rasterWork(async () => {
+    try {
+      const oriented = await sharp(uploads[0].bytes, {
+        limitInputPixels: 30000000,
+        animated: false,
+        failOn: "warning",
       })
-      .webp(
-        purpose === "artwork" ? { lossless: true, effort: 4 } : { quality: 85 },
+        .rotate()
+        .png()
+        .toBuffer({ resolveWithObject: true });
+      let pipeline = sharp(oriented.data, { limitInputPixels: 30000000 });
+      if (crop) {
+        if (
+          ![crop.x, crop.y, crop.width, crop.height].every(Number.isFinite) ||
+          crop.x < 0 ||
+          crop.y < 0 ||
+          crop.width < 0.01 ||
+          crop.height < 0.01 ||
+          crop.x + crop.width > 1.000001 ||
+          crop.y + crop.height > 1.000001
+        )
+          throw new BackendError("invalid_input", 400);
+        const left = Math.floor(crop.x * oriented.info.width),
+          top = Math.floor(crop.y * oriented.info.height);
+        pipeline = pipeline.extract({
+          left,
+          top,
+          width: Math.max(
+            1,
+            Math.min(
+              oriented.info.width - left,
+              Math.floor(crop.width * oriented.info.width),
+            ),
+          ),
+          height: Math.max(
+            1,
+            Math.min(
+              oriented.info.height - top,
+              Math.floor(crop.height * oriented.info.height),
+            ),
+          ),
+        });
+      }
+      pipeline = pipeline
+        .resize({
+          width: 2400,
+          height: 2400,
+          fit: "inside",
+          withoutEnlargement: true,
+        })
+        .webp(
+          purpose === "artwork"
+            ? { lossless: true, effort: 4 }
+            : { quality: 85 },
+        );
+      const { data, info } = await pipeline.toBuffer({
+        resolveWithObject: true,
+      });
+      if (!info.width || !info.height || data.length > 5 * 1024 * 1024)
+        throw new BackendError("invalid_file", 400);
+      const id = randomUUID(),
+        name = `${id}.webp`;
+      let url: string;
+      if (storageMode() === "local") {
+        const directory = join(dataDirectory(), "media");
+        await mkdir(directory, { recursive: true, mode: 0o700 });
+        await writeFile(join(directory, name), data, {
+          mode: 0o600,
+          flag: "wx",
+        });
+        url = `/api/media/${name}`;
+      } else {
+        const client = supabaseService(),
+          { error } = await client.storage
+            .from("portfolio-private")
+            .upload(name, data, { contentType: "image/webp", upsert: false });
+        if (error) throw new BackendError("unavailable", 503);
+        url = `/api/media/${name}`;
+      }
+      await registerMedia(
+        {
+          url,
+          name: file.name,
+          bytes: data.length,
+          width: info.width,
+          height: info.height,
+          createdAt: new Date().toISOString(),
+        },
+        actor,
       );
-    const { data, info } = await pipeline.toBuffer({ resolveWithObject: true });
-    if (!info.width || !info.height || data.length > 5 * 1024 * 1024)
+      return { url, width: info.width, height: info.height };
+    } catch (error) {
+      if (error instanceof BackendError) throw error;
       throw new BackendError("invalid_file", 400);
-    const id = randomUUID(),
-      name = `${id}.webp`;
-    let url: string;
-    if (storageMode() === "local") {
-      const directory = join(dataDirectory(), "media");
-      await mkdir(directory, { recursive: true, mode: 0o700 });
-      await writeFile(join(directory, name), data, { mode: 0o600, flag: "wx" });
-      url = `/api/media/${name}`;
-    } else {
-      const client = supabaseService(),
-        { error } = await client.storage
-          .from("portfolio-private")
-          .upload(name, data, { contentType: "image/webp", upsert: false });
-      if (error) throw new BackendError("unavailable", 503);
-      url = `/api/media/${name}`;
     }
-    await registerMedia(
-      {
-        url,
-        name: file.name,
-        bytes: data.length,
-        width: info.width,
-        height: info.height,
-        createdAt: new Date().toISOString(),
-      },
-      actor,
-    );
-    return { url, width: info.width, height: info.height };
-  } catch (error) {
-    if (error instanceof BackendError) throw error;
-    throw new BackendError("invalid_file", 400);
-  }
+  });
 }
 export async function readLocalMedia(name: string) {
   if (

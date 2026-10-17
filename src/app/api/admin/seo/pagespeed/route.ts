@@ -15,14 +15,17 @@ export async function POST(request: Request) {
     requireSameOrigin(request);
     const actor = await requireActor(request, "editor");
     const input = z
-      .object({ path: z.string().max(250) })
+      .object({
+        path: z.string().max(250),
+        strategy: z.enum(["mobile", "desktop"]).default("mobile"),
+      })
       .strict()
       .safeParse(await boundedJSON(request, 1024));
     if (!input.success || !(await seoPages()).includes(input.data.path))
       throw new BackendError("invalid_input", 400);
     if (!(await getStorage().consumeRate(`pagespeed:${actor.id}`, 10, 3600000)))
       throw new BackendError("rate_limited", 429);
-    const data = await pageSpeed(input.data.path);
+    const data = await pageSpeed(input.data.path, input.data.strategy);
     await requireActor(request, "editor");
     await getStorage().audit(actor, "seo.pagespeed", input.data.path);
     return Response.json(data, {

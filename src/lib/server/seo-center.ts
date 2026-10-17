@@ -61,7 +61,10 @@ export async function conversionDays(range: DateRange) {
 }
 export async function seoPages() {
   const c = (await getStorage().content()).published || defaultContent;
-  return publicPaths(c);
+  return publicPaths({
+    ...c,
+    projects: c.projects.filter((p) => p.kind === "real"),
+  });
 }
 async function text(url: string) {
   const r = await fetch(url, {
@@ -105,7 +108,9 @@ export async function auditPage(path: string) {
     html,
     sitemap,
     robots,
-    paths,
+    paths: publicPaths(
+      (await getStorage().content()).published || defaultContent,
+    ),
     indexable: isIndexable,
     assetExists: (p) => {
       if (

@@ -1,0 +1,91 @@
+{
+  "checkedAt": "2026-10-17T09:50:30.296Z",
+  "scope": "Public loopback only, repository/default content, unique rendered img and picture sources. Not a hosted-production test.",
+  "images": [
+    {
+      "path": "/_next/image?url=%2Fbranding%2Fartmaster-symbol.webp&w=3840&q=85",
+      "status": 200
+    },
+    {
+      "path": "/media/hero-narrow.avif",
+      "status": 200
+    },
+    {
+      "path": "/media/hero-narrow.webp",
+      "status": 200
+    },
+    {
+      "path": "/media/hero-wide.avif",
+      "status": 200
+    },
+    {
+      "path": "/media/hero-wide.webp",
+      "status": 200
+    },
+    {
+      "path": "/_next/image?url=%2Fmedia%2Fprint-workshop.png&w=3840&q=75",
+      "status": 200
+    },
+    {
+      "path": "/_next/image?url=%2Fmedia%2Fletters.png&w=3840&q=75",
+      "status": 200
+    },
+    {
+      "path": "/_next/image?url=%2Fmedia%2F3d.png&w=3840&q=75",
+      "status": 200
+    },
+    {
+      "path": "/media/laser.svg",
+      "status": 200
+    },
+    {
+      "path": "/media/cnc.svg",
+      "status": 200
+    },
+    {
+      "path": "/partners/example-1.svg",
+      "status": 200
+    },
+    {
+      "path": "/partners/example-2.svg",
+      "status": 200
+    },
+    {
+      "path": "/partners/example-3.svg",
+      "status": 200
+    },
+    {
+      "path": "/partners/example-4.svg",
+      "status": 200
+    },
+    {
+      "path": "/partners/example-5.svg",
+      "status": 200
+    },
+    {
+      "path": "/partners/example-6.svg",
+      "status": 200
+    },
+    {
+      "path": "/media/vehicle-wrap.svg",
+      "status": 200
+    },
+    {
+      "path": "/media/stickers.svg",
+      "status": 200
+    },
+    {
+      "path": "/media/banner.svg",
+      "status": 200
+    },
+    {
+      "path": "/media/branding.svg",
+      "status": 200
+    },
+    {
+      "path": "/media/exhibition.svg",
+      "status": 200
+    }
+  ],
+  "redirects": []
+}

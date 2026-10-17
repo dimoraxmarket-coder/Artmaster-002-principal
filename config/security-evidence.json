@@ -1,0 +1,17 @@
+{
+  "checkedAt": "2026-10-17T10:11:07.176Z",
+  "lockSha256": "d965f56ba0f5041e48a7b4c855571ce51f60f61c382a5511f09846823275d0a1",
+  "source": "npm audit --json, all dependencies, isolated audit environment",
+  "total": 0,
+  "restoration": {
+    "checkedAt": "2026-10-17T10:11:07.176Z",
+    "passed": 3,
+    "scope": "Synthetic local restoration tests only; never production or hosted Supabase.",
+    "sourceSha256": "702723cc439fe6320101fb75a8511ea3f7af33f23e698dbe78f7caec8051a7f0",
+    "files": [
+      "src/lib/server/backup.ts",
+      "src/lib/server/config.ts",
+      "src/lib/server/local.ts"
+    ]
+  }
+}

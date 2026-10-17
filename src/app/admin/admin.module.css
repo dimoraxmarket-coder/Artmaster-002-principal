@@ -2316,3 +2316,11 @@
  .securityDialog h2 { font-size: 17px; overflow-wrap: anywhere; }
  .securityFilters { padding-inline: 17px; }
 }
+.postureList > div { align-items: start; }
+.postureList dd { text-align: left; font-size: .875rem; line-height: 1.6; }
+@media (max-width: 700px) {
+  .postureHeading { flex-direction: column; align-items: stretch; gap: 16px; }
+  .postureHeading button { align-self: flex-start; }
+  .postureList > div { display: block; padding-block: 16px; }
+  .postureList dt { margin-bottom: 8px; }
+}

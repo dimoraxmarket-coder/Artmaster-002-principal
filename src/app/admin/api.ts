@@ -37,6 +37,8 @@ export async function adminApi<T>(
         "Imaginea este folosită în conținut salvat sau a fost arhivată. Actualizează biblioteca înainte de a continua.",
       not_found: "Înregistrarea nu mai este disponibilă. Actualizează datele.",
       invalid_input: "Verifică datele introduse și încearcă din nou.",
+      upload_busy:
+        "Procesarea imaginilor este ocupată. Așteaptă puțin și încearcă din nou.",
     };
     throw new AdminApiError(
       messages[code] || "Nu am putut finaliza acțiunea. Încearcă din nou.",

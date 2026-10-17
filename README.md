@@ -63,3 +63,6 @@ Vezi [README-WINDOWS.md](README-WINDOWS.md). Într-o copie curată, `START.bat` 
 Fotografiile de concept trebuie înlocuite cu fotografii ARTMASTER aprobate înainte de lansare. Nu sunt dovezi de lucrări executate. Datele tehnice, textele în trei limbi și paginile juridice necesită verificarea companiei.
 
 Gestionarea bannerului și a partenerilor în Content Studio: [fluxuri, surse și limite](docs/banner-partners.md). Bannerul original și logo-urile autentice rămân de importat/verificat; pachetul nu le substituie cu imagini generate.
+# Audit tehnic și actualizare de securitate — 17 octombrie 2026
+
+Verdictul, dovezile și pașii de staging: [ARTMASTER-PRODUCTION-READINESS.md](ARTMASTER-PRODUCTION-READINESS.md). Rapoarte: [SEO](ARTMASTER-SEO-AUDIT.md), [securitate](ARTMASTER-SECURITY-AUDIT.md), [performanță](ARTMASTER-PERFORMANCE-REPORT.md), [concurenți](ARTMASTER-COMPETITOR-ANALYSIS.md). SEO Center: `/admin#seo`; Security Center: `/admin#security`. Nu se face deploy sau merge automat.

@@ -1,0 +1,210 @@
+{
+  "scope": "Local lab only. Mobile was repeated once to investigate LCP variance; both after samples are retained. No field INP or hosted Google validation.",
+  "runs": [
+    {
+      "run": "before-mobile",
+      "checkedAt": "2026-10-17T08:40:59.541Z",
+      "lighthouseVersion": "13.5.0",
+      "url": "http://127.0.0.1:3100/ro",
+      "categories": {
+        "performance": 93,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 69
+      },
+      "metrics": {
+        "largest-contentful-paint": 2650.56875,
+        "first-contentful-paint": 1060.2275,
+        "cumulative-layout-shift": 0.0005421208522849038,
+        "total-blocking-time": 225.5,
+        "speed-index": 1102.230707226458
+      },
+      "settings": {
+        "formFactor": "mobile",
+        "throttlingMethod": "simulate",
+        "throttling": {
+          "rttMs": 150,
+          "throughputKbps": 1638.4,
+          "requestLatencyMs": 562.5,
+          "downloadThroughputKbps": 1474.5600000000002,
+          "uploadThroughputKbps": 675,
+          "cpuSlowdownMultiplier": 4
+        },
+        "screenEmulation": {
+          "mobile": true,
+          "width": 412,
+          "height": 823,
+          "deviceScaleFactor": 1.75,
+          "disabled": false
+        }
+      },
+      "hostUserAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/154.0.0.0 Safari/537.36",
+      "benchmarkIndex": 2553,
+      "visibleLabelCheck": 0
+    },
+    {
+      "run": "before-desktop",
+      "checkedAt": "2026-10-17T08:41:52.822Z",
+      "lighthouseVersion": "13.5.0",
+      "url": "http://127.0.0.1:3100/ro",
+      "categories": {
+        "performance": 100,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 69
+      },
+      "metrics": {
+        "largest-contentful-paint": 739.4100000000001,
+        "first-contentful-paint": 419.41,
+        "cumulative-layout-shift": 0.000945496350933554,
+        "total-blocking-time": 0,
+        "speed-index": 419.9748196270243
+      },
+      "settings": {
+        "formFactor": "desktop",
+        "throttlingMethod": "simulate",
+        "throttling": {
+          "rttMs": 40,
+          "throughputKbps": 10240,
+          "requestLatencyMs": 0,
+          "downloadThroughputKbps": 0,
+          "uploadThroughputKbps": 0,
+          "cpuSlowdownMultiplier": 1
+        },
+        "screenEmulation": {
+          "mobile": false,
+          "width": 1350,
+          "height": 940,
+          "deviceScaleFactor": 1,
+          "disabled": false
+        }
+      },
+      "hostUserAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/154.0.0.0 Safari/537.36",
+      "benchmarkIndex": 2735.5,
+      "visibleLabelCheck": 0
+    },
+    {
+      "run": "after-mobile",
+      "checkedAt": "2026-10-17T09:39:32.535Z",
+      "lighthouseVersion": "13.5.0",
+      "url": "http://127.0.0.1:3100/ro",
+      "categories": {
+        "performance": 90,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 69
+      },
+      "metrics": {
+        "largest-contentful-paint": 3542.9511999999995,
+        "first-contentful-paint": 1666.4755999999998,
+        "cumulative-layout-shift": 0.001290118910391126,
+        "total-blocking-time": 42.5,
+        "speed-index": 1666.4755999999998
+      },
+      "settings": {
+        "formFactor": "mobile",
+        "throttlingMethod": "simulate",
+        "throttling": {
+          "rttMs": 150,
+          "throughputKbps": 1638.4,
+          "requestLatencyMs": 562.5,
+          "downloadThroughputKbps": 1474.5600000000002,
+          "uploadThroughputKbps": 675,
+          "cpuSlowdownMultiplier": 4
+        },
+        "screenEmulation": {
+          "mobile": true,
+          "width": 412,
+          "height": 823,
+          "deviceScaleFactor": 1.75,
+          "disabled": false
+        }
+      },
+      "hostUserAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/154.0.0.0 Safari/537.36",
+      "benchmarkIndex": 2661,
+      "visibleLabelCheck": 1
+    },
+    {
+      "run": "after-desktop",
+      "checkedAt": "2026-10-17T09:43:02.737Z",
+      "lighthouseVersion": "13.5.0",
+      "url": "http://127.0.0.1:3100/ro",
+      "categories": {
+        "performance": 100,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 69
+      },
+      "metrics": {
+        "largest-contentful-paint": 736.3817,
+        "first-contentful-paint": 416.3817,
+        "cumulative-layout-shift": 0.000945496350933554,
+        "total-blocking-time": 0,
+        "speed-index": 416.3817
+      },
+      "settings": {
+        "formFactor": "desktop",
+        "throttlingMethod": "simulate",
+        "throttling": {
+          "rttMs": 40,
+          "throughputKbps": 10240,
+          "requestLatencyMs": 0,
+          "downloadThroughputKbps": 0,
+          "uploadThroughputKbps": 0,
+          "cpuSlowdownMultiplier": 1
+        },
+        "screenEmulation": {
+          "mobile": false,
+          "width": 1350,
+          "height": 940,
+          "deviceScaleFactor": 1,
+          "disabled": false
+        }
+      },
+      "hostUserAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/154.0.0.0 Safari/537.36",
+      "benchmarkIndex": 2573,
+      "visibleLabelCheck": 1
+    },
+    {
+      "run": "after-mobile-repeat",
+      "checkedAt": "2026-10-17T09:45:07.806Z",
+      "lighthouseVersion": "13.5.0",
+      "url": "http://127.0.0.1:3100/ro",
+      "categories": {
+        "performance": 96,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 69
+      },
+      "metrics": {
+        "largest-contentful-paint": 2646.7716,
+        "first-contentful-paint": 1514.5144,
+        "cumulative-layout-shift": 0.001290118910391126,
+        "total-blocking-time": 40,
+        "speed-index": 1514.5144
+      },
+      "settings": {
+        "formFactor": "mobile",
+        "throttlingMethod": "simulate",
+        "throttling": {
+          "rttMs": 150,
+          "throughputKbps": 1638.4,
+          "requestLatencyMs": 562.5,
+          "downloadThroughputKbps": 1474.5600000000002,
+          "uploadThroughputKbps": 675,
+          "cpuSlowdownMultiplier": 4
+        },
+        "screenEmulation": {
+          "mobile": true,
+          "width": 412,
+          "height": 823,
+          "deviceScaleFactor": 1.75,
+          "disabled": false
+        }
+      },
+      "hostUserAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/154.0.0.0 Safari/537.36",
+      "benchmarkIndex": 2668.5,
+      "visibleLabelCheck": 1
+    }
+  ]
+}
